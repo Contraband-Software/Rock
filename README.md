@@ -1,4 +1,4 @@
-# GREngine :: GREEN ROCK ENGINE
+# **GREngine** :: GREEN ROCK ENGINE
 
 ![Green glowing rock outline over black background](./Documentation/Images/rockIcon.png)
 
