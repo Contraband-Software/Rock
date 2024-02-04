@@ -1,18 +1,34 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>software.contraband.green-rock-engine</id>
+    <id>software.contraband.GREngine</id>
     <version>0.1.0</version>
     <title>GreenRockEngine</title>
     <authors>Sam Taseff; Jakub Bala; Julius Van Ander Arend</authors>
     <owners>Contraband Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/lgpl-3.0.html</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <projectUrl>https://github.com/Contraband-Software/Rock</projectUrl>
+    <iconUrl>https://github.com/Contraband-Software/Rock/blob/main/Documentation/Images/rockIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Small scale multiplatform engine used by Contraband Software</description>
     <releaseNotes>This engine is in its alpha stages and is not considered stable</releaseNotes>
     <copyright>Copyright (c) 2024 Contraband Software</copyright>
     <tags>Game-Engine</tags>
+    
+    <dependencies>
+      <group targetFramework="net6.0"/>
+    </dependencies>
   </metadata>
+  <files>
+    <!--    <file src="..\GREngine.Core\GREngine.Core.System\bin\Release\net6.0\GREngine.Core.System.dll" target="lib\net6.0" />-->
+    <!--    <file src="..\GREngine.Core\GREngine.Core.Sound\bin\Release\net6.0\GREngine.Core.Sound.dll" target="lib\net6.0" />-->
+    <!--    <file src="..\GREngine.Core\GREngine.Core.Physics2D\bin\Release\net6.0\GREngine.Core.Physics2D.dll" target="lib\net6.0" />-->
+    <!--    <file src="..\GREngine.Core\GREngine.Core.PebbleRenderer\bin\Release\net6.0\GREngine.Core.PebbleRenderer.dll" target="lib\net6.0" />-->
+        <file src="..\Build\artefacts\GREngine.Core.System.dll" target="lib\net6.0" />
+        <file src="..\Build\artefacts\GREngine.Core.Sound.dll" target="lib\net6.0" />
+        <file src="..\Build\artefacts\GREngine.Core.Physics2D.dll" target="lib\net6.0" />
+        <file src="..\Build\artefacts\GREngine.Core.PebbleRenderer.dll" target="lib\net6.0" />
+
+    <!--    <file src="bin\Release\net6.0\*.dll" target="lib\net6.0" />-->
+  </files>
 </package>

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- nuget -->
-    <PackageId>software.contraband.green-rock-engine</PackageId>
+    <PackageId>software.contraband.GREngine</PackageId>
     <Version>0.1.0</Version>
     <Authors>Sam Taseff; Jakub Bala; Julius Van Ander Arend</Authors>
     <Company>Contraband Software</Company>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!--    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
     <Description>Small scale multiplatform engine used by Contraband Software</Description>
     
     <TargetFramework>net6.0</TargetFramework>
@@ -17,9 +17,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GREngine.Core\PebbleRenderer\PebbleRenderer.csproj" />
-    <ProjectReference Include="..\GREngine.Core\Physics2D\Physics2D.csproj" />
-    <ProjectReference Include="..\GREngine.Core\Sound\Sound.csproj" />
-    <ProjectReference Include="..\GREngine.Core\System\System.csproj" />
+    <ProjectReference Include="..\GREngine.Core\GREngine.Core.PebbleRenderer\GREngine.Core.PebbleRenderer.csproj" />
+    <ProjectReference Include="..\GREngine.Core\GREngine.Core.Physics2D\GREngine.Core.Physics2D.csproj" />
+    <ProjectReference Include="..\GREngine.Core\GREngine.Core.Sound\GREngine.Core.Sound.csproj" />
+    <ProjectReference Include="..\GREngine.Core\GREngine.Core.System\GREngine.Core.System.csproj" />
   </ItemGroup>
 </Project>
