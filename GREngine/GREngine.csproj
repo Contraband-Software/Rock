@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- nuget -->
+    <PackageId>software.contraband.green-rock-engine</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Sam Taseff; Jakub Bala; Julius Van Ander Arend</Authors>
+    <Company>Contraband Software</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Small scale multiplatform engine used by Contraband Software</Description>
+    
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>GREngine</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GREngine.Core\PebbleRenderer\PebbleRenderer.csproj" />
+    <ProjectReference Include="..\GREngine.Core\Physics2D\Physics2D.csproj" />
+    <ProjectReference Include="..\GREngine.Core\Sound\Sound.csproj" />
+    <ProjectReference Include="..\GREngine.Core\System\System.csproj" />
+  </ItemGroup>
+</Project>

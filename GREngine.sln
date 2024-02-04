@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GREngine.Core", "GREngine.Core", "{2DFA445B-45BB-41E8-BF4E-598F86710492}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System", "GREngine.Core\System\System.csproj", "{7B462971-E2CE-44AB-92D0-9A758485F962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound", "GREngine.Core\Sound\Sound.csproj", "{C77339AE-F05F-4DBF-A1EE-A35D295E08B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physics2D", "GREngine.Core\Physics2D\Physics2D.csproj", "{5CED2ABB-B245-4E81-840F-4A2483968D3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PebbleRenderer", "GREngine.Core\PebbleRenderer\PebbleRenderer.csproj", "{7F8E767D-3561-414F-B644-5384D1FA543F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GREngine", "GREngine\GREngine.csproj", "{5D3F3B34-D405-4A30-9998-298611F19E3A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B462971-E2CE-44AB-92D0-9A758485F962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B462971-E2CE-44AB-92D0-9A758485F962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B462971-E2CE-44AB-92D0-9A758485F962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B462971-E2CE-44AB-92D0-9A758485F962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77339AE-F05F-4DBF-A1EE-A35D295E08B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77339AE-F05F-4DBF-A1EE-A35D295E08B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77339AE-F05F-4DBF-A1EE-A35D295E08B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77339AE-F05F-4DBF-A1EE-A35D295E08B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CED2ABB-B245-4E81-840F-4A2483968D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CED2ABB-B245-4E81-840F-4A2483968D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CED2ABB-B245-4E81-840F-4A2483968D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CED2ABB-B245-4E81-840F-4A2483968D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F8E767D-3561-414F-B644-5384D1FA543F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8E767D-3561-414F-B644-5384D1FA543F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F8E767D-3561-414F-B644-5384D1FA543F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F8E767D-3561-414F-B644-5384D1FA543F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D3F3B34-D405-4A30-9998-298611F19E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D3F3B34-D405-4A30-9998-298611F19E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D3F3B34-D405-4A30-9998-298611F19E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D3F3B34-D405-4A30-9998-298611F19E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B462971-E2CE-44AB-92D0-9A758485F962} = {2DFA445B-45BB-41E8-BF4E-598F86710492}
+		{C77339AE-F05F-4DBF-A1EE-A35D295E08B0} = {2DFA445B-45BB-41E8-BF4E-598F86710492}
+		{5CED2ABB-B245-4E81-840F-4A2483968D3F} = {2DFA445B-45BB-41E8-BF4E-598F86710492}
+		{7F8E767D-3561-414F-B644-5384D1FA543F} = {2DFA445B-45BB-41E8-BF4E-598F86710492}
+	EndGlobalSection
+EndGlobal
