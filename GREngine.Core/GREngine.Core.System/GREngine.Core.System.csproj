@@ -2,10 +2,15 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>GREngine.Core.System</RootNamespace>
+      <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GREngine.Algorithms\GREngine.Algorithms.csproj" />
+    <ProjectReference Include="..\..\GREngine.Debug\GREngine.Debug.csproj" />
   </ItemGroup>
 </Project>

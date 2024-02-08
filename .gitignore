@@ -1,6 +1,7 @@
 # ROCK GITIGNORE
 
 [Bb]uild/
+TestApp/
 
 # JetBrains
 
