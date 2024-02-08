@@ -1,6 +1,7 @@
 # **GREngine** :: GREEN ROCK ENGINE
 
 Contraband Software's very own custom game engine, built on top of the reliable Monogame framework. Simple and ready for game jams!
+
 ![Green glowing rock outline over black background](./Documentation/Images/rockIcon.png) 
 
 ## Prerequisites
