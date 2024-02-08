@@ -27,3 +27,16 @@ To get started immediately, create your game project in a sister folder to the r
 
  - `dotnet add package software.contraband.GREngine -s "../GreenRockEngine/Build/"`
  - Start game dev!
+
+## License TLDR - If you want to make something awesome
+
+We have licensed this project under LGPL, here are the broad strokes:
+
+ - You may freely: use, distribute, alter, and incorporate this library into commercial works, provided the following terms are followed:
+ - You **cannot** statically link this library with proprietary code, no restrictions exist on open source projects with LGPL-compatible licenses.
+   - .NET Core dynamically links libraries by default anyway.
+ - You must distribute a copy of this project's `LICENSE` text along with any work that uses this library at all
+ - If you make any modifications to this library's code, you will need to distribute those changes under LGPL along with any proprietary work that uses that modified version of the library, along with the library's `LICENSE` text
+   - You may still keep any code that you wrote yourself proprietary if you wish
+
+*This is not a legal substitute for the full license terms.*
