@@ -1,7 +1,7 @@
 #### using **GREngine**;
 # ----> GREEN ROCK ENGINE - Active Development
 
-Contraband Software's very own custom game engine, built on top of the reliable Monogame framework. Simple and ready for game jams!
+Contraband Software's very own custom game engine, built on top of the reliable MonoGame framework. Simple and ready for game jams!
 
 ![Green glowing rock outline over black background](./Documentation/Images/rockIcon.png) 
 
@@ -9,7 +9,7 @@ Contraband Software's very own custom game engine, built on top of the reliable 
 
 This is a .NET Core 6.0 MonoGame Game Library, so you will need both of those things installed. Also Git.
 
- - [.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+ - [.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) Make sure to install the SDK, which also contains the runtime.
  - [MonoGame / XNA](https://monogame.net/articles/getting_started/index.html)
 
 ## Usage
