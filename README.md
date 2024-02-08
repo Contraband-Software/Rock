@@ -18,7 +18,7 @@ You will need to create a MonoGame Desktop GL CSharp project for your game.
  - Clone the repo
  - Run `BUILD_NUPKG.sh` (`BUILD_NUPKG.bat` if you use Windows) to generate a local nuget package + feed
    - You may need to run `chmod +x ./BUILD_NUPKG.sh` on Linux to allow it to run
-   - `./Build/` Will contain a `.nupkg` file you'd want to copy and store in your project's external libs folder
+   - The generated `./Build/` folder will contain a `.nupkg` file you'd want to copy and store in your project's external libs folder
  - From your game project, add that local nuget package as a reference
    `dotnet add package software.contraband.GREngine -s "<directory containing the .nupkg file>"
 
