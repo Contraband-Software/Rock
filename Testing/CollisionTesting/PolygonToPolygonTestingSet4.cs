@@ -12,10 +12,10 @@ using GREngine.Core.Physics2D;
 
 public class PolygonToPolygonTestingSet4 : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private GraphicsDeviceManager graphics;
+    private SpriteBatch spriteBatch;
 
-    private Texture2D _texture;
+    private Texture2D texture;
     private Texture2D pixelTexture;
     private CollisionSystem collisionSystem;
 
@@ -110,19 +110,21 @@ public class PolygonToPolygonTestingSet4 : Game
 
     public PolygonToPolygonTestingSet4()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        collisionSystem = new(this);
     }
 
     protected override void Initialize()
     {
-        _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
-        _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
-        _graphics.ApplyChanges();
+        graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+        graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+        graphics.ApplyChanges();
 
         // TODO: Add your initialization logic here
-        collisionSystem = CollisionSystem.Instance;
+        Components.Add(collisionSystem);
         Services.AddService<ICollisionSystem>(collisionSystem);
         collisionSystem.SetPosition(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2));
 
@@ -496,8 +498,8 @@ public class PolygonToPolygonTestingSet4 : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _texture = this.Content.Load<Texture2D>("collision/circle");
+        spriteBatch = new SpriteBatch(GraphicsDevice);
+        texture = this.Content.Load<Texture2D>("collision/circle");
         pixelTexture = Content.Load<Texture2D>("collision/pixel");
 
     }
@@ -586,15 +588,15 @@ public class PolygonToPolygonTestingSet4 : Game
         GraphicsDevice.Clear(new Color(31, 31, 31));
 
         // TODO: Add your drawing code here
-        _spriteBatch.Begin();
+        spriteBatch.Begin();
 
         //drawing polygons
         foreach (PolygonCollider obj in collisionSystem.GetVerletObjects().OfType<PolygonCollider>())
         {
-            obj.DrawDebug(_spriteBatch, pixelTexture);
+            obj.DrawDebug(spriteBatch, pixelTexture);
         }
 
-        _spriteBatch.End();
+        spriteBatch.End();
 
         base.Draw(gameTime);
     }

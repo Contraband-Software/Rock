@@ -1,3 +1,3 @@
-﻿
-using var game = new Testing.Game1();
+
+using var game = new PolygonToPolygonTestingSet4();
 game.Run();

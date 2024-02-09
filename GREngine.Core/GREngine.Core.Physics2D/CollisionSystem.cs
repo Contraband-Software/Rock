@@ -15,7 +15,7 @@ public interface ICollisionSystem
 {
 }
 //This should be a singleton service
-public class CollisionSystem : ICollisionSystem
+public class CollisionSystem : GameComponent, ICollisionSystem
 {
     HashSet<VerletObject> verletObjects = new HashSet<VerletObject>();
     Vector2 gravity = new Vector2(0, 1000f);
@@ -23,27 +23,7 @@ public class CollisionSystem : ICollisionSystem
     float radius = 300f;
 
     int subSteps = 1;
-
-    // Singleton Pattern
-    public static CollisionSystem instance;
-    private CollisionSystem()
-    {
-    }
-    public static CollisionSystem Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                if (instance == null)
-                {
-                    instance = new CollisionSystem();
-                }
-            }
-
-            return instance;
-        }
-    }
+    public CollisionSystem(Game game) : base(game){}
 
     public void Update(float dt)
     {
