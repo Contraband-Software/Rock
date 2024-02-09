@@ -1,5 +1,3 @@
-using NotImplementedException = System.NotImplementedException;
-
 namespace GREngine.Core.System;
 
 using global::System;
@@ -21,7 +19,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
 
     private SortedSet<Behaviour> activeBehaviours = new SortedSet<Behaviour>();
     private List<Behaviour> initializationQueue = new List<Behaviour>();
-    private Dictionary<string, List<Node>> nodeTagIndex = new Dictionary<string, List<Node>>();
+    private Dictionary<string, HashSet<Node>> nodeTagIndex = new Dictionary<string, HashSet<Node>>();
 
     public SceneManager(Game game) : base(game)
     {
@@ -55,8 +53,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
                 // calculate load order for each behaviour [REFLECTION USED HERE]
                 this.initializationQueue.ForEach(b =>
                 {
-                    TypeInfo typeInfo = gameTime.GetType().GetTypeInfo();
-                    IEnumerable<Attribute> attrs = typeInfo.GetCustomAttributes();
+                    IEnumerable<Attribute> attrs = b.GetType().GetTypeInfo().GetCustomAttributes();
 
                     Attribute? loadOrderAttribute = attrs.ToList().FindLast(a => a.GetType() == typeof(GRExecutionOrderAttribute));
 
@@ -106,7 +103,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         return nodeTagIndex[tag].First();
     }
 
-    public List<Node> FindNodesWithTag(string tag)
+    public HashSet<Node> FindNodesWithTag(string tag)
     {
         #if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
@@ -118,6 +115,11 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         return nodeTagIndex[tag];
     }
 
+    /// <summary>
+    /// If any node behaviours are disabled, they are not initialized
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="parent"></param>
     public void AddNode(Node node, Node parent)
     {
             // add node to parent's child list
@@ -131,22 +133,55 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         // repeat this process for child nodes
 
         // sort the initialization queue
+
+        parent.children.Add(node);
+        node.parent = parent;
+
+        IEnumerable<Attribute> attrs = node.GetType().GetTypeInfo().GetCustomAttributes();
+        Attribute? tagsAttribute = attrs.ToList().FindLast(a => a.GetType() == typeof(GRETagWithAttribute));
+        if (tagsAttribute != null)
+        {
+            ((GRETagWithAttribute)tagsAttribute).Tags.ToList().ForEach(t => node.Tags.Add(t));
+        }
+
+        node.Tags.ToList().ForEach(t => AppendTagIndex(t, node));
+
+        node.behaviours.ForEach(b =>
+        {
+            b.Node = node;
+            if (b.Enabled) this.initializationQueue.Add(b);
+        });
     }
 
     public void DestroyNode(Node node)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
 
         // get node TagList, remove node reference from tag indexes
         // get all component instances, run their OnDestroy, remove them from activeBehaviours
         // repeat for all children
         // delete node and sub tree
         // garbage collect
+
+        node.parent?.children.Remove(node);
+        node.parent = null;
+
+        TraverseGraphNodes(node,
+            n =>
+            {
+                n.Tags.ToList().ForEach(t => RemoveTagIndex(t, node));
+                n.behaviours.FindAll(b => b.Initialized).ForEach(this.DeInitBehaviour);
+                return n.children;
+            });
+
+        GC.Collect();
     }
+
     public RootNode GetRootNode()
     {
         return this.rootNode;
     }
+
     public RootNode GetPersistentNode()
     {
         return this.persistantNode;
@@ -174,10 +209,9 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         // remove behaviour from active list
         // remove behaviour from node list
 
-        behaviour.OnDestroy();
-        behaviour.Node?.behaviours.Remove(behaviour);
+        DeInitBehaviour(behaviour);
+        behaviour.Node.behaviours.Remove(behaviour);
         behaviour.Node = null;
-        this.activeBehaviours.Remove(behaviour);
     }
     public void RemoveBehavioursWithTag(Node node, string tag)
     {
@@ -219,15 +253,78 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         }
     }
 
+    private void DeInitBehaviour(Behaviour behaviour)
+    {
+        behaviour.OnDestroy();
+        this.activeBehaviours.Remove(behaviour);
+    }
+
     private void DestroyGraphComponents(Node node)
     {
         // depth first tree traversal
 
-        node.behaviours.FindAll(b => b.Initialized).ForEach(b => b.OnDestroy());
-        foreach (Node child in node.GetChildren())
+        TraverseGraphNodes(node, n =>
         {
-            this.DestroyGraphComponents(child);
+            n.behaviours.FindAll(b => b.Initialized).ForEach(this.DeInitBehaviour);
+            return n.children;
+        });
+    }
+
+    private bool IsDescendedFromRoot(Node node, RootNode parent)
+    {
+        return GetFirstAncestor(node) == parent;
+    }
+
+    private static Node GetFirstAncestor(Node node)
+    {
+        while (true)
+        {
+            if (node.parent == null)
+            {
+                return node;
+            }
+            node = node.parent;
         }
+    }
+
+    private void TraverseGraphNodes(Node start, Func<Node, IEnumerable<Node>> function)
+    {
+        foreach (Node child in function(start))
+        {
+            this.TraverseGraphNodes(child, function);
+        }
+    }
+
+    private void AppendTagIndex(string tag, Node node)
+    {
+        if (this.nodeTagIndex.ContainsKey(tag))
+        {
+            this.nodeTagIndex[tag].Add(node);
+        }
+        else
+        {
+            this.nodeTagIndex.Add(tag, new HashSet<Node> { node });
+        }
+    }
+
+    private void AppendTagIndexList(string tag, HashSet<Node> nodes)
+    {
+        if (!this.nodeTagIndex.TryAdd(tag, nodes))
+        {
+            this.nodeTagIndex[tag] = this.nodeTagIndex[tag].Concat(nodes) as HashSet<Node> ?? nodes;
+        }
+    }
+
+    private void RemoveTagIndex(string tag, Node node)
+    {
+        #if DEBUG
+        if (!this.nodeTagIndex.ContainsKey(tag))
+        {
+            throw new InvalidOperationException("Trying to update indexes for non-existent tags");
+        }
+        #endif
+
+        this.nodeTagIndex[tag].Remove(node);
     }
     #endregion
 
@@ -300,7 +397,14 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
             this.rootNode.children.Clear();
 
             // wipe scene data
-            this.activeBehaviours.Clear();
+            this.activeBehaviours.RemoveWhere(b =>
+            {
+                if (!this.IsDescendedFromRoot(b.Node, this.rootNode)) return false;
+
+                this.DeInitBehaviour(b);
+                return true;
+            });
+
             this.initializationQueue.Clear();
             this.nodeTagIndex.Clear();
 

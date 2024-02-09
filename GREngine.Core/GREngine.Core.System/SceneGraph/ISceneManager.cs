@@ -17,7 +17,7 @@ public interface ISceneControllerService
     public void DestroyNode(Node node);
 
     public Node? FindNodeWithTag(string tag);
-    public List<Node> FindNodesWithTag(string tag);
+    public HashSet<Node> FindNodesWithTag(string tag);
 
     public Scene? GetCurrentScene();
     public void AddScene(Scene scene);

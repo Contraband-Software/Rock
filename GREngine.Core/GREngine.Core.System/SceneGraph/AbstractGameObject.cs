@@ -14,7 +14,7 @@ public abstract class AbstractGameObject
     public bool Enabled { get; private set; } = true;
 
     public string Name { get; internal protected set; } = "Generic Object";
-    protected internal readonly HashSet<string> Tags = new();
+    internal protected readonly HashSet<string> Tags = new();
 
     public virtual void SetEnabled(bool state)
     {

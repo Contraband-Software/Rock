@@ -4,8 +4,10 @@ using global::System;
 
 public class GRETagWithAttribute : Attribute
 {
-    public GRETagWithAttribute(params string[] tag)
-    {
+    public string[] Tags { get; private set; }
 
+    public GRETagWithAttribute(params string[] tags)
+    {
+        Tags = tags;
     }
 }

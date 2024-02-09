@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 public abstract class Node : AbstractGameObject
 {
-    private Node? parent;
+    internal Node? parent;
     private Transform transform;
     private SceneManager sceneManager;
 
