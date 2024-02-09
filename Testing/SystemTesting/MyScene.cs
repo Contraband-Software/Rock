@@ -1,6 +1,8 @@
 namespace Testing.SystemTesting;
 
 using GREngine.Core.System;
+using GREngine.Debug;
+using Microsoft.Xna.Framework.Graphics;
 
 public class MyScene : Scene
 {

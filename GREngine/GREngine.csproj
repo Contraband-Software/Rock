@@ -17,6 +17,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GREngine.Algorithms\GREngine.Algorithms.csproj" />
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.PebbleRenderer\GREngine.Core.PebbleRenderer.csproj" />
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.Physics2D\GREngine.Core.Physics2D.csproj" />
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.Sound\GREngine.Core.Sound.csproj" />

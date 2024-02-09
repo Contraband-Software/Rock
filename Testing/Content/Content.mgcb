@@ -10,8 +10,32 @@
 
 #-------------------------------- References --------------------------------#
 
-
 #---------------------------------- Content ---------------------------------#
+
+
+#begin defaultDiffuseShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:defaultDiffuseShader.fx
+
+#begin defaultNormalShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:defaultNormalShader.fx
+
+#begin pointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:pointLight.fx
+
+#begin pointLightShaderShadowCasting.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:pointLightShaderShadowCasting.fx
 
 #begin collision/circle.png
 /importer:TextureImporter
@@ -36,4 +60,5 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:collision/pixel.png
+
 

@@ -8,7 +8,7 @@ namespace Testing;
 using GREngine.Core.System;
 using SystemTesting;
 
-public class Game1 : Game
+public class GraphicsTesting : Game
 {
     private GraphicsDeviceManager graphics;
     //private SpriteBatch _spriteBatch;
@@ -18,7 +18,7 @@ public class Game1 : Game
 
     private SceneManager sceneManager;
 
-    public Game1()
+    public GraphicsTesting()
     {
         graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";

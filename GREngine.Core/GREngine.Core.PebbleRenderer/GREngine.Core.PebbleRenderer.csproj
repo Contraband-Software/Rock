@@ -7,5 +7,9 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="MonoGame.Primitives2D" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GREngine.Core.System\GREngine.Core.System.csproj" />
   </ItemGroup>
 </Project>
