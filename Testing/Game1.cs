@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+using GREngine.Core.PebbleRenderer;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,26 +7,38 @@ namespace Testing;
 
 public class Game1 : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private GraphicsDeviceManager graphics;
+    //private SpriteBatch _spriteBatch;
+
+    private readonly PebbleRenderer re;
+
 
     public Game1()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        re = new PebbleRenderer(this, graphics, 1920, 1080, 1f, 0.5f);
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
 
+
+        this.Components.Add(re);
+        this.Services.AddService(typeof(IPebbleRendererService), re);
+
         base.Initialize();
+
+
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        re.LoadShaders();   
+        //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
     }
@@ -42,10 +55,12 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        //GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
 
-        base.Draw(gameTime);
+        //base.Draw(gameTime);
+
+        re.Draw(gameTime);  
     }
 }
