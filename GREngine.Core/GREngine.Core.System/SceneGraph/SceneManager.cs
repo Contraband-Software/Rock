@@ -2,10 +2,12 @@ namespace GREngine.Core.System;
 
 using global::System;
 using global::System.Collections.Generic;
+using global::System.IO;
 using global::System.Linq;
 using global::System.Reflection;
 using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using static GREngine.Debug.Out;
 
 public sealed partial class SceneManager : GameComponent, ISceneControllerService
@@ -18,12 +20,22 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
     private readonly RootNode persistantNode = new();
 
     private SortedSet<Behaviour> activeBehaviours = new SortedSet<Behaviour>();
-    private List<Behaviour> initializationQueue = new List<Behaviour>();
+    private HashSet<Behaviour> initializationSet = new HashSet<Behaviour>();
     private Dictionary<string, HashSet<Node>> nodeTagIndex = new Dictionary<string, HashSet<Node>>();
 
     public SceneManager(Game game) : base(game)
     {
+    }
 
+    public override void Initialize()
+    {
+        // Texture2D liberia = Texture2D.FromStream(this.Game.GraphicsDevice,);
+        // PrintLn(liberia.Bounds.ToString());
+
+        var assembly = typeof(GREngine.Core.System.SceneManager).GetTypeInfo().Assembly;
+        Stream resource = assembly.GetManifestResourceStream("GREngine.Core.System.test.fx");
+
+        base.Initialize();
     }
 
     #region MONOGAME
@@ -48,10 +60,11 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
                 b.OnUpdate(gameTime);
             }
 
-            if (this.initializationQueue.Count != 0)
+            if (this.initializationSet.Count != 0)
             {
+                List<Behaviour> initializationQueue = this.initializationSet.ToList();
                 // calculate load order for each behaviour [REFLECTION USED HERE]
-                this.initializationQueue.ForEach(b =>
+                initializationQueue.ForEach(b =>
                 {
                     IEnumerable<Attribute> attrs = b.GetType().GetTypeInfo().GetCustomAttributes();
 
@@ -62,13 +75,13 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
                 });
 
                 // uses CompareTo function of behaviour, which uses load order
-                this.initializationQueue.Sort();
+                initializationQueue.Sort();
 
                 // Awake functions (in load order)
-                this.initializationQueue.ForEach(b => b.OnAwake());
+                initializationQueue.ForEach(b => b.OnAwake());
 
                 // run start functions for enabled behaviours (in load order)
-                List<Behaviour> enabledBehaviours = this.initializationQueue.FindAll(b => b.Enabled);
+                List<Behaviour> enabledBehaviours = initializationQueue.FindAll(b => b.Enabled);
                 enabledBehaviours.ForEach(b => b.OnStart());
 
                 // Add initialized and started scripts to regular update loop (in load order)
@@ -76,7 +89,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
                 //                    ?? throw new InvalidOperationException("Active behaviour sorting resulted in a null list!");
 
                 enabledBehaviours.ForEach(b => this.activeBehaviours.Add(b));
-                this.initializationQueue.Clear();
+                this.initializationSet.Clear();
 
                 GC.Collect();
             }
@@ -115,6 +128,16 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         return nodeTagIndex[tag];
     }
 
+    public void AddNodeAtPersistent(Node node)
+    {
+        AddNode(node, this.persistantNode);
+    }
+
+    public void AddNodeAtRoot(Node node)
+    {
+        AddNode(node, this.rootNode);
+    }
+
     /// <summary>
     /// If any node behaviours are disabled, they are not initialized
     /// </summary>
@@ -149,7 +172,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         node.behaviours.ForEach(b =>
         {
             b.Node = node;
-            if (b.Enabled) this.initializationQueue.Add(b);
+            if (!b.Initialized) this.initializationSet.Add(b);
         });
     }
 
@@ -201,7 +224,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
 
         behaviour.Node = node;
         node.behaviours.Add(behaviour);
-        if (behaviour.Enabled) this.initializationQueue.Add(behaviour);
+        if (!behaviour.Initialized) this.initializationSet.Add(behaviour);
     }
     public void RemoveBehaviour(Behaviour behaviour)
     {
@@ -235,7 +258,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
             }
             else
             {
-                this.initializationQueue.Add(behaviour);
+                this.initializationSet.Add(behaviour);
             }
         }
         else
@@ -270,7 +293,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         });
     }
 
-    private bool IsDescendedFromRoot(Node node, RootNode parent)
+    private static bool IsDescendedFromRoot(Node node, RootNode parent)
     {
         return GetFirstAncestor(node) == parent;
     }
@@ -399,13 +422,13 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
             // wipe scene data
             this.activeBehaviours.RemoveWhere(b =>
             {
-                if (!this.IsDescendedFromRoot(b.Node, this.rootNode)) return false;
+                if (!IsDescendedFromRoot(b.Node, this.rootNode)) return false;
 
                 this.DeInitBehaviour(b);
                 return true;
             });
 
-            this.initializationQueue.Clear();
+            this.initializationSet.Clear();
             this.nodeTagIndex.Clear();
 
             // unload assets

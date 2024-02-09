@@ -13,4 +13,10 @@
     <ProjectReference Include="..\..\GREngine.Algorithms\GREngine.Algorithms.csproj" />
     <ProjectReference Include="..\..\GREngine.Debug\GREngine.Debug.csproj" />
   </ItemGroup>
+    <ItemGroup>
+        <Content Remove="Content/test.fx" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Content/test.fx" />
+    </ItemGroup>
 </Project>

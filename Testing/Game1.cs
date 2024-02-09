@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Testing;
 
+using GREngine.Core.System;
+using SystemTesting;
+
 public class Game1 : Game
 {
     private GraphicsDeviceManager graphics;
@@ -13,18 +16,26 @@ public class Game1 : Game
     private readonly PebbleRenderer re;
 
 
+    private SceneManager sceneManager;
+
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
+
         re = new PebbleRenderer(this, graphics, 1920, 1080, 1f, 0.5f);
+
+        sceneManager = new SceneManager(this);
+
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        this.Components.Add(sceneManager);
+        this.Services.AddService(typeof(ISceneControllerService), sceneManager);
 
 
         this.Components.Add(re);
@@ -40,15 +51,25 @@ public class Game1 : Game
         re.LoadShaders();   
         //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        Scene myScene = new MyScene();
+        this.sceneManager.AddScene(myScene);
+
+        this.sceneManager.ChangeScene("MyScene");
+
         // TODO: use this.Content to load your game content here
     }
 
+    private bool done = false;
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        if (!done)
+        {
+            sceneManager.DebugPrintGraph();
+            done = true;
+        }
 
         base.Update(gameTime);
     }
