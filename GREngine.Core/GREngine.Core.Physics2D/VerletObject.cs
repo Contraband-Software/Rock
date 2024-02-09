@@ -9,7 +9,7 @@ using GREngine.Core.Physics2D;
 
 namespace GREngine.Core.Physics2D;
 
-public class VerletObject
+public abstract class VerletObject
 {
 
     private Vector2 currentPosition = Vector2.Zero;

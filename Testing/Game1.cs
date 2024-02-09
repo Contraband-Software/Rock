@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Testing;
 
+using System.Diagnostics;
 using GREngine.Core.System;
 using SystemTesting;
 
@@ -24,11 +25,9 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-
-        re = new PebbleRenderer(this, graphics, 1920, 1080, 1f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 1000, 600, 1f, 0.5f);
 
         sceneManager = new SceneManager(this);
-
     }
 
     protected override void Initialize()
@@ -48,7 +47,7 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        re.LoadShaders();   
+        re.LoadShaders();
         //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
         Scene myScene = new MyScene();
@@ -82,6 +81,6 @@ public class Game1 : Game
 
         //base.Draw(gameTime);
 
-        re.Draw(gameTime);  
+        re.Draw(gameTime);
     }
 }
