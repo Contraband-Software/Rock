@@ -122,7 +122,6 @@ public class PolygonToPolygonTestingSet2 : Game
         // TODO: Add your initialization logic here
         Components.Add(collisionSystem);
         Services.AddService<ICollisionSystem>(collisionSystem);
-        collisionSystem.SetPosition(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2));
 
         List<PointF> squarePointFList = new List<PointF>
         {
