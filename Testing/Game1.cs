@@ -4,21 +4,30 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Testing;
 
+using GREngine.Core.System;
+using SystemTesting;
+
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+
+    private SceneManager sceneManager;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        sceneManager = new SceneManager(this);
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        this.Components.Add(sceneManager);
+        this.Services.AddService(typeof(ISceneControllerService), sceneManager);
 
         base.Initialize();
     }
@@ -27,15 +36,25 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        Scene myScene = new MyScene();
+        this.sceneManager.AddScene(myScene);
+
+        this.sceneManager.ChangeScene("MyScene");
+
         // TODO: use this.Content to load your game content here
     }
 
+    private bool done = false;
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        if (!done)
+        {
+            sceneManager.DebugPrintGraph();
+            done = true;
+        }
 
         base.Update(gameTime);
     }

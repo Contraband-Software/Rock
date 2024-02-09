@@ -18,6 +18,8 @@ public interface ISceneControllerService
 
     public Node? FindNodeWithTag(string tag);
     public HashSet<Node> FindNodesWithTag(string tag);
+    public void AddNodeAtPersistent(Node node);
+    public void AddNodeAtRoot(Node node);
 
     public Scene? GetCurrentScene();
     public void AddScene(Scene scene);
