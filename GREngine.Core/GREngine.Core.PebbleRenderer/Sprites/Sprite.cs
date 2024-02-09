@@ -31,10 +31,10 @@ public class Sprite : Behaviour
 
     public int material = 0;
     public int layer = 0;
-    public Sprite(Vector2 position,float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness,int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) {
+    public Sprite(float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness,int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
-        this.position = position;
+        this.position = new Vector2(0);
         this.rotation = rotation;
         this.material = material;
         this.layer = layer; //layer0 = behind everything
@@ -43,7 +43,19 @@ public class Sprite : Behaviour
         this.scale = scale;
         calculateOffset();
         calculateSize();
+    }
+
+    protected override void OnStart()
+    {
         Game.Services.GetService<IPebbleRendererService>().addSprite(this);
+        //base.OnStart();
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        this.position.X = this.Node.GetGlobalPosition().X;
+        this.position.Y = this.Node.GetGlobalPosition().Y;
+        //base.OnUpdate(gameTime);
     }
 
     private void calculateOffset()

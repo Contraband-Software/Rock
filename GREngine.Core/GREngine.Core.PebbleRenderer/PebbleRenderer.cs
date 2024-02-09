@@ -200,10 +200,10 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void LoadShaders()
     {
-        defaultNormalShader = new Shader(Game.Content.Load<Effect>("defaultNormalShader")); // make sure this loads  before anything ++ add error throw
-        defaultDiffuseShader = new Shader(Game.Content.Load<Effect>("defaultDiffuseShader"));
-        pointLightShader = new Shader(Game.Content.Load<Effect>("pointLight"));
-        pointLightShaderShadowed = new Shader(Game.Content.Load<Effect>("pointLightShaderShadowCasting")); //maybe some of these can just be effects not shaders.
+        defaultNormalShader = new Shader(Game.Content.Load<Effect>("Graphics/defaultNormalShader")); // make sure this loads  before anything ++ add error throw
+        defaultDiffuseShader = new Shader(Game.Content.Load<Effect>("Graphics/defaultDiffuseShader"));
+        pointLightShader = new Shader(Game.Content.Load<Effect>("Graphics/pointLight"));
+        pointLightShaderShadowed = new Shader(Game.Content.Load<Effect>("Graphics/pointLightShaderShadowCasting")); //maybe some of these can just be effects not shaders.
 
         materials[0] = new Material(defaultDiffuseShader, defaultNormalShader, null); //default mat
 

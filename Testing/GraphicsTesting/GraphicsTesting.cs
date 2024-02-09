@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Input;
 namespace Testing;
 
 using GREngine.Core.System;
+using System;
+using System.Diagnostics;
 using SystemTesting;
 
 public class GraphicsTesting : Game
@@ -51,10 +53,10 @@ public class GraphicsTesting : Game
         re.LoadShaders();   
         //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        Scene myScene = new MyScene();
+        Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
-
-        this.sceneManager.ChangeScene("MyScene");
+       
+        this.sceneManager.ChangeScene("GraphicsTestScene");
 
         // TODO: use this.Content to load your game content here
     }

@@ -10,32 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
+
 #---------------------------------- Content ---------------------------------#
-
-
-#begin defaultDiffuseShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:defaultDiffuseShader.fx
-
-#begin defaultNormalShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:defaultNormalShader.fx
-
-#begin pointLight.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:pointLight.fx
-
-#begin pointLightShaderShadowCasting.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:pointLightShaderShadowCasting.fx
 
 #begin collision/circle.png
 /importer:TextureImporter
@@ -61,4 +37,63 @@
 /processorParam:TextureFormat=Color
 /build:collision/pixel.png
 
+#begin Graphics/defaultDiffuseShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/defaultDiffuseShader.fx
+
+#begin Graphics/defaultNormalShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/defaultNormalShader.fx
+
+#begin Graphics/pointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/pointLight.fx
+
+#begin Graphics/pointLightShaderShadowCasting.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/pointLightShaderShadowCasting.fx
+
+#begin Graphics/space-cruiser-panels2_albedo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/space-cruiser-panels2_albedo.png
+
+#begin Graphics/space-cruiser-panels2_normal-ogl.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/space-cruiser-panels2_normal-ogl.png
+
+#begin Graphics/space-cruiser-panels2_roughness.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/space-cruiser-panels2_roughness.png
 

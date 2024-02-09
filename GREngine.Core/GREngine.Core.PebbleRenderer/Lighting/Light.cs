@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using GREngine.Core.System;
 
+using sd = global::System.Diagnostics;
+
 namespace GREngine.Core.PebbleRenderer;
 
 public class Light : Behaviour
@@ -16,16 +18,27 @@ public class Light : Behaviour
     private Vector3 coneEdges;// t1 & t2 are the angles of the egdes of the light cone
     private float rotation = 0;
     public bool isShadowCasting;
-    public Light(Vector2 position, Vector3 color,bool isShadowCasting = false ,float rotation = 0,float arc = 1) { //anything else?
-        this.position = position;
+    public Light(Vector3 color,bool isShadowCasting = false ,float rotation = 0,float arc = 1) { //anything else?
+        this.position = new Vector2(0);
         this.color = color;
         this.rotation = rotation;
         this.isShadowCasting = isShadowCasting;
         this.coneEdges.Z = arc;
         calculateThetas();
 
+    }
+
+    protected override void OnStart()
+    {
         Game.Services.GetService<IPebbleRendererService>().addLight(this);
-    }  
+    }
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        this.position.X = this.Node.GetGlobalPosition().X;
+        this.position.Y = this.Node.GetGlobalPosition().Y;
+
+        sd.Debug.WriteLine(this.Node.GetGlobalPosition().ToString());
+    }
 
     public void setRotation(float rotation)
     {
