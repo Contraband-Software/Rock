@@ -14,13 +14,10 @@ namespace GREngine.Core.Physics2D;
 public interface ICollisionSystem
 {
 }
-//This should be a singleton service
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
     HashSet<VerletObject> verletObjects = new HashSet<VerletObject>();
     Vector2 gravity = new Vector2(0, 1000f);
-    Vector2 position = new Vector2(300, 0);
-    float radius = 300f;
 
     int subSteps = 1;
     public CollisionSystem(Game game) : base(game){}
@@ -31,7 +28,6 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         for (int i = 0; i < subSteps; i++)
         {
             applyGravity();
-            applyConstraint();
             SolveCollisions();
             updatePositions(subDt);
         }
@@ -52,20 +48,6 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         }
     }
 
-    void applyConstraint()
-    {
-        foreach (CircleCollider obj in verletObjects.OfType<CircleCollider>())
-        {
-            Vector2 to_obj = obj.GetPosition() - position;
-            float dist = to_obj.Length();
-            if (dist > (radius - obj.GetRadius()))
-            {
-                Vector2 normalized = to_obj / dist;
-                obj.SetPosition(position + normalized * (radius - obj.GetRadius()));
-            }
-        }
-    }
-
     void SolveCollisions()
     {
         //discrete collision calculation
@@ -77,6 +59,8 @@ public class CollisionSystem : GameComponent, ICollisionSystem
 
             obj1.SetAABBOverlapping(false);
             obj1.CalculateAABB();
+
+            List<VerletObject> aabbOverlapObjects = new List<VerletObject>();
             foreach (VerletObject obj2 in verletObjects)
             {
                 obj2.CalculateAABB();
@@ -84,8 +68,13 @@ public class CollisionSystem : GameComponent, ICollisionSystem
                 {
                     continue;
                 }
-                obj1.SolveCollision(obj2);
+                if(AABBOverlap(obj1.GetAABB(), obj2.GetAABB()))
+                {
+                    aabbOverlapObjects.Add(obj2);
+                }
             }
+
+            obj1.SolveCollisions(aabbOverlapObjects);
         }
     }
 
@@ -249,18 +238,4 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         verletObjects.Add(obj);
     }
     public HashSet<VerletObject> GetVerletObjects() { return verletObjects; }
-
-    public void SetPosition(Vector2 position)
-    {
-        this.position = position;
-    }
-
-    public Vector2 GetPosition()
-    {
-        return position;
-    }
-    public float GetRadius()
-    {
-        return radius;
-    }
 }

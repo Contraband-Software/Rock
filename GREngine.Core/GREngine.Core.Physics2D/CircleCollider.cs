@@ -22,7 +22,14 @@ public class CircleCollider : VerletObject
     /// Circle Colliding potentially with another circle
     /// </summary>
     /// <param name="obj2"></param>
-    public override void SolveCollision(CircleCollider obj2)
+    ///
+
+    public override void SolveCollision(PolygonCollider other, Vector2 velocity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void SolveCollision(CircleCollider obj2, Vector2 velocity)
     {
         Vector2 collisionAxis = GetPosition() - obj2.GetPosition();
         float dist = collisionAxis.Length();

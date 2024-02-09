@@ -72,21 +72,13 @@ public class PolygonCollider : VerletObject
     }
 
 
-
     /// <summary>
     /// First checks if AABBs are overlapping before proceeding
     /// Then will do some shit idk and resolve the collision
     /// </summary>
     /// <param name="other"></param>
-    public override void SolveCollision(PolygonCollider other)
+    public override void SolveCollision(PolygonCollider other, Vector2 velocity)
     {
-        if (!CollisionSystem.AABBOverlap(GetAABB(), other.GetAABB()))
-        {
-            return;
-        }
-        SetAABBOverlapping(true);
-        other.SetAABBOverlapping(true);
-
         //cache successful collision vectors
         List<Vector2> collisionVectors = new List<Vector2>();
 
@@ -100,8 +92,11 @@ public class PolygonCollider : VerletObject
         }
 
         //get motion and reverse motion vectors
-        Vector2 velocityVector = new Vector2(GetPosition().X - GetOldPosition().X, GetPosition().Y - GetOldPosition().Y);
-        velocityVector.Normalize();
+        Vector2 velocityVector = velocity;
+        if(velocityVector != Vector2.Zero)
+        {
+            velocityVector.Normalize();
+        }
         AABB combinedAABB = CollisionSystem.GetCombinedAABBRegion(GetAABB(), other.GetAABB());
         float vectorScale = new Vector2(combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
         Vector2 forwardVector = velocityVector * vectorScale;
@@ -222,6 +217,7 @@ public class PolygonCollider : VerletObject
                 {
                     continue;
                 }
+
                 //otherwise, find vector from vertice to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
@@ -248,6 +244,10 @@ public class PolygonCollider : VerletObject
             ResolveCollision(other, vectorWithGreatestMagnitude);
         }
         else { return; }
+    }
+    public override void SolveCollision(CircleCollider other, Vector2 velocity)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
