@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using GREngine.Core.Physics2D;
+using System.Collections.Generic;
 
 namespace GREngine.Core.Physics2D;
 
-public class VerletObject
+public abstract class VerletObject
 {
 
     private Vector2 currentPosition = Vector2.Zero;
@@ -79,27 +80,37 @@ public class VerletObject
         return rotation;
     }
 
-    public void SolveCollision(VerletObject other)
+    public void SolveCollision(VerletObject other, Vector2 velocity)
     {
         if (other is CircleCollider circCol)
         {
-            SolveCollision(circCol);
+            SolveCollision(circCol, velocity);
         }
         else if (other is PolygonCollider polyCol)
         {
-            SolveCollision(polyCol);
+            SolveCollision(polyCol, velocity);
         }
     }
 
-    protected AABB GetAABB() { return aabb; }
+    public AABB GetAABB() { return aabb; }
     protected void SetAABB(AABB aabb) { this.aabb = aabb; }
     public void SetStatic(bool b) { isStatic = b; }
     public bool IsStatic() { return isStatic; }
     public bool IsAABBOverlapping() { return aabbOverlapping; }
     public void SetAABBOverlapping(bool b) { aabbOverlapping = b; }
 
-    public virtual void SolveCollision(CircleCollider other) { }
-    public virtual void SolveCollision(PolygonCollider other) { }
+    public void SolveCollisions(List<VerletObject> others)
+    {
+        SetAABBOverlapping(true);
+        Vector2 velocityVector = new Vector2(GetPosition().X - GetOldPosition().X, GetPosition().Y - GetOldPosition().Y);
+        foreach (VerletObject other in others)
+        {
+            other.SetAABBOverlapping(true);
+            SolveCollision(other, velocityVector);
+        }
+    }
+    public abstract void SolveCollision(PolygonCollider other, Vector2 velocity);
+    public abstract void SolveCollision(CircleCollider other, Vector2 velocity);
 
     /// <summary>
     /// Each subclass will have its own method of calculating its AABB

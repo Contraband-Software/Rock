@@ -40,14 +40,18 @@ public class PolygonToPolygonTestingSet4 : Game
     VerletObject cola7_3;
     VerletObject cola8_1;
     VerletObject cola8_2;
+    VerletObject cola8_3;
     VerletObject cola9_1;
     VerletObject cola9_2;
+    VerletObject cola9_3;
     #endregion
     #region B_TESTING_VARS
     VerletObject colb1_1;
     VerletObject colb1_2;
+    VerletObject colb1_3;
     VerletObject colb2_1;
     VerletObject colb2_2;
+    VerletObject colb2_3;
     VerletObject colb3_1;
     VerletObject colb3_2;
     VerletObject colb4_1;
@@ -126,7 +130,6 @@ public class PolygonToPolygonTestingSet4 : Game
         // TODO: Add your initialization logic here
         Components.Add(collisionSystem);
         Services.AddService<ICollisionSystem>(collisionSystem);
-        collisionSystem.SetPosition(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2));
 
         List<PointF> squarePointFList = new List<PointF>
         {
@@ -295,31 +298,37 @@ public class PolygonToPolygonTestingSet4 : Game
 
         cola8_1 = new PolygonCollider(new Vector2(1500, 100), squarePointFList);
         collisionSystem.AddCollisionObject(cola8_1);
-        cola8_2 = new PolygonCollider(new Vector2(1560, 160), squarePointFList);
+        cola8_2 = new PolygonCollider(new Vector2(1500, 140), squarePointFList);
         collisionSystem.AddCollisionObject(cola8_2);
+        cola8_3 = new PolygonCollider(new Vector2(1560, 160), squarePointFList);
+        collisionSystem.AddCollisionObject(cola8_3);
         cola8_1.SetStatic(true);
-        //
+
         cola9_1 = new PolygonCollider(new Vector2(1700, 100), squarePointFList);
         collisionSystem.AddCollisionObject(cola9_1);
-        cola9_2 = new PolygonCollider(new Vector2(1760, 60), squarePointFList);
+        cola9_2 = new PolygonCollider(new Vector2(1740, 140), squarePointFList);
         collisionSystem.AddCollisionObject(cola9_2);
+        cola9_3 = new PolygonCollider(new Vector2(1760, 90), squarePointFList);
+        collisionSystem.AddCollisionObject(cola9_3);
         cola9_1.SetStatic(true);
-        //
+        cola9_2.SetStatic(true);
+
+
         #endregion
         #region B_TESTING_INIT
         colb1_1 = new PolygonCollider(new Vector2(100, 400), squarePointFList);
-        colb1_1.SetRotation(45f);
         collisionSystem.AddCollisionObject(colb1_1);
-        colb1_2 = new PolygonCollider(new Vector2(100, 460), squarePointFList);
+        colb1_2 = new PolygonCollider(new Vector2(140, 440), squarePointFList);
         collisionSystem.AddCollisionObject(colb1_2);
-        colb1_1.SetStatic(true);
+        colb1_3 = new PolygonCollider(new Vector2(160, 390), squarePointFList);
+        collisionSystem.AddCollisionObject(colb1_3);
 
         colb2_1 = new PolygonCollider(new Vector2(300, 400), squarePointFList);
-        colb2_1.SetRotation(45f);
         collisionSystem.AddCollisionObject(colb2_1);
-        colb2_2 = new PolygonCollider(new Vector2(240, 460), squarePointFList);
+        colb2_2 = new PolygonCollider(new Vector2(340, 440), squarePointFList);
         collisionSystem.AddCollisionObject(colb2_2);
-        colb2_1.SetStatic(true);
+        colb2_3 = new PolygonCollider(new Vector2(360, 380), squarePointFList);
+        collisionSystem.AddCollisionObject(colb2_3);
 
         colb3_1 = new PolygonCollider(new Vector2(500, 400), squarePointFList);
         colb3_1.SetRotation(45f);
@@ -545,12 +554,16 @@ public class PolygonToPolygonTestingSet4 : Game
         cola6_1.SetVelocity(new Vector2(-0.2f, 0f));
         cola7_1.SetVelocity(new Vector2(-0.2f, -0.1f));
 
-        cola8_2.SetVelocity(new Vector2(-0.2f, -0.2f));
-        cola9_2.SetVelocity(new Vector2(-0.2f, 0.2f)); //
+        cola8_3.SetVelocity(new Vector2(-0.2f, -0.2f));
+
+        cola9_3.SetVelocity(new Vector2(-0.2f, 0.1f));
+
         #endregion
         #region B_TESTING
-        colb1_2.SetVelocity(new Vector2(0, -0.2f));
-        colb2_2.SetVelocity(new Vector2(0.2f, -0.2f));
+        colb1_3.SetVelocity(new Vector2(-0.2f, 0.2f));
+
+        colb2_3.SetVelocity(new Vector2(-0.2f, 0.2f));
+
         colb3_2.SetVelocity(new Vector2(0.2f, 0));
         colb4_2.SetVelocity(new Vector2(0.2f, 0.2f));
         colb5_2.SetVelocity(new Vector2(0, 0.2f));

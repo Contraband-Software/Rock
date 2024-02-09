@@ -124,8 +124,6 @@ public class PolygonToPolygonTestingSet1 : Game
         Components.Add(collisionSystem);
         Services.AddService<ICollisionSystem>(collisionSystem);
 
-        collisionSystem.SetPosition(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2));
-
         List<PointF> squarePointFList = new List<PointF>
         {
             new PointF(-20, -20),

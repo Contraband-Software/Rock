@@ -5,12 +5,13 @@ using global::System.Collections.Generic;
 using global::System.IO;
 using global::System.Linq;
 using global::System.Reflection;
+using global::System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using static GREngine.Debug.Out;
 
-public sealed partial class SceneManager : GameComponent, ISceneControllerService
+public sealed class SceneManager : GameComponent, ISceneControllerService
 {
     private readonly List<Scene> scenes = new();
     private Scene? activeScene;
@@ -29,12 +30,6 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
 
     public override void Initialize()
     {
-        // Texture2D liberia = Texture2D.FromStream(this.Game.GraphicsDevice,);
-        // PrintLn(liberia.Bounds.ToString());
-
-        var assembly = typeof(GREngine.Core.System.SceneManager).GetTypeInfo().Assembly;
-        Stream resource = assembly.GetManifestResourceStream("GREngine.Core.System.test.fx");
-
         base.Initialize();
     }
 

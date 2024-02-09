@@ -16,7 +16,4 @@
     <ItemGroup>
         <Content Remove="Content/test.fx" />
     </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Content/test.fx" />
-    </ItemGroup>
 </Project>
