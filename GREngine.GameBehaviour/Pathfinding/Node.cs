@@ -15,4 +15,16 @@ internal class Node
     internal float H { get; private set; }
     internal float F { get { return this.G + this.H; } }
     internal NodeState State { get; set; } = NodeState.Untested;
+
+    public Node(Point location, bool walkable)
+    {
+        Location = location;
+        IsWalkable = walkable;
+    }
+
+    public void InitCosts(Point start, Point end)
+    {
+        G = NodeNetwork.GetTraversalCost(Location, start);
+        H = NodeNetwork.GetTraversalCost(Location, end);
+    }
 }

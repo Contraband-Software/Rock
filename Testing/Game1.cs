@@ -41,21 +41,16 @@ public class Game1 : Game
         this.Services.AddService(typeof(IPebbleRendererService), re);
 
         base.Initialize();
-
-
     }
 
     protected override void LoadContent()
     {
         re.LoadShaders();
-        //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
         Scene myScene = new MyScene();
         this.sceneManager.AddScene(myScene);
 
         this.sceneManager.ChangeScene("MyScene");
-
-        // TODO: use this.Content to load your game content here
     }
 
     private bool done = false;

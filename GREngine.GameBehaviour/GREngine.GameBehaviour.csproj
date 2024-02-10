@@ -9,6 +9,7 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\GREngine.Core\GREngine.Core.PebbleRenderer\GREngine.Core.PebbleRenderer.csproj" />
       <ProjectReference Include="..\GREngine.Core\GREngine.Core.System\GREngine.Core.System.csproj" />
     </ItemGroup>
 </Project>

@@ -22,7 +22,9 @@ public interface ICollisionSystem
     public PointF LineIntersectionPoint(Line l1, Line l2);
     public bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2);
     public void AddCollisionObject(Collider obj);
+    public void RemoveCollisionObject(Collider obj);
     public HashSet<Collider> GetColliderObjects();
+    public bool PointIsCollidingWithLayer(PointF point, string layer);
 }
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
@@ -249,5 +251,18 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     {
         verletObjects.Add(obj);
     }
+    public void RemoveCollisionObject(Collider obj) { verletObjects.Remove(obj);}
     public HashSet<Collider> GetColliderObjects() { return verletObjects; }
+
+    public bool PointIsCollidingWithLayer(PointF point, string layer)
+    {
+        foreach(Collider obj in verletObjects)
+        {
+            if(obj.GetLayer() == layer)
+            {
+                if (obj.PointInsideCollider(point)) { return true; }
+            }
+        }
+        return false;
+    }
 }
