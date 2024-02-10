@@ -271,14 +271,22 @@ public class PolygonCollider : Collider
     /// <param name="other"></param>
     private void ResolveCollision(PolygonCollider other, Vector2 collisionVector)
     {
+        FireCorrectEvent(collisionVector, other);
+
         Vector2 currentPos = GetGlobalPosition();
         Vector2 otherCurrentPos = other.GetGlobalPosition();
         Vector2 thisColliderResolution = new Vector2(collisionVector.X * -1, collisionVector.Y * -1);
-        if (other.IsStatic())
+        if (IsTrigger() || other.IsTrigger())
+        {
+            return;
+        }
+        //normal to static, resolve only normal
+        else if (other.IsStatic())
         {
             Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             SetPosition(resolvedPosition);
         }
+        //Normal to normal, resolve both
         else
         {
             float thisColliderResolutionScale = thisColliderResolution.Length() * 0.5f;

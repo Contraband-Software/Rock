@@ -63,7 +63,7 @@ public class GeneralCollisionTesting : Scene
         CircleCollider circCol1 = new CircleCollider(50f);
         sceneManager.AddBehaviour(node3, circCol1);
 
-        sceneManager.QueueSceneAction(() =>
+        sceneManager.QueueSceneAction((_) =>
         {
             col1.SetRotation(45f);
             col1.SetVelocity(new Vector2(0.2f, 0f));
