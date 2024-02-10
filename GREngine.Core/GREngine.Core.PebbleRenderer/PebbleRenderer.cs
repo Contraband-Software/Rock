@@ -31,6 +31,8 @@ public interface IPebbleRendererService
 
     public Vector2 getCameraPosition();
 
+    public void lookAt(Vector2 position);
+
     public void addMaterial(Material material);
 
     public void drawDebug(DebugDrawable drawable);
