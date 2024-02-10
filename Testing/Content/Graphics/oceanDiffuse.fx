@@ -101,7 +101,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     
     float2 lightmapUV = float2(input.Position.x / width, input.Position.y / height);
     //float3 lightColor = tex2D(lightMap, lightmapUV).rgb + ambientColor; //baked in ambient todo make it a parameter
-    float3 lightColor = tex2D(lightMap, lightmapUV).rgb*1 + ambientColor +scatter(lightmapUV)*0.2;
+    float3 lightColor = tex2D(lightMap, lightmapUV).rgb*0.2 + ambientColor*0.8 +scatter(lightmapUV)*0.2;
     float2 uv = input.TextureCoordinates * scale;
 
     //float hlUVNoise = tex2D(noiseMap, uv *scale/8).r;
