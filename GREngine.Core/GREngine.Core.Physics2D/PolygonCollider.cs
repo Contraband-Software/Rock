@@ -75,7 +75,6 @@ public class PolygonCollider : Collider
         SetAABB(new AABB(min, max));
     }
 
-
     /// <summary>
     /// First checks if AABBs are overlapping before proceeding
     /// Then will do some shit idk and resolve the collision
@@ -251,7 +250,26 @@ public class PolygonCollider : Collider
     }
     public override void SolveCollision(CircleCollider other, Vector2 velocity)
     {
-        throw new NotImplementedException();
+        //cache successful collision vectors
+        List<Vector2> collisionVectors = new List<Vector2>();
+
+        //calculate overlap region AABB
+        AABB overlapRegion = collisionSystem.GetAABBOverlapRegion(GetAABB(), other.GetAABB());
+
+        //if overlapregion size is like (0,x), (0,0), (x,0) then its not a collision
+        if (overlapRegion.size().X == 0 || overlapRegion.size().Y == 0)
+        {
+            return;
+        }
+
+        //get motion and reverse motion vectors
+        Vector2 velocityVector = velocity;
+        if (velocityVector != Vector2.Zero)
+        {
+            velocityVector.Normalize();
+        }
+
+
     }
 
     /// <summary>

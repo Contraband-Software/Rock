@@ -49,8 +49,8 @@ public class CircleCollider : Collider
 
     public override bool PointInsideCollider(PointF point)
     {
-        float distToCentreSqrd = (GetGlobalPosition() - new Vector2(point.X, point.Y)).LengthSquared();
-        return distToCentreSqrd < (radius * radius);
+        float distToCentreSqrd = (GetGlobalPosition() - new Vector2(point.X, point.Y)).Length();
+        return distToCentreSqrd < radius;
     }
 
     public float GetRadius()
