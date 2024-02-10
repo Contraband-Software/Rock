@@ -25,6 +25,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     private HashSet<Behaviour> initializationSet = new HashSet<Behaviour>();
     private Dictionary<string, HashSet<Node>> nodeTagIndex = new Dictionary<string, HashSet<Node>>();
 
+    private HashSet<Action> lateUpdateQueue = new HashSet<Action>();
+
     public SceneManager(Game game) : base(game)
     {
     }
@@ -34,13 +36,13 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         base.Initialize();
     }
 
-    private class LoadOrderComparison : IComparer<Behaviour>
-    {
-        public int Compare(Behaviour a, Behaviour b)
-        {
-            return a.loadOrder.CompareTo(b.loadOrder);
-        }
-    }
+    // private class LoadOrderComparison : IComparer<Behaviour>
+    // {
+    //     public int Compare(Behaviour a, Behaviour b)
+    //     {
+    //         return a.loadOrder.CompareTo(b.loadOrder);
+    //     }
+    // }
 
     #region MONOGAME
     public override void Update(GameTime gameTime)
@@ -97,6 +99,12 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
                 GC.Collect();
             }
+
+            if (this.lateUpdateQueue.Count > 0)
+            {
+                this.lateUpdateQueue.ToList().ForEach(a => a.Invoke());
+                this.lateUpdateQueue.Clear();
+            }
         }
 
         base.Update(gameTime);
@@ -104,6 +112,11 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     #endregion
 
     #region CURRENT_SCENE_API
+    public void QueueSceneAction(Action action)
+    {
+        this.lateUpdateQueue.Add(action);
+    }
+
     public Node? FindNodeWithTag(string tag)
     {
         #if DEBUG
