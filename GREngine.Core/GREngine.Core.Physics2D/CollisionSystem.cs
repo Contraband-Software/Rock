@@ -178,7 +178,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <returns></returns>
     public bool LinesCanIntersect(Line l1, Line l2)
     {
-        return l1.m != l2.m;
+        return (l1.a == 1 && l2.a == 1 && l1.m != l2.m) || (l1.a != l2.a);
     }
 
     /// <summary>

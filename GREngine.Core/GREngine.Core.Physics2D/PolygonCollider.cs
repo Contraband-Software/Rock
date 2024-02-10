@@ -11,6 +11,8 @@ using Color = Microsoft.Xna.Framework.Color;
 using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using GREngine.Core.PebbleRenderer;
+using GREngine.Debug;
+using System.Net.NetworkInformation;
 
 namespace GREngine.Core.Physics2D;
 
@@ -296,7 +298,61 @@ public class PolygonCollider : Collider
 
     public override bool PointInsideCollider(PointF point)
     {
-        throw new NotImplementedException();
+
+        CalculateAABB();
+        AABB colliderAABB = GetAABB();
+        float aabbWidth = colliderAABB.max.X - colliderAABB.min.X;
+        float aabbHeight = colliderAABB.max.Y - colliderAABB.min.Y;
+
+        //If point is not the AABB, it most certainly isnt in the collider
+        if (!collisionSystem.PointIsInAABB(point, colliderAABB))
+        {
+            return false;
+        }
+
+        List<Vector2> vectors = new List<Vector2> {
+            new Vector2(0, aabbHeight),
+            new Vector2(0, -aabbHeight),
+            new Vector2(aabbWidth, 0),
+            new Vector2(-aabbWidth, 0),
+        };
+        List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
+
+        int hitCount = 0;
+        //for all lines in our collider:
+        foreach (Vector2 v in vectors)
+        {
+            PointF a2 = new PointF(point.X + v.X, point.Y + v.Y);
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                PointF b1 = vertices[i];
+                PointF b2 = i == vertices.Count - 1 ? vertices[0] : vertices[i + 1];
+                //check if this line equation intersects our collider line equation
+                if (!collisionSystem.LinesSegmentsOverlap(point, a2, b1, b2))
+                {
+                    continue;
+                }
+                Line l1 = new Line(point, a2);
+                Line l2 = new Line(b1, b2);
+                if (!collisionSystem.LinesCanIntersect(l1, l2))
+                {
+                    continue;
+                }
+                //if it does, find where
+                PointF intersectionPoint = collisionSystem.LineIntersectionPoint(l1, l2);
+                //reject it if not in bounds,
+                if (!collisionSystem.IntersectionIsWithinLineSegments(intersectionPoint, point, a2, b1, b2))
+                {
+                    continue;
+                }
+
+                //otherwise, this point + this direction has intersected the shape somewhere
+                hitCount++;
+                break;
+            }
+        }
+        return hitCount == 4;
+        
     }
 
     /// <summary>

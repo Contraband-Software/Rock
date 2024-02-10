@@ -49,18 +49,12 @@ public class GeneralCollisionTesting : Scene
         //Collider object 2
         GenericNode node2 = new GenericNode();
 
-        node2.SetLocalPosition(new Vector2(160f, 100f));
+        node2.SetLocalPosition(new Vector2(200f, 100f));
         sceneManager.AddNodeAtRoot(node2);
 
         PolygonCollider col2 = new PolygonCollider(squarePointFList);
         collisionSystem.AddCollisionObject(col2);
         sceneManager.AddBehaviour(node2, col2);
-
-        sceneManager.QueueSceneAction(() =>
-        {
-            col1.SetVelocity(new Vector2(0.2f, 0f));
-            col2.SetVelocity(new Vector2(-0.2f, 0f));
-        });
 
         //Circle collider object 1
         GenericNode node3 = new GenericNode();
@@ -68,6 +62,13 @@ public class GeneralCollisionTesting : Scene
         sceneManager.AddNodeAtRoot(node3);
         CircleCollider circCol1 = new CircleCollider(50f);
         sceneManager.AddBehaviour(node3, circCol1);
+
+        sceneManager.QueueSceneAction(() =>
+        {
+            col1.SetRotation(45f);
+            col1.SetVelocity(new Vector2(0.2f, 0f));
+            col2.SetVelocity(new Vector2(-0.2f, 0f));
+        });
     }
 }
 
