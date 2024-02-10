@@ -32,11 +32,18 @@ public class CircleCollider : Collider
     {
         this.radius = radius;
     }
+    public CircleCollider(float radius, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset:offset)
+    {
+        this.radius = radius;
+    }
+    public CircleCollider(float radius, Vector2 offset, bool debugged = false) : base(debug: debugged, offset: offset)
+    {
+        this.radius = radius;
+    }
 
     public override void DrawDebug()
     {
-        Vector2 pos = new Vector2();
-        Node.GetGlobalPosition().Deconstruct(out pos.X, out pos.Y, out _);
+        Vector2 pos = GetGlobalColliderPosition();
         Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(pos, this.GetRadius(), Color.Lime));
     }
 
@@ -53,7 +60,7 @@ public class CircleCollider : Collider
 
     public override void SolveCollision(CircleCollider obj2, Vector2 velocity)
     {
-        Vector2 collisionAxis = GetGlobalPosition() - obj2.GetGlobalPosition();
+        Vector2 collisionAxis = GetGlobalColliderPosition() - obj2.GetGlobalColliderPosition();
         float dist = collisionAxis.Length();
         float minDist = GetRadius() + obj2.GetRadius();
         if (dist < minDist)
@@ -62,14 +69,14 @@ public class CircleCollider : Collider
 
             Vector2 n = collisionAxis / dist;
             float delta = minDist - dist;
-            SetPosition(GetPosition() + 0.5f * n * delta);
-            obj2.SetPosition(obj2.GetPosition() - 0.5f * n * delta);
+            SetNodePosition(GetLocalNodePosition() + 0.5f * n * delta);
+            obj2.SetNodePosition(obj2.GetLocalNodePosition() - 0.5f * n * delta);
         }
     }
 
     public override bool PointInsideCollider(PointF point)
     {
-        float distToCentreSqrd = (GetGlobalPosition() - new Vector2(point.X, point.Y)).LengthSquared();
+        float distToCentreSqrd = (GetGlobalColliderPosition() - new Vector2(point.X, point.Y)).LengthSquared();
         return distToCentreSqrd < (radius * radius);
     }
 
