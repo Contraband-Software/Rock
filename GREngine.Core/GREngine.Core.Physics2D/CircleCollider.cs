@@ -38,6 +38,8 @@ public class CircleCollider : Collider
         float minDist = GetRadius() + obj2.GetRadius();
         if (dist < minDist)
         {
+            FireCorrectEvent(collisionAxis, obj2);
+
             Vector2 n = collisionAxis / dist;
             float delta = minDist - dist;
             SetPosition(GetPosition() + 0.5f * n * delta);

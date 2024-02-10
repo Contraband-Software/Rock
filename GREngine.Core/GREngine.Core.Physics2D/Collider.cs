@@ -27,9 +27,12 @@ public abstract class Collider : Behaviour
     private bool isStatic = false;
     private bool isTrigger = false;
     private string collisionLayer = "default";
-    public Collider()
-    {
-    }
+
+    public delegate void TriggerEvent(Collider collidedWith);
+    public event TriggerEvent? OnTriggerEnter;
+    public delegate void CollisionEvent(Collider collidedWith);
+    public event CollisionEvent? OnCollisionEnter;
+    public Collider() {}
 
     protected override void OnAwake()
     {
@@ -156,4 +159,42 @@ public abstract class Collider : Behaviour
     /// (eg, draw the collider outline)
     /// </summary>
     public virtual void DrawDebug() { }
+
+    protected void FireCorrectEvent(Vector2 collisionVector, Collider other)
+    {
+        if(collisionVector == Vector2.Zero)
+        {
+            return;
+        }
+        if (IsTrigger() || other.IsTrigger())
+        {
+            FireTriggerEnter(collisionVector, other);
+            other.FireTriggerEnter(collisionVector, this);
+        }
+        else if (other.IsStatic())
+        {
+            FireCollisionEnter(collisionVector, other);
+            other.FireCollisionEnter(collisionVector, this);
+        }
+        else
+        {
+            FireCollisionEnter(collisionVector, other);
+            other.FireCollisionEnter(collisionVector, this);
+        }
+    }
+
+    protected void FireTriggerEnter(Vector2 collisionVector, Collider other)
+    {
+        if(collisionVector != Vector2.Zero)
+        {
+            this.OnTriggerEnter?.Invoke(other);
+        }
+    }
+    protected void FireCollisionEnter(Vector2 collisionVector, Collider other)
+    {
+        if (collisionVector != Vector2.Zero)
+        {
+            this.OnCollisionEnter?.Invoke(other);
+        }
+    }
 }
