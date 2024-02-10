@@ -32,11 +32,8 @@ public class GraphicsTestScene : Scene
 
         Light lightRenderer = new Light(new Vector3(1000000, 100000, 100000), true, 1f, 0.9f);
 
-
-
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(testObject, spriteRenderer);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(light, lightRenderer);
-
 
         this.Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(root);
         this.Game.Services.GetService<ISceneControllerService>().AddNode(testObject, root);

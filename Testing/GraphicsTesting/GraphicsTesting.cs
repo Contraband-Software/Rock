@@ -39,13 +39,10 @@ public class GraphicsTesting : Game
         this.Components.Add(sceneManager);
         this.Services.AddService(typeof(ISceneControllerService), sceneManager);
 
-
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
 
         base.Initialize();
-
-
     }
 
     protected override void LoadContent()
@@ -56,7 +53,7 @@ public class GraphicsTesting : Game
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
-       
+
         this.sceneManager.ChangeScene("GraphicsTestScene");
 
         // TODO: use this.Content to load your game content here
@@ -70,9 +67,11 @@ public class GraphicsTesting : Game
 
         if (!done)
         {
-            sceneManager.DebugPrintGraph();
+            // sceneManager.DebugPrintGraph();
             done = true;
         }
+
+        // sceneManager.DebugPrintGraph();
 
         base.Update(gameTime);
     }
@@ -85,6 +84,6 @@ public class GraphicsTesting : Game
 
         //base.Draw(gameTime);
 
-        re.Draw(gameTime);  
+        re.Draw(gameTime);
     }
 }

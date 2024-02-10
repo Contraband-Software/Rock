@@ -1,5 +1,6 @@
 namespace GREngine.Core.System;
 
+using Debug;
 using global::System;
 using global::System.Collections.Generic;
 using global::System.IO;
@@ -31,6 +32,14 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     public override void Initialize()
     {
         base.Initialize();
+    }
+
+    private class LoadOrderComparison : IComparer<Behaviour>
+    {
+        public int Compare(Behaviour a, Behaviour b)
+        {
+            return a.loadOrder.CompareTo(b.loadOrder);
+        }
     }
 
     #region MONOGAME
@@ -451,7 +460,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     /// </summary>
     public void DebugPrintGraph()
     {
-        string rootName = "SceneController";
+        string rootName = "<SceneController>";
         PrintLn(rootName.PadLeft(POSITION_PADDING + rootName.Length + "    ".Length));
         this.PrintChildren(this.rootNode, 0);
         this.PrintChildren(this.persistantNode, 0);
@@ -470,12 +479,16 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
         string components = "";
         node.GetAllBehaviours().ToList().ForEach(c => { components += c.GetType().Name + ":" + c.Name + ", "; });
+
+        string tags = "";
+        node.Tags.ToList().ForEach(c => { tags += c + ","; });
+
         Vector3 position = node.GetGlobalPosition();
         string format = "{0,10:####0.000}";
         PrintLn(
             "[" + String.Format(format, position.X) + ", " + String.Format(format, position.Y) + ", " + String.Format(format, position.Z) + "]" +
             space +
-            node.GetType().Name + ": '" + node.Name + "' -> [" + components + "]"
+            node.GetType().Name + ": '" + node.Name + "' -> [" + components + "]" + " <" + tags + ">"
         );
 
         IEnumerable<Node> g = node.GetChildren();
