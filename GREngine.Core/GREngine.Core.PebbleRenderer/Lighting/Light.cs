@@ -39,7 +39,7 @@ public class Light : Behaviour
         this.position.X = this.Node.GetGlobalPosition().X;
         this.position.Y = this.Node.GetGlobalPosition().Y;
 
-        sd.Debug.WriteLine(this.Node.GetGlobalPosition().ToString());
+        //Out.Debug.WriteLine(this.Node.GetGlobalPosition().ToString());
     }
 
     public void setRotation(float rotation)
