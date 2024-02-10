@@ -10,6 +10,7 @@ public interface ISceneControllerService
     public RootNode GetRootNode();
     public RootNode GetPersistentNode();
 
+    public void QueueSceneAction(Action action);
     public void AddBehaviour(Node node, Behaviour behaviour);
     public void RemoveBehaviour(Behaviour behaviour);
     public void RemoveBehavioursWithTag(Node node, string tag);
