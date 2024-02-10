@@ -226,7 +226,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void lookAt(Vector2 position)
     {
-        this.cameraPosition = position - new Vector2(renderWidth,renderHeight);
+        this.cameraPosition = position - new Vector2(REFERENCE_WIDTH/2,REFERENCE_HEIGHT/2);
     }
     public Vector2 getCameraPosition()
     {
@@ -405,7 +405,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         }
         spriteBatch.End();
 
-        renderDebugShapes(null, view);
+        renderDebugShapes(null, view * Matrix.CreateScale(1/scaleFactor));
     }
 
     private void setEngineShaderParams(Effect effect)
@@ -537,14 +537,14 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             switch (drawable.shape)
             {
                 case DebugShape.LINE:
-                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,2);
+                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,4);
                     break;
 
                 case DebugShape.RECTANGLE:
-                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,2 );
+                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,4 );
                     break;
                 case DebugShape.CIRCLE:
-                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,2);
+                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,4);
                     break;
             }
         }
