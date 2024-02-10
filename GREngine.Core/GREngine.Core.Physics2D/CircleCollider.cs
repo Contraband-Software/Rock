@@ -53,7 +53,6 @@ public class CircleCollider : Collider
     /// </summary>
     /// <param name="obj2"></param>
     ///
-
     public override void SolveCollision(PolygonCollider other, Vector2 velocity)
     {
         throw new NotImplementedException();

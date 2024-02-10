@@ -98,7 +98,15 @@ public abstract class Node : AbstractGameObject
     // ReSharper disable once UnusedMember.Global
     public Behaviour? GetBehaviour<T>() where T : Behaviour
     {
-        return this.behaviours.FirstOrDefault(c => c.GetType() == typeof(T));
+        return this.behaviours.FirstOrDefault(c =>
+        {
+            for (var current = typeof(T); current != null; current = current.BaseType)
+            {
+                if (current == typeof(T))
+                    return true;
+            }
+            return false;
+        });
     }
 
     /// <summary>

@@ -109,7 +109,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private RenderTarget2D shadowUpscaleTarget;
     private BlurPostProcess shadowBlurer;
 
-    private RenderTarget2D noiseTarget; 
+    private RenderTarget2D noiseTarget;
 
     //renderingparams
     private Vector2 cameraPosition = new Vector2(0);
@@ -185,9 +185,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth*2, renderHeight*2,false,SurfaceFormat.Alpha8,DepthFormat.None); //*2?
         shadowUpscaleTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
-        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); 
+        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None);
 
-        noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None); 
+        noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
         shadowBlurer = new BlurPostProcess(Game, renderWidth, renderHeight, 4, 0.5f);
 
@@ -198,6 +198,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         nullTexture.SetData(new Color[] { Color.White });
 
         spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+        LoadShaders();
     }
 
     public void LoadShaders()
