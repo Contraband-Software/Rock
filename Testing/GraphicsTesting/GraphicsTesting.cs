@@ -27,7 +27,7 @@ public class GraphicsTesting : Game
         IsMouseVisible = true;
 
 
-        re = new PebbleRenderer(this, graphics, 1920, 1080, 0.125f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 1920, 1080, 0.25f, 0.5f);
 
         sceneManager = new SceneManager(this);
 
@@ -49,7 +49,15 @@ public class GraphicsTesting : Game
     {
         re.LoadShaders();
         Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), null, null);
+
+        //Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/oceanRoughness")));
         re.addMaterial(oceanMat);
+
+        //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
+        //re.addPostProcess(new BloomPostProcess(this, Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
+        //re.addPostProcess(new BlurPostProcess(this, 1920, 1080, 1, 0.9f));
+        //engine.addPostProcess(new DitherPostProcess(this, Content.Load<Effect>("Graphics/dither"), Content.Load<Texture2D>("bayer")));
+        //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);

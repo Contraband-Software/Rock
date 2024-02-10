@@ -37,6 +37,12 @@
 /processorParam:TextureFormat=Color
 /build:collision/pixel.png
 
+#begin Graphics/crtPostProcess.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/crtPostProcess.fx
+
 #begin Graphics/defaultDiffuseShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -49,11 +55,41 @@
 /processorParam:DebugMode=Auto
 /build:Graphics/defaultNormalShader.fx
 
+#begin Graphics/dither.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/dither.fx
+
+#begin Graphics/gradientNoiseShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/gradientNoiseShader.fx
+
+#begin Graphics/isolate.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/isolate.fx
+
 #begin Graphics/oceanDiffuse.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Graphics/oceanDiffuse.fx
+
+#begin Graphics/oceanNormal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/oceanNormal.fx
+
+#begin Graphics/oceanRoughness.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/oceanRoughness.fx
 
 #begin Graphics/pointLight.fx
 /importer:EffectImporter
@@ -102,4 +138,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Graphics/space-cruiser-panels2_roughness.png
+
+#begin Graphics/tonemapping.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/tonemapping.fx
 
