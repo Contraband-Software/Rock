@@ -243,6 +243,11 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         node.behaviours.Add(behaviour);
         if (!behaviour.Initialized) this.initializationSet.Add(behaviour);
     }
+    public Behaviour InitBehaviour(Node node, Behaviour behaviour)
+    {
+        this.AddBehaviour(node, behaviour);
+        return behaviour;
+    }
     public void RemoveBehaviour(Behaviour behaviour)
     {
         // run on destroy

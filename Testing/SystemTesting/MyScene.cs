@@ -1,5 +1,6 @@
 namespace Testing.SystemTesting;
 
+using System.Collections.Generic;
 using System.Drawing;
 using GREngine.Core.Physics2D;
 using GREngine.Core.System;
@@ -26,29 +27,32 @@ public class MyScene : Scene
         sc.AddBehaviour(myNode, new UpdateNotifier());
         sc.AddNodeAtRoot(myNode);
 
-        GenericNode node = new GenericNode();
-        NodeNetwork network = new NodeNetwork();
-        sc.AddBehaviour(node, network);
-        sc.AddNode(myNode, node);
-
         GenericNode map = new GenericNode();
-        map.SetLocalPosition(1, 1);
-        CircleCollider mapCol1 = new CircleCollider(100, "mapFloor", true);
-        sc.AddBehaviour(map, mapCol1);
+        NodeNetwork nodeNetwork = sc.InitBehaviour(map, new NodeNetwork()) as NodeNetwork;
+        sc.AddBehaviour(map, new CircleCollider(100, "mapFloor", true));
         sc.AddNodeAtRoot(map);
+
+        GenericNode map_col1 = new GenericNode();
+        sc.AddBehaviour(map_col1, new CircleCollider(100, "mapFloor", true));
+        sc.AddNode(map, map_col1);
+
+        map.SetLocalPosition(100, 100);
 
         sc.QueueSceneAction((GameTime gt) =>
         {
-            node.SetLocalPosition(new Vector2(-50, -50));
-            network.BuildNetwork(600, 600, "mapFloor", "", 10);
+            nodeNetwork.BuildNetwork(600, 600, "mapFloor", "", 20);
 
-            network.Navigate(new Point(10, 10), new Point(300, 300));
-            Out.PrintLn(mapCol1.PointInsideCollider(new PointF(300, 300)).ToString());
+            List<Point> path = nodeNetwork.Navigate(new Point(10, 10), new Point(300, 300));
 
-            foreach (var p in network.LastPath)
+            if (path != null)
             {
-                Out.PrintLn(p.ToString());
+                foreach (var p in path)
+                {
+                    Out.PrintLn(p.ToString());
+                }
             }
+
+            sc.DebugPrintGraph();
         });
     }
 }

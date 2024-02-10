@@ -76,11 +76,10 @@ public class NodeNetwork : Behaviour
                 // Out.PrintLn("collision");
                 // Out.PrintLn(globalPosition.ToString());
                 // Out.PrintLn(col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer).ToString());
-                bool dogshit = col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer);
                 this.nodeNetwork[vy, vx] = new Node(
                     new Point(x, y),
-                    dogshit
-                    // && !col.PointIsCollidingWithLayer(new PointF(x, y), cullPointLayer)
+                    col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer)
+                    && !col.PointIsCollidingWithLayer(new PointF(x, y), cullPointLayer)
                     );
                 vx++;
 
@@ -95,26 +94,38 @@ public class NodeNetwork : Behaviour
         {
             foreach (var node in this.nodeNetwork)
             {
-                if (node.IsWalkable)
-                    this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(node.Location.ToVector2(), 6, Color.Aqua));
+                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(GetGlobalNodePosition(node.Location).ToVector2(), 6,
+                    node.IsWalkable ? Color.Aqua : Color.Crimson));
             }
         }
+
         if (this.startNode != null)
-            this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.startNode.Location.ToVector2(), 10, Color.Lime));
+            this.Game.Services.GetService<IPebbleRendererService>().drawDebug(
+                new DebugDrawable(GetGlobalNodePosition(this.startNode.Location).ToVector2(), 10, Color.Lime));
         if (this.endNode != null)
-            this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.endNode.Location.ToVector2(), 10, Color.Gold));
+            this.Game.Services.GetService<IPebbleRendererService>().drawDebug(
+                new DebugDrawable(GetGlobalNodePosition(this.endNode.Location).ToVector2(), 10, Color.Gold));
+
         if (LastPath != null)
         {
             Point lastPoint = this.startNode.Location;
             foreach (var p in LastPath)
             {
-                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(lastPoint.ToVector2(), p.ToVector2(), Color.Crimson, DebugShape.LINE));
+                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(
+                    GetGlobalNodePosition(lastPoint).ToVector2(), GetGlobalNodePosition(p).ToVector2(), Color.Crimson, DebugShape.LINE));
                 lastPoint = p;
             }
         }
     }
 
-    public List<Point> Navigate(Point start, Point end)
+    private Point GetGlobalNodePosition(Point localPosition)
+    {
+        Vector2 gPosition = new Vector2();
+        (Node.GetGlobalPosition() + new Vector3(localPosition.X, localPosition.Y, 0)).Deconstruct(out gPosition.X, out gPosition.Y, out _);
+        return new Point((int)gPosition.X, (int)gPosition.Y);
+    }
+
+    public List<Point>? Navigate(Point start, Point end)
     {
         this.startNode = GetNearestNode(start);
         this.endNode = GetNearestNode(end);
@@ -131,7 +142,13 @@ public class NodeNetwork : Behaviour
         }
         #endif
 
-        return FindPath();
+        List<Point> path = this.FindPath();
+        if (path.Count < 0)
+            return null;
+
+        path.Insert(0, start);
+        path.Add(end);
+        return path;
     }
 
     private Node GetNearestNode(Point position)
@@ -164,7 +181,8 @@ public class NodeNetwork : Behaviour
             }
             path.Reverse();
         }
-        LastPath = path;
+        if (path.Count > 0)
+            LastPath = path;
         return path;
     }
 
