@@ -25,6 +25,7 @@ public interface ICollisionSystem
     public void RemoveCollisionObject(Collider obj);
     public HashSet<Collider> GetColliderObjects();
     public bool PointIsCollidingWithLayer(PointF point, string layer);
+    public List<Collider> GetCollidersOfLayer(string layer);
 }
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
@@ -265,5 +266,10 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             }
         }
         return false;
+    }
+
+    public List<Collider> GetCollidersOfLayer(string layer)
+    {
+        return this.verletObjects.Where(c => c.GetLayer() == layer).ToList();
     }
 }

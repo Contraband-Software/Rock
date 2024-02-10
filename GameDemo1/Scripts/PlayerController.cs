@@ -1,6 +1,8 @@
 namespace GameDemo1.Scripts;
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.System;
 using GREngine.Algorithms;
@@ -10,11 +12,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 using static GREngine.Debug.Out;
+using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 [GRETagWith("Player")]
 public class Player : Node {}
 
+[GRExecutionOrder(1000)]
 public class PlayerController : Behaviour
 {
     #region EVENTS
@@ -27,6 +31,8 @@ public class PlayerController : Behaviour
     private float maxGunPower = 60;
     private float gunCooldown = 0.5f;
     private float gunKnockback = 1;
+
+    private string mapFloorCollisionLayer;
     #endregion
 
     #region STATE
@@ -38,12 +44,27 @@ public class PlayerController : Behaviour
     private int scrollDelta = 0;
     private float currentGunCooldown = 0;
     private float facingDirection = 0;
+    private float maxFallTime = 3;
+
+    private float Size
+    {
+        get
+        {
+            return (this.currentFallTime != 0) ? this.maxFallTime / this.currentFallTime : 1;
+        }
+    }
 
     #region INTERNAL
     private bool gunFiredThisFrame = false;
     private int previousScrollValue = 0;
+    private float currentFallTime = 0;
     #endregion
     #endregion
+
+    public PlayerController(string mapFloorCollisionLayer = "mapFloor")
+    {
+        this.mapFloorCollisionLayer = mapFloorCollisionLayer;
+    }
 
     protected override void OnAwake()
     {
@@ -53,6 +74,14 @@ public class PlayerController : Behaviour
     protected override void OnStart()
     {
         rb = this.Node.GetBehaviour<Collider>() as Collider;
+
+        this.rb.OnTriggerEnter += c =>
+        {
+            if (c.GetLayer() == mapFloorCollisionLayer)
+            {
+                this.isGrounded = true;
+            }
+        };
     }
 
     protected override void OnUpdate(GameTime gameTime)
@@ -63,15 +92,50 @@ public class PlayerController : Behaviour
         Vector2 m = this.ManageMovementInput();
         if (isGrounded && m.Length() > 0)
         {
-            Node.SetLocalPosition((Node.GetLocalPosition2D() + m * this.walkSpeed));
+            this.rb.Velocity += m * this.walkSpeed;
         }
 
         this.ManageGunInput(gameTime);
         #endregion
 
-        // PrintLn(this.Node.GetGlobalPosition().ToString());
+        if (this.isGrounded)
+        {
+            currentFallTime = 0;
+        }
+        else
+        {
+            currentFallTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
+
+            if (currentFallTime > this.maxFallTime)
+            {
+                GameOver();
+            }
+
+            // PrintLn(Size.ToString());
+        }
 
         render.drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 20, Color.Orange));
+
+        isGrounded = false;
+
+        // List<Collider> mapColliders = this.Game.Services.GetService<ICollisionSystem>().GetCollidersOfLayer(this.mapFloorCollisionLayer);
+        //
+        // mapColliders.ForEach(c =>
+        // {
+        //     var p = new PointF(this.Node.GetGlobalPosition().X, this.Node.GetGlobalPosition().Y);
+        //     if (c.PointInsideCollider(p))
+        //     {
+        //         PrintLn(p.ToString());
+        //         isGrounded = true;
+        //     }
+        // });
+        // if (!this.isGrounded)
+        //     PrintLn("bye");
+    }
+
+    private void GameOver()
+    {
+        PrintLn("Game Over");
     }
 
     private void FireGun()
@@ -87,7 +151,6 @@ public class PlayerController : Behaviour
         {
             if (this.currentGunCooldown == 0)
             {
-                PrintLn("pew");
                 this.currentGunCooldown = this.gunCooldown;
                 this.FireGun();
             }

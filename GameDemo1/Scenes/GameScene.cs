@@ -13,11 +13,13 @@ public class GameScene : Scene
 
     protected override void OnLoad(SceneManager sceneManager)
     {
+        string mapFloorCollisionLayer = "mapFloor";
+
         Player n1 = new Player();
         sceneManager.AddNodeAtRoot(n1);
         n1.SetLocalPosition(100, 100);
-        sceneManager.AddBehaviour(n1, new CircleCollider(20, true));
-        sceneManager.AddBehaviour(n1, new PlayerController());
+        sceneManager.AddBehaviour(n1, new CircleCollider(20, mapFloorCollisionLayer, true));
+        sceneManager.AddBehaviour(n1, new PlayerController(mapFloorCollisionLayer));
 
         GenericNode mapNode = new GenericNode();
         sceneManager.AddNodeAtRoot(mapNode);
