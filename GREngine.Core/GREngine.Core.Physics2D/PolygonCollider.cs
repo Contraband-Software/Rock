@@ -294,6 +294,11 @@ public class PolygonCollider : Collider
         }
     }
 
+    public override bool PointInsideCollider(PointF point)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Draws the Polygon onto the provided SpriteBatch
     /// </summary>
