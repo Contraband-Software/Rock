@@ -3,9 +3,14 @@ namespace GameDemo1.Scripts;
 using System;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.System;
+using GREngine.Algorithms;
+using GREngine.Core.Physics2D;
 using GREngine.Debug;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+
+using static GREngine.Debug.Out;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -18,18 +23,21 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private float speed = 10;
+    private float walkSpeed = 10;
     private float maxGunPower = 60;
     private float gunCooldown = 0.5f;
+    private float gunKnockback = 1;
     #endregion
 
     #region STATE
     private IPebbleRendererService render;
+    private Collider rb;
 
     private int currentGunPower = 0;
     private bool isGrounded = true;
     private int scrollDelta = 0;
     private float currentGunCooldown = 0;
+    private float facingDirection = 0;
 
     #region INTERNAL
     private bool gunFiredThisFrame = false;
@@ -42,37 +50,44 @@ public class PlayerController : Behaviour
         render = this.Game.Services.GetService<IPebbleRendererService>();
     }
 
+    protected override void OnStart()
+    {
+        rb = this.Node.GetBehaviour<Collider>() as Collider;
+    }
+
     protected override void OnUpdate(GameTime gameTime)
     {
         #region INPUT
-        this.ManageScrollInput();
+        this.ManageMouseInput();
 
         Vector2 m = this.ManageMovementInput();
         if (isGrounded && m.Length() > 0)
         {
-            Node.SetLocalPosition((Node.GetLocalPosition2D() + m * this.speed));
+            Node.SetLocalPosition((Node.GetLocalPosition2D() + m * this.walkSpeed));
         }
 
         this.ManageGunInput(gameTime);
         #endregion
+
+        // PrintLn(this.Node.GetGlobalPosition().ToString());
 
         render.drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 20, Color.Orange));
     }
 
     private void FireGun()
     {
-
+        this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
     }
 
     private void ManageGunInput(GameTime gameTime)
     {
         currentGunPower = (int)Math.Clamp(this.currentGunPower + this.scrollDelta / 30, 0, maxGunPower);
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Space) || Mouse.GetState().LeftButton == ButtonState.Pressed)
+        if (Keyboard.GetState().IsKeyDown(Keys.Space))// || Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
             if (this.currentGunCooldown == 0)
             {
-                Out.PrintLn("fuck");
+                PrintLn("pew");
                 this.currentGunCooldown = this.gunCooldown;
                 this.FireGun();
             }
@@ -111,10 +126,21 @@ public class PlayerController : Behaviour
         return forceVector;
     }
 
-    private void ManageScrollInput()
+    private void ManageMouseInput()
     {
+        // Scroll wheel
         MouseState currentMouseState = Mouse.GetState();
         scrollDelta = currentMouseState.ScrollWheelValue - previousScrollValue;
         previousScrollValue = currentMouseState.ScrollWheelValue;
+
+        // Aim direction
+        Vector2 relativeTo = new Vector2(
+            this.Game.GraphicsDevice.Viewport.Width  / 2,
+            this.Game.GraphicsDevice.Viewport.Height / 2);
+        MouseState mouseState = Mouse.GetState();
+        Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+        Vector2 mouseDisplacement = mousePos - relativeTo;
+        mouseDisplacement.Normalize();
+        this.facingDirection = Vector.VectorToAngle(mouseDisplacement);
     }
 }

@@ -1,5 +1,6 @@
 namespace GameDemo1.Scenes;
 
+using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using GREngine.Debug;
 using Scripts;
@@ -14,11 +15,14 @@ public class GameScene : Scene
     {
         Player n1 = new Player();
         sceneManager.AddNodeAtRoot(n1);
+        n1.SetLocalPosition(100, 100);
+        sceneManager.AddBehaviour(n1, new CircleCollider(20, true));
         sceneManager.AddBehaviour(n1, new PlayerController());
 
-        sceneManager.QueueSceneAction(_ =>
-        {
-            Out.PrintLn(sceneManager.FindNodeWithTag("Player").Name);
-        });
+        GenericNode mapNode = new GenericNode();
+        sceneManager.AddNodeAtRoot(mapNode);
+        CircleCollider c1 = new CircleCollider(400, true);
+        c1.SetTrigger(true);
+        sceneManager.AddBehaviour(mapNode, c1);
     }
 }
