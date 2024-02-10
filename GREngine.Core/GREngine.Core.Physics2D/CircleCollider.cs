@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace GREngine.Core.Physics2D;
 
+using PebbleRenderer;
+using Color = Microsoft.Xna.Framework.Color;
+
 public class CircleCollider : Collider
 {
     float radius;
@@ -18,6 +21,23 @@ public class CircleCollider : Collider
     public CircleCollider(float radius) : base()
     {
         this.radius = radius;
+    }
+
+    public CircleCollider(float radius, bool debugged) : base(debug: debugged)
+    {
+        this.radius = radius;
+    }
+
+    public CircleCollider(float radius, string collisionLayer, bool debugged=false) : base(layer: collisionLayer, debug: debugged)
+    {
+        this.radius = radius;
+    }
+
+    public override void DrawDebug()
+    {
+        Vector2 pos = new Vector2();
+        Node.GetGlobalPosition().Deconstruct(out pos.X, out pos.Y, out _);
+        Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(pos, this.GetRadius(), Color.Lime));
     }
 
     /// <summary>

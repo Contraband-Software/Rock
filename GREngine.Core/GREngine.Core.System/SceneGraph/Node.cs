@@ -38,6 +38,10 @@ public abstract class Node : AbstractGameObject
     }
 
     #region HELPERS
+    public void SetLocalPosition(float x, float y)
+    {
+        this.SetLocalPosition(new Vector3(x, y, this.GetLocalPosition().Z));
+    }
     public void SetLocalPosition(Vector3 localPosition)
     {
         Matrix matrix = this.GetLocalTransform();

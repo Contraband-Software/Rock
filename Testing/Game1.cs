@@ -6,18 +6,17 @@ using Microsoft.Xna.Framework.Input;
 namespace Testing;
 
 using System.Diagnostics;
+using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using SystemTesting;
 
 public class Game1 : Game
 {
     private GraphicsDeviceManager graphics;
-    //private SpriteBatch _spriteBatch;
 
+    private readonly CollisionSystem cs;
     private readonly PebbleRenderer re;
-
-
-    private SceneManager sceneManager;
+    private readonly SceneManager sceneManager;
 
     public Game1()
     {
@@ -26,7 +25,7 @@ public class Game1 : Game
         IsMouseVisible = true;
 
         re = new PebbleRenderer(this, graphics, 1000, 600, 1f, 0.5f);
-
+        cs = new CollisionSystem(this);
         sceneManager = new SceneManager(this);
     }
 
@@ -36,6 +35,8 @@ public class Game1 : Game
         this.Components.Add(sceneManager);
         this.Services.AddService(typeof(ISceneControllerService), sceneManager);
 
+        this.Components.Add(cs);
+        this.Services.AddService(typeof(ICollisionSystem), cs);
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
