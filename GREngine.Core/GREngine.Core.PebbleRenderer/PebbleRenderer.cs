@@ -113,6 +113,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private Vector2 cameraPosition = new Vector2(0);
     public Color ambientLightColor;
     private bool useRaymarchedShadows = true;
+    private SamplerState samplerState;
 
     //shaders
     private Shader defaultNormalShader;
@@ -171,9 +172,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public override void Initialize() //overide?
     {
-
-        //Game.Content.RootDirectory = "GREngine.Core.PebbleRenderer/Content/bin/DesktopGL";
-
+        samplerState = SamplerState.PointClamp;
 
         diffuseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.HdrBlendable, DepthFormat.None);
         normalTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight);
@@ -361,7 +360,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
         //HERE
         Game.GraphicsDevice.SetRenderTarget(postProcessTarget1); //I can maybe optimise this to overwrite diffuse buffer or lighting buffers, depends if I still want them
-        spriteBatch.Begin(transformMatrix: Matrix.CreateScale(1 / renderScale)); // maybe dont create the matrix every frame
+        spriteBatch.Begin(transformMatrix: Matrix.CreateScale(1 / renderScale),samplerState: samplerState); // maybe dont create the matrix every frame
         spriteBatch.Draw(diffuseTarget, new Vector2(0f), Color.White);
         spriteBatch.End();
         Game.GraphicsDevice.SetRenderTarget(null);

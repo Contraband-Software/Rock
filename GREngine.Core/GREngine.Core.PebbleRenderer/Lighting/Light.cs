@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using GREngine.Core.System;
-
-using sd = global::System.Diagnostics;
+using GREngine.Debug;
 
 namespace GREngine.Core.PebbleRenderer;
 
@@ -37,7 +36,7 @@ public class Light : Behaviour
         this.position.X = this.Node.GetGlobalPosition().X;
         this.position.Y = this.Node.GetGlobalPosition().Y;
 
-        sd.Debug.WriteLine(this.Node.GetGlobalPosition().ToString());
+        Out.PrintLn(this.Node.GetGlobalPosition().ToString());
     }
 
     public void setRotation(float rotation)

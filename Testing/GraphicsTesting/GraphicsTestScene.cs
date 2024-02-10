@@ -5,7 +5,8 @@ using GREngine.Core.System;
 using GREngine.Debug;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
+
+
 
 public class GraphicsTestScene : Scene
 {
@@ -21,13 +22,13 @@ public class GraphicsTestScene : Scene
         GenericNode light = new GenericNode();
         light.SetLocalPosition(new Vector2(400, 400));
 
-        Debug.WriteLine("hellow world");
+        Out.PrintLn("hellow world");
 
 
-        Sprite spriteRenderer = new Sprite(0f, new Vector2(1),
+        Sprite spriteRenderer = new Sprite(0f, new Vector2(0.5f),
             Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_albedo"),
             Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_normal-ogl"),
-            Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_roughness"),0,0,false);
+            Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_roughness"),0,1,false);
 
         Light lightRenderer = new Light(new Vector3(1000000, 100000, 100000), true, 1f, 0.9f);
 

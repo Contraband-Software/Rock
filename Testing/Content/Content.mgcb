@@ -49,6 +49,12 @@
 /processorParam:DebugMode=Auto
 /build:Graphics/defaultNormalShader.fx
 
+#begin Graphics/oceanDiffuse.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/oceanDiffuse.fx
+
 #begin Graphics/pointLight.fx
 /importer:EffectImporter
 /processor:EffectProcessor

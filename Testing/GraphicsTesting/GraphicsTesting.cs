@@ -27,7 +27,7 @@ public class GraphicsTesting : Game
         IsMouseVisible = true;
 
 
-        re = new PebbleRenderer(this, graphics, 1920, 1080, 1f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 1920, 1080, 0.125f, 0.5f);
 
         sceneManager = new SceneManager(this);
 
@@ -50,8 +50,9 @@ public class GraphicsTesting : Game
 
     protected override void LoadContent()
     {
-        re.LoadShaders();   
-        //_spriteBatch = new SpriteBatch(GraphicsDevice);
+        re.LoadShaders();
+        Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), null, null);
+        re.addMaterial(oceanMat);
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
