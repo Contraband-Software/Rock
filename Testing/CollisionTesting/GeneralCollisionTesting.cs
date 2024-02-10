@@ -36,8 +36,8 @@ public class GeneralCollisionTesting : Scene
             new PointF(-20, 20)
         };
 
+        //Collider object 1
         GenericNode node1 = new GenericNode();
-        sceneManager.AddBehaviour(node1, new ColTest());
 
         node1.SetLocalPosition(new Vector2(100f, 100f));
         sceneManager.AddNodeAtRoot(node1);
@@ -46,7 +46,29 @@ public class GeneralCollisionTesting : Scene
         collisionSystem.AddCollisionObject(col1);
         sceneManager.AddBehaviour(node1, col1);
 
-        sceneManager.AddBehaviour(node1, new ColliderVelocityController(col1));
+        //Collider object 2
+        GenericNode node2 = new GenericNode();
+
+        node2.SetLocalPosition(new Vector2(200f, 100f));
+        sceneManager.AddNodeAtRoot(node2);
+
+        PolygonCollider col2 = new PolygonCollider(squarePointFList);
+        collisionSystem.AddCollisionObject(col2);
+        sceneManager.AddBehaviour(node2, col2);
+
+        //Circle collider object 1
+        GenericNode node3 = new GenericNode();
+        node3.SetLocalPosition(new Vector2(60,0));
+        sceneManager.AddNodeAtRoot(node3);
+        CircleCollider circCol1 = new CircleCollider(50f);
+        sceneManager.AddBehaviour(node3, circCol1);
+
+        sceneManager.QueueSceneAction(() =>
+        {
+            col1.SetRotation(45f);
+            col1.SetVelocity(new Vector2(0.2f, 0f));
+            col2.SetVelocity(new Vector2(-0.2f, 0f));
+        });
     }
 }
 

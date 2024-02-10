@@ -22,7 +22,7 @@ public interface ICollisionSystem
     public PointF LineIntersectionPoint(Line l1, Line l2);
     public bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2);
     public void AddCollisionObject(Collider obj);
-    public HashSet<Collider> GetVerletObjects();
+    public HashSet<Collider> GetColliderObjects();
 }
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
@@ -178,7 +178,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <returns></returns>
     public bool LinesCanIntersect(Line l1, Line l2)
     {
-        return l1.m != l2.m;
+        return (l1.a == 1 && l2.a == 1 && l1.m != l2.m) || (l1.a != l2.a);
     }
 
     /// <summary>
@@ -249,5 +249,5 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     {
         verletObjects.Add(obj);
     }
-    public HashSet<Collider> GetVerletObjects() { return verletObjects; }
+    public HashSet<Collider> GetColliderObjects() { return verletObjects; }
 }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using GREngine.Core.System;
 using System.Xml.Linq;
 using GREngine.Core.PebbleRenderer;
+using System.Drawing;
 
 namespace GREngine.Core.Physics2D;
 
@@ -21,9 +22,11 @@ public abstract class Collider : Behaviour
     private AABB aabb;
     private bool aabbOverlapping = false;
 
-    private Vector2 externalVelocity = Vector2.Zero;
-    private bool isStatic = false;
     protected ICollisionSystem collisionSystem;
+
+    private bool isStatic = false;
+    private bool isTrigger = false;
+    private string collisionLayer = "default";
     public Collider()
     {
     }
@@ -110,6 +113,10 @@ public abstract class Collider : Behaviour
     protected void SetAABB(AABB aabb) { this.aabb = aabb; }
     public void SetStatic(bool b) { isStatic = b; }
     public bool IsStatic() { return isStatic; }
+    public void SetTrigger(bool b) { isTrigger = b; }
+    public bool IsTrigger() { return isTrigger;}
+    public void SetLayer(string layer) { collisionLayer = layer; }
+    public string GetLayer() { return collisionLayer; }
     public bool IsAABBOverlapping() { return aabbOverlapping; }
     public void SetAABBOverlapping(bool b) { aabbOverlapping = b; }
 
@@ -136,6 +143,8 @@ public abstract class Collider : Behaviour
     }
     public abstract void SolveCollision(PolygonCollider other, Vector2 velocity);
     public abstract void SolveCollision(CircleCollider other, Vector2 velocity);
+
+    public abstract bool PointInsideCollider(PointF point);
 
     /// <summary>
     /// Each subclass will have its own method of calculating its AABB

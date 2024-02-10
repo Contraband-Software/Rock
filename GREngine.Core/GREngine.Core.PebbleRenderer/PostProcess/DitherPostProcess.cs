@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GREngine.Core.PebbleRenderer;
 
-internal class DitherPostProcess : PostProcess
+public class DitherPostProcess : PostProcess
 {
     Texture2D ditherPattern;
     public DitherPostProcess(Game game, Effect shader, Texture2D ditherPattern) : base(game, shader)

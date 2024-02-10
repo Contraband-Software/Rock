@@ -1,4 +1,4 @@
-﻿#if OPENGL
+#if OPENGL
 	#define SV_POSITION POSITION
 	#define VS_SHADERMODEL vs_3_0
 	#define PS_SHADERMODEL ps_3_0
@@ -26,7 +26,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 sample = tex2D(SpriteTextureSampler, input.TextureCoordinates);
 
-    return float4(step(0.9, dot(sample.rgb, sample.rgb)) * sample.rgb*2, sample.a)*0.1;
+    return float4(step(0.9, dot(sample.rgb, sample.rgb)) * sample.rgb*2, sample.a)*0.5;
 }
 
 technique SpriteDrawing

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,12 @@ public class CircleCollider : Collider
             SetPosition(GetPosition() + 0.5f * n * delta);
             obj2.SetPosition(obj2.GetPosition() - 0.5f * n * delta);
         }
+    }
+
+    public override bool PointInsideCollider(PointF point)
+    {
+        float distToCentreSqrd = (GetGlobalPosition() - new Vector2(point.X, point.Y)).LengthSquared();
+        return distToCentreSqrd < (radius * radius);
     }
 
     public float GetRadius()

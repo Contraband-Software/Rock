@@ -109,17 +109,21 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private RenderTarget2D shadowUpscaleTarget;
     private BlurPostProcess shadowBlurer;
 
+    private RenderTarget2D noiseTarget; 
+
     //renderingparams
     private Vector2 cameraPosition = new Vector2(0);
     public Color ambientLightColor;
     private bool useRaymarchedShadows = true;
     private SamplerState samplerState;
+    private Texture2D nullTexture;
 
     //shaders
     private Shader defaultNormalShader;
     private Shader defaultDiffuseShader;
     private Shader pointLightShader;
     private Shader pointLightShaderShadowed;
+    private Shader gradientNoiseShader;
 
     //shader params
     private double time;
@@ -181,19 +185,18 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth*2, renderHeight*2,false,SurfaceFormat.Alpha8,DepthFormat.None); //*2?
         shadowUpscaleTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
-        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); //optimise can get rid of depth
+        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); 
+
+        noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None); 
 
         shadowBlurer = new BlurPostProcess(Game, renderWidth, renderHeight, 4, 0.5f);
 
         postProcessTarget1 = new RenderTarget2D(Game.GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.HdrBlendable, DepthFormat.None);
         postProcessTarget2 = new RenderTarget2D(Game.GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.HdrBlendable, DepthFormat.None);
 
-        //defaultNormalShader = new Shader(Game.Content.Load<Effect>("defaultNormalShader")); // make sure this loads  before anything ++ add error throw
-        //defaultDiffuseShader = new Shader(Game.Content.Load<Effect>("Content/defaultDiffuseShader"));
-        //pointLightShader = new Shader(Game.Content.Load<Effect>("Content/pointLight"));
-        //pointLightShaderShadowed = new Shader(Game.Content.Load<Effect>("Content/pointLightShaderShadowCasting")); //maybe some of these can just be effects not shaders.
+        nullTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
+        nullTexture.SetData(new Color[] { Color.White });
 
-        //materials[0] = new Material(defaultDiffuseShader, defaultNormalShader, null);
         spriteBatch = new SpriteBatch(Game.GraphicsDevice);
     }
 
@@ -203,9 +206,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         defaultDiffuseShader = new Shader(Game.Content.Load<Effect>("Graphics/defaultDiffuseShader"));
         pointLightShader = new Shader(Game.Content.Load<Effect>("Graphics/pointLight"));
         pointLightShaderShadowed = new Shader(Game.Content.Load<Effect>("Graphics/pointLightShaderShadowCasting")); //maybe some of these can just be effects not shaders.
+        gradientNoiseShader = new Shader(Game.Content.Load<Effect>("Graphics/gradientNoiseShader"));
 
         materials[0] = new Material(defaultDiffuseShader, defaultNormalShader, null); //default mat
-
     }
 
     public void drawDebug(DebugDrawable drawable)
@@ -291,6 +294,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     public void Draw(GameTime time) {
         this.time = time.TotalGameTime.TotalSeconds;
         this.random = randomGen.NextDouble();
+        RenderNoise();
 
         Matrix view = Matrix.CreateTranslation(0f - cameraPosition.X, 0f - cameraPosition.Y, 0f) * Matrix.CreateScale(scaleFactor);
 
@@ -401,6 +405,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         effect.Parameters["random"]?.SetValue((float)random);
         effect.Parameters["width"]?.SetValue(renderWidth);// are these needed? should be float?
         effect.Parameters["height"]?.SetValue(renderHeight);
+        effect.Parameters["noiseMap"]?.SetValue(noiseTarget);
     }
 
     private void renderOutput(RenderTarget2D target, Matrix viewProjection){ //refactor this maybe, having a function for rendering to target isnt as nice as I hoped.
@@ -450,7 +455,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 }
                 else
                 {
-                    materials[j].shaders[shaderIndex].shader.Parameters["time"]?.SetValue((float)time);// do I want to do this automatically, or have to add to param list for each material?
+                    setEngineShaderParams(materials[j].shaders[shaderIndex].shader);// do I want to do this automatically, or have to add to param list for each material?
                     spriteBatch.Begin(transformMatrix: viewProjection, effect: materials[j].shaders[shaderIndex].shader);
                 }
 
@@ -465,6 +470,16 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             }
         }
         Game.GraphicsDevice.SetRenderTarget(null);// is this neccasary?
+    }
+
+    private void RenderNoise()
+    {
+        Game.GraphicsDevice.SetRenderTarget(noiseTarget);
+        setEngineShaderParams(gradientNoiseShader.shader);
+        spriteBatch.Begin(effect: gradientNoiseShader.shader);
+        spriteBatch.Draw(nullTexture, new Vector2(0),null, Color.White,0,Vector2.Zero,new Vector2(renderWidth,renderHeight),SpriteEffects.None,0);
+        spriteBatch.End();
+        Game.GraphicsDevice.SetRenderTarget(null);//? needed?
     }
 
     private void renderShadowCasters(RenderTarget2D target, Matrix viewProjection) {
@@ -526,6 +541,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         }
         spriteBatch.End();
     }
+
+
 }
 
 
