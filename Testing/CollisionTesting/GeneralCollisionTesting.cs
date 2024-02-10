@@ -17,7 +17,7 @@ public class GeneralCollisionTesting : Scene
     {
     }
 
-    protected override void OnLoad(Node rootNode, Node persistantNode)
+    protected override void OnLoad(SceneManager sceneManager)
     {
         MyNode myNode = new MyNode();
         MyBehaviour myBehaviour = new MyBehaviour();
@@ -25,7 +25,6 @@ public class GeneralCollisionTesting : Scene
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(myNode, myBehaviour);
         this.Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(myNode);
 
-        ISceneControllerService sceneManager = this.Game.Services.GetService<ISceneControllerService>();
         ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
 
         List<PointF> squarePointFList = new List<PointF>

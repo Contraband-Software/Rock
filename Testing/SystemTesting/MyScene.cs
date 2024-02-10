@@ -18,7 +18,7 @@ public class MyScene : Scene
     {
     }
 
-    protected override void OnLoad(Node rootNode, Node persistantNode)
+    protected override void OnLoad(SceneManager sceneManager)
     {
         MyNode myNode = new MyNode();
         MyBehaviour myBehaviour = new MyBehaviour();

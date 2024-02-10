@@ -7,4 +7,9 @@ public class GameScene : Scene
     public GameScene() : base("GameScene")
     {
     }
+
+    protected override void OnLoad(SceneManager sceneManager)
+    {
+
+    }
 }

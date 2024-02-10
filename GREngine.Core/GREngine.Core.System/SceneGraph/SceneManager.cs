@@ -466,7 +466,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         this.nextScene = null;
 
         // guaranteed to be not null by ChangeScene function not having a nullable (?) parameter
-        this.activeScene?.OnLoad(this.rootNode, this.persistantNode);
+        this.activeScene?.OnLoad(this);
     }
     #endregion
 
