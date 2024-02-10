@@ -528,14 +528,14 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             switch (drawable.shape)
             {
                 case DebugShape.LINE:
-                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color);
+                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,2);
                     break;
 
                 case DebugShape.RECTANGLE:
-                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color );
+                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,2 );
                     break;
                 case DebugShape.CIRCLE:
-                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color);
+                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,2);
                     break;
             }
         }

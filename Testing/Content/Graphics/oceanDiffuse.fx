@@ -92,7 +92,14 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     //float hlUVNoise = tex2D(noiseMap, uv *scale/8).r;
     //float4 sample = tex2D(diffuseSampler, uv + hlUVNoise*0.1);
 
-    //float4 noiseSample = tex2D(noiseMap, uv);
+    float noiseSample = tex2D(noiseMap, uv/2).r;
+
+    float noiseSample2 = tex2D(noiseMap, uv*0.1 + float2(sin(uv.x*0.1), 0.5*cos(uv.x*0.1))).r;
+    noiseSample2 = pow(noiseSample2 + 0.4, 0.5);
+
+    float noiseSample3 = tex2D(noiseMap, uv/16 + float2(sin(uv.x/16), 0.5 * cos(uv.x/16))).r;
+    //noiseSample3 = pow(noiseSample2 + 0.4, 0.5);
+    noiseSample3 = max(pow(noiseSample3, 0.25) - 0.1, 0);
 
     
     
@@ -105,9 +112,9 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     
     //float3 waveColor = float3(foam, foam, foam) + float3(0.2, 0.4, 0.9) * (floor(pow(waveNoise, 0.2) * 5) / 8 + 0.4);
 
-    float2 waveMaskUV = uv + float2(scaledTime, scaledTime);
+    float2 waveMaskUV = uv + float2(scaledTime, scaledTime) + noiseSample * 0.05 + noiseSample2*0.5 + noiseSample3*0.5; //+ float2(sin(uv.x +scaledTime*10), cos(uv.y+scaledTime*10)); //+ 0.1*float2(sin(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)),cos(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)));
     
-    float waveMask = 1 - ((waveMaskUV.x * sin(waveAngle) + waveMaskUV.y * cos(waveAngle)) % (1 / scale))*scale;
+    float waveMask = 1 - ((waveMaskUV.x * sin(waveAngle) + waveMaskUV.y * cos(waveAngle)) % (1 / scale)) * scale;
 
     float waveMaskoffset1 = 1 - (((waveMaskUV.x + 0.01) * sin(waveAngle) + (waveMaskUV.y + 0.01) * cos(waveAngle)) % (1 / scale)) * scale;
     float waveMaskoffset2 = 1 - (((waveMaskUV.x + 0.02) * sin(waveAngle) + (waveMaskUV.y + 0.02) * cos(waveAngle)) % (1 / scale)) * scale;
@@ -123,9 +130,10 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     //waveMask *= 2;
     
     waveMask = min(waveMask, 1);
+    waveMask = smoothstep(0.3, 1,waveMask);
     
     
-    return float4(waveMask, waveMask, waveMask,1) * input.Color; //a is alpha right?
+    return float4(waveMask, waveMask, waveMask, 1) * input.Color; //a is alpha right?
     //return float4(hlUVNoise, hlUVNoise, hlUVNoise, 1);
 
 }
