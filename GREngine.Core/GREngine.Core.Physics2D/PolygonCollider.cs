@@ -38,6 +38,14 @@ public class PolygonCollider : Collider
     {
         this.vertices = vertices;
     }
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset:offset)
+    {
+        this.vertices = vertices;
+    }
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, bool debugged = false) : base(debug: debugged, offset: offset)
+    {
+        this.vertices = vertices;
+    }
 
     private List<PointF> rotateVertices(List<PointF> vertices)
     {
@@ -57,7 +65,7 @@ public class PolygonCollider : Collider
     private List<PointF> translateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
-        PointF origin = new PointF(GetGlobalPosition().X, GetGlobalPosition().Y);
+        PointF origin = new PointF(GetGlobalColliderPosition().X, GetGlobalColliderPosition().Y);
         foreach (PointF relativePoint in vertices)
         {
             // Translate points to be relative to shape centre in worldspace
@@ -120,8 +128,8 @@ public class PolygonCollider : Collider
         List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
         List<PointF> otherVertices = other.translateVertices(other.rotateVertices(other.vertices));
 
-        Vector2 position = GetGlobalPosition();
-        Vector2 otherPostion = other.GetGlobalPosition();
+        Vector2 position = GetGlobalColliderPosition();
+        Vector2 otherPostion = other.GetGlobalColliderPosition();
         bool velocityTowardsCollision = false;
         float distToOtherObj = new Vector2(otherPostion.X - position.X, otherPostion.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
@@ -261,26 +269,7 @@ public class PolygonCollider : Collider
     }
     public override void SolveCollision(CircleCollider other, Vector2 velocity)
     {
-        //cache successful collision vectors
-        List<Vector2> collisionVectors = new List<Vector2>();
-
-        //calculate overlap region AABB
-        AABB overlapRegion = collisionSystem.GetAABBOverlapRegion(GetAABB(), other.GetAABB());
-
-        //if overlapregion size is like (0,x), (0,0), (x,0) then its not a collision
-        if (overlapRegion.size().X == 0 || overlapRegion.size().Y == 0)
-        {
-            return;
-        }
-
-        //get motion and reverse motion vectors
-        Vector2 velocityVector = velocity;
-        if (velocityVector != Vector2.Zero)
-        {
-            velocityVector.Normalize();
-        }
-
-
+       
     }
 
     /// <summary>
@@ -292,8 +281,9 @@ public class PolygonCollider : Collider
     {
         FireCorrectEvent(collisionVector, other);
 
-        Vector2 currentPos = GetGlobalPosition();
-        Vector2 otherCurrentPos = other.GetGlobalPosition();
+        Vector2 currentPos = GetGlobalColliderPosition();
+        Vector2 otherCurrentPos = other.GetGlobalColliderPosition();
+
         Vector2 thisColliderResolution = new Vector2(collisionVector.X * -1, collisionVector.Y * -1);
         if (IsTrigger() || other.IsTrigger())
         {
@@ -303,7 +293,7 @@ public class PolygonCollider : Collider
         else if (other.IsStatic())
         {
             Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
-            SetPosition(resolvedPosition);
+            SetNodePosition(resolvedPosition);
         }
         //Normal to normal, resolve both
         else
@@ -328,9 +318,14 @@ public class PolygonCollider : Collider
             Vector2 otherColliderResolvedPosition = new Vector2(
                 otherCurrentPos.X + otherColliderResolution.X,
                 otherCurrentPos.Y + otherColliderResolution.Y);
-            SetPosition(resolvedPosition);
-            other.SetPosition(otherColliderResolvedPosition);
+            SetNodePosition(resolvedPosition);
+            other.SetNodePosition(otherColliderResolvedPosition);
         }
+    }
+
+    private void ResolveCollision(CircleCollider circCollider, Vector2 collisionVector)
+    {
+
     }
 
     public override bool PointInsideCollider(PointF point)

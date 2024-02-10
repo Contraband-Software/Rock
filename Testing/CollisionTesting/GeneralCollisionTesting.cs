@@ -41,23 +41,23 @@ public class GeneralCollisionTesting : Scene
         node1.SetLocalPosition(new Vector2(100f, 100f));
         sceneManager.AddNodeAtRoot(node1);
 
-        PolygonCollider col1 = new PolygonCollider(squarePointFList);
+        PolygonCollider col1 = new PolygonCollider(squarePointFList, new Vector2(0f, 100f), true);
         sceneManager.AddBehaviour(node1, col1);
 
         //Collider object 2
         GenericNode node2 = new GenericNode();
 
-        node2.SetLocalPosition(new Vector2(200f, 100f));
+        node2.SetLocalPosition(new Vector2(200f, 90f));
         sceneManager.AddNodeAtRoot(node2);
 
-        PolygonCollider col2 = new PolygonCollider(squarePointFList);
+        PolygonCollider col2 = new PolygonCollider(squarePointFList, new Vector2(0f, 100f), true);
         sceneManager.AddBehaviour(node2, col2);
 
         //Circle collider object 1
         GenericNode node3 = new GenericNode();
         node3.SetLocalPosition(new Vector2(100,100));
         sceneManager.AddNodeAtRoot(node3);
-        CircleCollider circCol1 = new CircleCollider(50f);
+        CircleCollider circCol1 = new CircleCollider(50f, new Vector2(0f, 100f), true);
         circCol1.SetLayer("map");
         sceneManager.AddBehaviour(node3, circCol1);
 
