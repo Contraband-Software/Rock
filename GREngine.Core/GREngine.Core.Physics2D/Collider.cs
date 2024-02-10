@@ -11,6 +11,7 @@ using GREngine.Core.System;
 using System.Xml.Linq;
 using GREngine.Core.PebbleRenderer;
 using System.Drawing;
+using GREngine.Debug;
 
 namespace GREngine.Core.Physics2D;
 
@@ -208,7 +209,7 @@ public abstract class Collider : Behaviour
     /// <summary>
     /// Each subclass will have its own method of calculating its AABB
     /// </summary>
-    public virtual void CalculateAABB() { }
+    public abstract void CalculateAABB();
 
     /// <summary>
     /// Define how to draw the verlet object for debugging

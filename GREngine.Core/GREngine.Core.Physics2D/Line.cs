@@ -25,6 +25,12 @@ public struct Line
         this.c = c;
         this.m = m;
     }
+    public Line(float a, float c, float m)
+    {
+        this.a = a;
+        this.c = c;
+        this.m = m;
+    }
 
     public Line(PointF p1, PointF p2)
     {
@@ -48,5 +54,34 @@ public struct Line
         this.a = a;
         this.c = c;
         this.m = m;
+    }
+
+    /// <summary>
+    /// Returns a line equation that is normal to this one
+    /// </summary>
+    /// <returns></returns>
+    public Line GetNormal()
+    {
+        //normal to vertical line
+        if(this.a == 0)
+        {
+            float m = 0f;
+            float c = 1;
+            return new Line(c, m);
+        }
+        //normal to horizontal line
+        else if(this.m == 0)
+        {
+            float a = 0f;
+            float c = -1;
+            float m = 1f;
+            return new Line(a, c, m);
+        }
+        //normal to a standard line
+        else
+        {
+            float m = (-1f / this.m);
+            return new Line(this.c, m);
+        }
     }
 }
