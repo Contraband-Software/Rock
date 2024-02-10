@@ -2,6 +2,7 @@ namespace GREngine.Core.System;
 
 using global::System;
 using global::System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 public interface ISceneControllerService
 {
@@ -10,7 +11,7 @@ public interface ISceneControllerService
     public RootNode GetRootNode();
     public RootNode GetPersistentNode();
 
-    public void QueueSceneAction(Action action);
+    public void QueueSceneAction(Action<GameTime> action);
     public void AddBehaviour(Node node, Behaviour behaviour);
     public void RemoveBehaviour(Behaviour behaviour);
     public void RemoveBehavioursWithTag(Node node, string tag);

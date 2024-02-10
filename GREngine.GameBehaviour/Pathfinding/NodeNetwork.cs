@@ -2,12 +2,16 @@ namespace GREngine.GameBehaviour.Pathfinding;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using Core.Physics2D;
 using Core.System;
 using Debug;
 using Microsoft.Xna.Framework;
 
 using GREngine.Core.PebbleRenderer;
+using Color = Microsoft.Xna.Framework.Color;
+using Point = Microsoft.Xna.Framework.Point;
 
 public class NodeNetwork : Behaviour
 {
@@ -17,6 +21,8 @@ public class NodeNetwork : Behaviour
     private int width;
     private int height;
     private Node[,] nodeNetwork = null;
+
+    public List<Point> LastPath { get; private set; }
 
     public NodeNetwork()
     {
@@ -28,8 +34,12 @@ public class NodeNetwork : Behaviour
         // this.Node.GetBehaviour<>()
     }
 
-    public void BuildNetwork(int width, int height, string mapCollisionLayer, string wallCollisionLayer, float resolution)
+    public void BuildNetwork(int width, int height, string makePointLayer, string cullPointLayer, float resolution)
     {
+        ICollisionSystem col = this.Game.Services.GetService<ICollisionSystem>();
+
+        // Out.PrintLn((col == null).ToString());
+
         this.width = width;
         this.height = height;
 
@@ -40,24 +50,43 @@ public class NodeNetwork : Behaviour
         int networkBottom = (int)MathF.Floor(position.X + height);
 
         this.nodeNetwork = new Node[
-            width  / ((int)(width  / resolution)),
-            height / ((int)(height / resolution))];
+            width  / ((int)MathF.Ceiling(width  / resolution)),
+            height / ((int)MathF.Ceiling(height / resolution))];
 
         int vx = 0;
         int vy = 0;
 
-        for (int y = (int)position.Y; y < networkBottom; y += (int)(height / resolution))
+        // Out.PrintLn(this.nodeNetwork.GetLength(0).ToString());
+        // Out.PrintLn(this.nodeNetwork.GetLength(1).ToString());
+
+        for (int y = (int)position.Y;; y += (int)(height / resolution))
         {
-            for (int x = (int)position.X; x < networkRight; x += (int)(width / resolution))
+            if (vy == this.nodeNetwork.GetLength(0))
+                break;
+            vx = 0;
+            for (int x = (int)position.X;; x += (int)(width / resolution))
             {
-                Out.PrintLn(vx.ToString() + ", " + vy);
-                this.nodeNetwork[vy, vx] = new Node(new Point(x, y), true);
-                vx = (vx + 1) % ((int)resolution);
+                if (vx == this.nodeNetwork.GetLength(1))
+                    break;
+                // Out.PrintLn(vx.ToString() + ", " + vy);
+
+                Vector2 globalPosition = new Vector2();
+                (Node.GetGlobalPosition() + new Vector3(new PointF(x, y).ToVector2(), 0)).Deconstruct(out globalPosition.X, out globalPosition.Y, out _);
+
+                // Out.PrintLn("collision");
+                // Out.PrintLn(globalPosition.ToString());
+                // Out.PrintLn(col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer).ToString());
+                bool dogshit = col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer);
+                this.nodeNetwork[vy, vx] = new Node(
+                    new Point(x, y),
+                    dogshit
+                    // && !col.PointIsCollidingWithLayer(new PointF(x, y), cullPointLayer)
+                    );
+                vx++;
+
             }
             vy++;
         }
-
-        // Out.PrintLn(vx.ToString() + ", " + vy);
     }
 
     protected override void OnUpdate(GameTime gameTime)
@@ -66,13 +95,23 @@ public class NodeNetwork : Behaviour
         {
             foreach (var node in this.nodeNetwork)
             {
-                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(node.Location.ToVector2(), 8, Color.Aqua));
+                if (node.IsWalkable)
+                    this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(node.Location.ToVector2(), 6, Color.Aqua));
             }
         }
         if (this.startNode != null)
             this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.startNode.Location.ToVector2(), 10, Color.Lime));
         if (this.endNode != null)
             this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.endNode.Location.ToVector2(), 10, Color.Gold));
+        if (LastPath != null)
+        {
+            Point lastPoint = this.startNode.Location;
+            foreach (var p in LastPath)
+            {
+                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(lastPoint.ToVector2(), p.ToVector2(), Color.Crimson, DebugShape.LINE));
+                lastPoint = p;
+            }
+        }
     }
 
     public List<Point> Navigate(Point start, Point end)
@@ -125,6 +164,7 @@ public class NodeNetwork : Behaviour
             }
             path.Reverse();
         }
+        LastPath = path;
         return path;
     }
 
@@ -206,18 +246,22 @@ public class NodeNetwork : Behaviour
                 {
                     int l = this.nodeNetwork.Length;
 
-                    int y_1 = Math.Clamp(y - 1, 0, l);
-                    adj.Add(this.nodeNetwork[y_1, Math.Clamp(x - 1, 0, l)].Location);
-                    adj.Add(this.nodeNetwork[y_1, x].Location);
-                    adj.Add(this.nodeNetwork[y_1, Math.Clamp(x + 1, 0, l)].Location);
+                    if (y - 1 >= 0)
+                    {
+                        if (x - 1 >= 0) adj.Add(this.nodeNetwork[y - 1, x - 1].Location);
+                        adj.Add(this.nodeNetwork[y - 1, x].Location);
+                        if (x + 1 < l) adj.Add(this.nodeNetwork[y - 1, x + 1].Location);
+                    }
 
-                    int y_a1 = Math.Clamp(y + 1, 0, l);
-                    adj.Add(this.nodeNetwork[y_a1, Math.Clamp(x - 1, 0, l)].Location);
-                    adj.Add(this.nodeNetwork[y_a1, x].Location);
-                    adj.Add(this.nodeNetwork[y_a1, Math.Clamp(x + 1, 0, l)].Location);
+                    if (y + 1 < l)
+                    {
+                        if (x - 1 >= 0) adj.Add(this.nodeNetwork[y + 1, x - 1].Location);
+                        adj.Add(this.nodeNetwork[y + 1, x].Location);
+                        if (x + 1 < l) adj.Add(this.nodeNetwork[y + 1, x + 1].Location);
+                    }
 
-                    adj.Add(this.nodeNetwork[y, Math.Clamp(x - 1, 0, l)].Location);
-                    adj.Add(this.nodeNetwork[y, Math.Clamp(x + 1, 0, l)].Location);
+                    if (x - 1 >= 0) adj.Add(this.nodeNetwork[y, x - 1].Location);
+                    if (x + 1 < l) adj.Add(this.nodeNetwork[y, x  + 1].Location);
 
                     return adj;
                 }

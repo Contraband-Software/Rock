@@ -29,6 +29,16 @@ public class PolygonCollider : Collider
         this.vertices = vertices;
     }
 
+    public PolygonCollider(List<PointF> vertices, bool debugged) : base(debug: debugged)
+    {
+        this.vertices = vertices;
+    }
+
+    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged=false) : base(layer: collisionLayer, debug: debugged)
+    {
+        this.vertices = vertices;
+    }
+
     private List<PointF> rotateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
@@ -50,7 +60,7 @@ public class PolygonCollider : Collider
         PointF origin = new PointF(GetGlobalPosition().X, GetGlobalPosition().Y);
         foreach (PointF relativePoint in vertices)
         {
-            // Translate points to be relative to shape centre in worldspace 
+            // Translate points to be relative to shape centre in worldspace
             result.Add(new PointF(origin.X + relativePoint.X, origin.Y + relativePoint.Y));
         }
 
@@ -74,6 +84,7 @@ public class PolygonCollider : Collider
 
         SetAABB(new AABB(min, max));
     }
+
 
     /// <summary>
     /// First checks if AABBs are overlapping before proceeding
@@ -378,7 +389,7 @@ public class PolygonCollider : Collider
             }
         }
         return hitCount == 4;
-        
+
     }
 
     /// <summary>
@@ -389,25 +400,25 @@ public class PolygonCollider : Collider
         Color lineColor = new Color(16, 245, 0); // Light green color
         float lineThickness = 2f;
 
-        List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
+        List<PointF> verticesDebug = translateVertices(rotateVertices(this.vertices));
 
         // Ensure there are enough vertices to draw lines
-        if (vertices.Count < 2)
+        if (verticesDebug.Count < 2)
         {
             return;
         }
 
         // Draw lines connecting vertices
-        for (int i = 0; i < vertices.Count - 1; i++)
+        for (int i = 0; i < verticesDebug.Count - 1; i++)
         {
-            Vector2 start = vertices[i].ToVector2();
-            Vector2 end = vertices[i + 1].ToVector2();
+            Vector2 start = verticesDebug[i].ToVector2();
+            Vector2 end = verticesDebug[i + 1].ToVector2();
             DrawLine(start, end, lineColor, lineThickness);
         }
 
         // Connect the last vertex to the first one
-        Vector2 last = vertices[vertices.Count - 1].ToVector2();
-        Vector2 first = vertices[0].ToVector2();
+        Vector2 last = verticesDebug[verticesDebug.Count - 1].ToVector2();
+        Vector2 first = verticesDebug[0].ToVector2();
         DrawLine(last, first, lineColor, lineThickness);
 
 

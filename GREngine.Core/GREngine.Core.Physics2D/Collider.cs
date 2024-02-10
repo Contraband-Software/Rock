@@ -32,16 +32,55 @@ public abstract class Collider : Behaviour
     public event TriggerEvent? OnTriggerEnter;
     public delegate void CollisionEvent(Collider collidedWith);
     public event CollisionEvent? OnCollisionEnter;
-    public Collider() {}
+
+    public bool Debug { get; set; } = false;
+
+    public Collider()
+    {
+    }
+
+    public Collider(string layer = "default", bool debug = false)
+    {
+        this.collisionLayer = layer;
+        Debug = debug;
+    }
 
     protected override void OnAwake()
     {
         collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
+        EnabledChangedEvent += state =>
+        {
+            if (state)
+            {
+                this.collisionSystem.AddCollisionObject(this);
+            }
+            else
+            {
+                this.collisionSystem.RemoveCollisionObject(this);
+            }
+        };
     }
 
     protected override void OnStart()
     {
         oldPosition = GetPosition();
+
+        this.collisionSystem.AddCollisionObject(this);
+    }
+
+    protected override void OnDestroy()
+    {
+        this.collisionSystem.RemoveCollisionObject(this);
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+#if DEBUG
+        if (Debug)
+        {
+            this.DrawDebug();
+        }
+#endif
     }
 
     public void updatePosition(float dt)

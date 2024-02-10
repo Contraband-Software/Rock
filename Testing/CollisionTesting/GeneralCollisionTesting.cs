@@ -56,19 +56,19 @@ public class GeneralCollisionTesting : Scene
 
         //Circle collider object 1
         GenericNode node3 = new GenericNode();
-        node3.SetLocalPosition(new Vector2(1,1));
+        node3.SetLocalPosition(new Vector2(100,100));
         sceneManager.AddNodeAtRoot(node3);
         CircleCollider circCol1 = new CircleCollider(50f);
         circCol1.SetLayer("map");
         sceneManager.AddBehaviour(node3, circCol1);
 
-        sceneManager.QueueSceneAction(() =>
+        sceneManager.QueueSceneAction((_) =>
         {
             col1.SetRotation(45f);
             col1.SetVelocity(new Vector2(0.2f, 0f));
             col2.SetVelocity(new Vector2(-0.2f, 0f));
 
-            collisionSystem.PointIsCollidingWithLayer(new PointF(30, 30), "map");
+            collisionSystem.PointIsCollidingWithLayer(new PointF(130, 130), "map");
         });
     }
 }
