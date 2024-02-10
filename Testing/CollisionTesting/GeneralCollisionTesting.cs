@@ -17,7 +17,7 @@ public class GeneralCollisionTesting : Scene
     {
     }
 
-    protected override void OnLoad(Node rootNode, Node persistantNode)
+    protected override void OnLoad(SceneManager sceneManager)
     {
         MyNode myNode = new MyNode();
         MyBehaviour myBehaviour = new MyBehaviour();
@@ -25,7 +25,6 @@ public class GeneralCollisionTesting : Scene
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(myNode, myBehaviour);
         this.Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(myNode);
 
-        ISceneControllerService sceneManager = this.Game.Services.GetService<ISceneControllerService>();
         ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
 
         List<PointF> squarePointFList = new List<PointF>
@@ -42,32 +41,33 @@ public class GeneralCollisionTesting : Scene
         node1.SetLocalPosition(new Vector2(100f, 100f));
         sceneManager.AddNodeAtRoot(node1);
 
-        PolygonCollider col1 = new PolygonCollider(squarePointFList);
-        collisionSystem.AddCollisionObject(col1);
+        PolygonCollider col1 = new PolygonCollider(squarePointFList, new Vector2(0f, 100f), true);
         sceneManager.AddBehaviour(node1, col1);
 
         //Collider object 2
         GenericNode node2 = new GenericNode();
 
-        node2.SetLocalPosition(new Vector2(200f, 100f));
+        node2.SetLocalPosition(new Vector2(200f, 90f));
         sceneManager.AddNodeAtRoot(node2);
 
-        PolygonCollider col2 = new PolygonCollider(squarePointFList);
-        collisionSystem.AddCollisionObject(col2);
+        PolygonCollider col2 = new PolygonCollider(squarePointFList, new Vector2(0f, 100f), true);
         sceneManager.AddBehaviour(node2, col2);
 
         //Circle collider object 1
         GenericNode node3 = new GenericNode();
-        node3.SetLocalPosition(new Vector2(60,0));
+        node3.SetLocalPosition(new Vector2(100,100));
         sceneManager.AddNodeAtRoot(node3);
-        CircleCollider circCol1 = new CircleCollider(50f);
+        CircleCollider circCol1 = new CircleCollider(50f, new Vector2(0f, 100f), true);
+        circCol1.SetLayer("map");
         sceneManager.AddBehaviour(node3, circCol1);
 
-        sceneManager.QueueSceneAction(() =>
+        sceneManager.QueueSceneAction((_) =>
         {
             col1.SetRotation(45f);
             col1.SetVelocity(new Vector2(0.2f, 0f));
             col2.SetVelocity(new Vector2(-0.2f, 0f));
+
+            collisionSystem.PointIsCollidingWithLayer(new PointF(130, 130), "map");
         });
     }
 }

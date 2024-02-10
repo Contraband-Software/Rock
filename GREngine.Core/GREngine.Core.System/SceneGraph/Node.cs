@@ -19,6 +19,11 @@ public abstract class Node : AbstractGameObject
         Name = "Node";
         this.transform.matrix = Matrix.Identity;
     }
+    protected Node(string name)
+    {
+        Name = name;
+        this.transform.matrix = Matrix.Identity;
+    }
 
     #region TRANSFORM_API
     public Matrix GetLocalTransform()
@@ -38,6 +43,16 @@ public abstract class Node : AbstractGameObject
     }
 
     #region HELPERS
+    public Vector2 GetLocalPosition2D()
+    {
+        Vector2 pos = new Vector2();
+        GetGlobalPosition().Deconstruct(out pos.X, out pos.Y, out _);
+        return pos;
+    }
+    public void SetLocalPosition(float x, float y)
+    {
+        this.SetLocalPosition(new Vector3(x, y, this.GetLocalPosition().Z));
+    }
     public void SetLocalPosition(Vector3 localPosition)
     {
         Matrix matrix = this.GetLocalTransform();

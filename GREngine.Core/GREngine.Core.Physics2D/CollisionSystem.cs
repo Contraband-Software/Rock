@@ -260,7 +260,8 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         {
             if(obj.GetLayer() == layer)
             {
-                if (obj.PointInsideCollider(point)) { return true; }
+                if (obj.PointInsideCollider(point))
+                { return true; }
             }
         }
         return false;

@@ -24,7 +24,7 @@ public abstract class Scene
     }
 
     #region USER_IMPLEMENTATION_API
-    internal protected virtual void OnLoad(Node rootNode, Node persistantNode) { }
+    internal protected virtual void OnLoad(SceneManager sceneManager) { }
     internal protected virtual void OnUnload() { }
     #endregion
 }

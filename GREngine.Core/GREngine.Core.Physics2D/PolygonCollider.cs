@@ -29,6 +29,24 @@ public class PolygonCollider : Collider
         this.vertices = vertices;
     }
 
+    public PolygonCollider(List<PointF> vertices, bool debugged) : base(debug: debugged)
+    {
+        this.vertices = vertices;
+    }
+
+    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged=false) : base(layer: collisionLayer, debug: debugged)
+    {
+        this.vertices = vertices;
+    }
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset:offset)
+    {
+        this.vertices = vertices;
+    }
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, bool debugged = false) : base(debug: debugged, offset: offset)
+    {
+        this.vertices = vertices;
+    }
+
     private List<PointF> rotateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
@@ -47,10 +65,10 @@ public class PolygonCollider : Collider
     private List<PointF> translateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
-        PointF origin = new PointF(GetGlobalPosition().X, GetGlobalPosition().Y);
+        PointF origin = new PointF(GetGlobalColliderPosition().X, GetGlobalColliderPosition().Y);
         foreach (PointF relativePoint in vertices)
         {
-            // Translate points to be relative to shape centre in worldspace 
+            // Translate points to be relative to shape centre in worldspace
             result.Add(new PointF(origin.X + relativePoint.X, origin.Y + relativePoint.Y));
         }
 
@@ -110,8 +128,8 @@ public class PolygonCollider : Collider
         List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
         List<PointF> otherVertices = other.translateVertices(other.rotateVertices(other.vertices));
 
-        Vector2 position = GetGlobalPosition();
-        Vector2 otherPostion = other.GetGlobalPosition();
+        Vector2 position = GetGlobalColliderPosition();
+        Vector2 otherPostion = other.GetGlobalColliderPosition();
         bool velocityTowardsCollision = false;
         float distToOtherObj = new Vector2(otherPostion.X - position.X, otherPostion.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
@@ -251,7 +269,7 @@ public class PolygonCollider : Collider
     }
     public override void SolveCollision(CircleCollider other, Vector2 velocity)
     {
-        throw new NotImplementedException();
+       
     }
 
     /// <summary>
@@ -261,14 +279,23 @@ public class PolygonCollider : Collider
     /// <param name="other"></param>
     private void ResolveCollision(PolygonCollider other, Vector2 collisionVector)
     {
-        Vector2 currentPos = GetGlobalPosition();
-        Vector2 otherCurrentPos = other.GetGlobalPosition();
+        FireCorrectEvent(collisionVector, other);
+
+        Vector2 currentPos = GetGlobalColliderPosition();
+        Vector2 otherCurrentPos = other.GetGlobalColliderPosition();
+
         Vector2 thisColliderResolution = new Vector2(collisionVector.X * -1, collisionVector.Y * -1);
-        if (other.IsStatic())
+        if (IsTrigger() || other.IsTrigger())
+        {
+            return;
+        }
+        //normal to static, resolve only normal
+        else if (other.IsStatic())
         {
             Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
-            SetPosition(resolvedPosition);
+            SetNodePosition(resolvedPosition);
         }
+        //Normal to normal, resolve both
         else
         {
             float thisColliderResolutionScale = thisColliderResolution.Length() * 0.5f;
@@ -291,9 +318,14 @@ public class PolygonCollider : Collider
             Vector2 otherColliderResolvedPosition = new Vector2(
                 otherCurrentPos.X + otherColliderResolution.X,
                 otherCurrentPos.Y + otherColliderResolution.Y);
-            SetPosition(resolvedPosition);
-            other.SetPosition(otherColliderResolvedPosition);
+            SetNodePosition(resolvedPosition);
+            other.SetNodePosition(otherColliderResolvedPosition);
         }
+    }
+
+    private void ResolveCollision(CircleCollider circCollider, Vector2 collisionVector)
+    {
+
     }
 
     public override bool PointInsideCollider(PointF point)
@@ -352,7 +384,7 @@ public class PolygonCollider : Collider
             }
         }
         return hitCount == 4;
-        
+
     }
 
     /// <summary>
@@ -363,25 +395,25 @@ public class PolygonCollider : Collider
         Color lineColor = new Color(16, 245, 0); // Light green color
         float lineThickness = 2f;
 
-        List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
+        List<PointF> verticesDebug = translateVertices(rotateVertices(this.vertices));
 
         // Ensure there are enough vertices to draw lines
-        if (vertices.Count < 2)
+        if (verticesDebug.Count < 2)
         {
             return;
         }
 
         // Draw lines connecting vertices
-        for (int i = 0; i < vertices.Count - 1; i++)
+        for (int i = 0; i < verticesDebug.Count - 1; i++)
         {
-            Vector2 start = vertices[i].ToVector2();
-            Vector2 end = vertices[i + 1].ToVector2();
+            Vector2 start = verticesDebug[i].ToVector2();
+            Vector2 end = verticesDebug[i + 1].ToVector2();
             DrawLine(start, end, lineColor, lineThickness);
         }
 
         // Connect the last vertex to the first one
-        Vector2 last = vertices[vertices.Count - 1].ToVector2();
-        Vector2 first = vertices[0].ToVector2();
+        Vector2 last = verticesDebug[verticesDebug.Count - 1].ToVector2();
+        Vector2 first = verticesDebug[0].ToVector2();
         DrawLine(last, first, lineColor, lineThickness);
 
 

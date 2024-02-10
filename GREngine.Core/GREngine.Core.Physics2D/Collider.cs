@@ -24,33 +24,83 @@ public abstract class Collider : Behaviour
 
     protected ICollisionSystem collisionSystem;
 
+    private Vector2 offset;
     private bool isStatic = false;
     private bool isTrigger = false;
     private string collisionLayer = "default";
+
+    public delegate void TriggerEvent(Collider collidedWith);
+    public event TriggerEvent? OnTriggerEnter;
+    public delegate void CollisionEvent(Collider collidedWith);
+    public event CollisionEvent? OnCollisionEnter;
+
+    public bool Debug { get; set; } = false;
+
     public Collider()
     {
+    }
+
+    public Collider(Vector2 offset, string layer = "default", bool debug = false)
+    {
+        this.offset = offset;
+        this.collisionLayer = layer;
+        Debug = debug;
+    }
+    public Collider(string layer = "default", bool debug = false)
+    {
+        this.offset = Vector2.Zero;
+        this.collisionLayer = layer;
+        Debug = debug;
     }
 
     protected override void OnAwake()
     {
         collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
+        EnabledChangedEvent += state =>
+        {
+            if (state)
+            {
+                this.collisionSystem.AddCollisionObject(this);
+            }
+            else
+            {
+                this.collisionSystem.RemoveCollisionObject(this);
+            }
+        };
     }
 
     protected override void OnStart()
     {
-        oldPosition = GetPosition();
+        oldPosition = GetLocalNodePosition();
+
+        this.collisionSystem.AddCollisionObject(this);
+    }
+
+    protected override void OnDestroy()
+    {
+        this.collisionSystem.RemoveCollisionObject(this);
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+#if DEBUG
+        if (Debug)
+        {
+            this.DrawDebug();
+        }
+#endif
     }
 
     public void updatePosition(float dt)
     {
         rotation %= 360; //ensure rotation never goes above 360 (resets to 0)
 
-        Vector2 currentPosition = GetPosition();
+        Vector2 currentPosition = GetLocalNodePosition();
         Vector2 velocity = currentPosition - oldPosition;
         // save current position
         oldPosition = new Vector2(currentPosition.X, currentPosition.Y);
         // Perform verlet integration
-        SetPosition(currentPosition + velocity + acceleration * dt * dt);
+        SetNodePosition(currentPosition + velocity + acceleration * dt * dt);
         // Reset acceleration
         acceleration = Vector2.Zero;
     }
@@ -64,7 +114,7 @@ public abstract class Collider : Behaviour
         n.Normalize();
         Vector2 v = m * n;
 
-        SetPosition(new Vector2(oldPosition.X + v.X, oldPosition.Y + v.Y));
+        SetNodePosition(new Vector2(oldPosition.X + v.X, oldPosition.Y + v.Y));
     }
 
     public void accelerate(Vector2 acc)
@@ -77,7 +127,7 @@ public abstract class Collider : Behaviour
     /// Gets local position from the node as a Vector2
     /// This method is used for velocity
     /// </summary>
-    public Vector2 GetPosition()
+    public Vector2 GetLocalNodePosition()
     {
         Vector3 pos = Node.GetLocalPosition();
         return new Vector2(pos.X, pos.Y);
@@ -88,18 +138,27 @@ public abstract class Collider : Behaviour
     /// This method is used for collision detection
     /// </summary>
     /// <returns></returns>
-    public Vector2 GetGlobalPosition()
+    public Vector2 GetGlobalColliderPosition()
     {
-        Vector3 pos = Node.GetGlobalPosition();
+        Vector3 pos = Node.GetGlobalPosition(); 
         return new Vector2(pos.X, pos.Y);
     }
-    public void SetPosition(Vector2 position)
+
+    /// <summary>
+    /// Sets the position of the Node
+    /// </summary>
+    /// <param name="position"></param>
+    public void SetNodePosition(Vector2 position)
     {
-        float z = Node.GetGlobalPosition().Z;
+        float z = Node.GetLocalPosition().Z;
         Vector3 pos = new Vector3(position.X, position.Y, z);
         Node.SetLocalPosition(pos);
     }
-
+    public Vector2 GetOffset()
+    {
+        return offset;
+    }
+    public void SetOffset(Vector2 offset) { this.offset = offset; }
     public float GetRotation()
     {
         return rotation;
@@ -123,7 +182,7 @@ public abstract class Collider : Behaviour
     public void SolveCollisions(List<Collider> others)
     {
         SetAABBOverlapping(true);
-        Vector2 velocityVector = new Vector2(GetPosition().X - GetOldPosition().X, GetPosition().Y - GetOldPosition().Y);
+        Vector2 velocityVector = new Vector2(GetLocalNodePosition().X - GetOldPosition().X, GetLocalNodePosition().Y - GetOldPosition().Y);
         foreach (Collider other in others)
         {
             other.SetAABBOverlapping(true);
@@ -156,4 +215,42 @@ public abstract class Collider : Behaviour
     /// (eg, draw the collider outline)
     /// </summary>
     public virtual void DrawDebug() { }
+
+    protected void FireCorrectEvent(Vector2 collisionVector, Collider other)
+    {
+        if(collisionVector == Vector2.Zero)
+        {
+            return;
+        }
+        if (IsTrigger() || other.IsTrigger())
+        {
+            FireTriggerEnter(collisionVector, other);
+            other.FireTriggerEnter(collisionVector, this);
+        }
+        else if (other.IsStatic())
+        {
+            FireCollisionEnter(collisionVector, other);
+            other.FireCollisionEnter(collisionVector, this);
+        }
+        else
+        {
+            FireCollisionEnter(collisionVector, other);
+            other.FireCollisionEnter(collisionVector, this);
+        }
+    }
+
+    protected void FireTriggerEnter(Vector2 collisionVector, Collider other)
+    {
+        if(collisionVector != Vector2.Zero)
+        {
+            this.OnTriggerEnter?.Invoke(other);
+        }
+    }
+    protected void FireCollisionEnter(Vector2 collisionVector, Collider other)
+    {
+        if (collisionVector != Vector2.Zero)
+        {
+            this.OnCollisionEnter?.Invoke(other);
+        }
+    }
 }

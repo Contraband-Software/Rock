@@ -25,7 +25,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     private HashSet<Behaviour> initializationSet = new HashSet<Behaviour>();
     private Dictionary<string, HashSet<Node>> nodeTagIndex = new Dictionary<string, HashSet<Node>>();
 
-    private HashSet<Action> lateUpdateQueue = new HashSet<Action>();
+    private HashSet<Action<GameTime>> lateUpdateQueue = new HashSet<Action<GameTime>>();
 
     public SceneManager(Game game) : base(game)
     {
@@ -102,7 +102,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
             if (this.lateUpdateQueue.Count > 0)
             {
-                this.lateUpdateQueue.ToList().ForEach(a => a.Invoke());
+                this.lateUpdateQueue.ToList().ForEach(a => a.Invoke(gameTime));
                 this.lateUpdateQueue.Clear();
             }
         }
@@ -112,7 +112,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     #endregion
 
     #region CURRENT_SCENE_API
-    public void QueueSceneAction(Action action)
+    public void QueueSceneAction(Action<GameTime> action)
     {
         this.lateUpdateQueue.Add(action);
     }
@@ -242,6 +242,11 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         behaviour.Node = node;
         node.behaviours.Add(behaviour);
         if (!behaviour.Initialized) this.initializationSet.Add(behaviour);
+    }
+    public Behaviour InitBehaviour(Node node, Behaviour behaviour)
+    {
+        this.AddBehaviour(node, behaviour);
+        return behaviour;
     }
     public void RemoveBehaviour(Behaviour behaviour)
     {
@@ -461,7 +466,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         this.nextScene = null;
 
         // guaranteed to be not null by ChangeScene function not having a nullable (?) parameter
-        this.activeScene?.OnLoad(this.rootNode, this.persistantNode);
+        this.activeScene?.OnLoad(this);
     }
     #endregion
 

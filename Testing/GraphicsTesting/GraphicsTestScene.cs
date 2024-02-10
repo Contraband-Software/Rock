@@ -15,7 +15,7 @@ public class GraphicsTestScene : Scene
 
     }
 
-    protected override void OnLoad(Node rootNode, Node persistantNode)
+    protected override void OnLoad(SceneManager sceneManager)
     {
         GenericNode root = new GenericNode();
         GenericNode testObject = new GenericNode();
