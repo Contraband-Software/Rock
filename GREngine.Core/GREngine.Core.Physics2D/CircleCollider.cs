@@ -69,7 +69,22 @@ public class CircleCollider : Collider
 
             Vector2 n = collisionAxis / dist;
             float delta = minDist - dist;
-            ResolveCollision(obj2, collisionAxis);
+
+            if (IsTrigger() || obj2.IsTrigger())
+            {
+                return;
+            }
+            else if (obj2.IsStatic())
+            {
+
+                SetNodePosition(GetGlobalColliderPosition() + 1f * n * delta);
+            }
+            else
+            {
+                SetNodePosition(GetGlobalColliderPosition() + 0.5f * n * delta);
+                obj2.SetNodePosition(obj2.GetGlobalColliderPosition() - 0.5f * n * delta);
+            }
+          
         }
     }
 

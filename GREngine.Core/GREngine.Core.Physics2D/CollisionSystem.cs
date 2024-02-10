@@ -20,6 +20,7 @@ public interface ICollisionSystem
     public bool LinesSegmentsOverlap(PointF a1, PointF a2, PointF b1, PointF b2);
     public bool LinesCanIntersect(Line l1, Line l2);
     public PointF LineIntersectionPoint(Line l1, Line l2);
+    public List<PointF> LineIntersectsCircle(PointF p1, PointF p2, PointF c, float r);
     public bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2);
     public void AddCollisionObject(Collider obj);
     public void RemoveCollisionObject(Collider obj);
@@ -239,6 +240,26 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     }
     #endregion
 
+    public List<PointF> LineIntersectsCircle(PointF p1, PointF p2, PointF c, float r)
+    {
+        p1 = new PointF(p1.X - c.X, p1.Y - c.Y);
+        p2 = new PointF(p2.X - c.X, p2.Y - c.Y);
+
+        float dx = p2.X - p1.X;
+        float dy = p2.Y - p1.Y;
+        float dr = MathF.Sqrt((dx * dx) + (dy * dy));
+        float D = (p1.X * p2.Y) - (p2.X * p1.Y);
+
+        float x1 = ((D * dy) + (Math.Sign(dy) * dx * MathF.Sqrt(((r * r) * (dr * dr)) - (D * D)))) / (dr * dr);
+        float x2 = ((D * dy) - (Math.Sign(dy) * dx * MathF.Sqrt(((r * r) * (dr * dr)) - (D * D)))) / (dr * dr);
+
+        float y1 = ((-1 * D * dx) + (Math.Abs(dy) * MathF.Sqrt(((r * r) * (dr * dr)) - (D * D)))) / (dr * dr);
+        float y2 = ((-1 * D * dx) - (Math.Abs(dy) * MathF.Sqrt(((r * r) * (dr * dr)) - (D * D)))) / (dr * dr);
+
+        return new List<PointF> {
+            new PointF(x1 + c.X, y1 + c.Y),
+            new PointF(x2 + c.X, y2 + c.X) };
+    }
 
     void updatePositions(float dt)
     {
