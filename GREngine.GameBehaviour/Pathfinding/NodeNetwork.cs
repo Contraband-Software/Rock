@@ -38,51 +38,35 @@ public class NodeNetwork : Behaviour
     {
         ICollisionSystem col = this.Game.Services.GetService<ICollisionSystem>();
 
-        // Out.PrintLn((col == null).ToString());
-
         this.width = width;
         this.height = height;
-
-        Vector2 position = new Vector2();
-        this.Node.GetLocalPosition().Deconstruct(out position.X, out position.Y, out _);
-
-        int networkRight = (int)MathF.Floor(position.Y + width);
-        int networkBottom = (int)MathF.Floor(position.X + height);
 
         this.nodeNetwork = new Node[
             width  / ((int)MathF.Ceiling(width  / resolution)),
             height / ((int)MathF.Ceiling(height / resolution))];
 
-        int vx = 0;
         int vy = 0;
-
-        // Out.PrintLn(this.nodeNetwork.GetLength(0).ToString());
-        // Out.PrintLn(this.nodeNetwork.GetLength(1).ToString());
-
-        for (int y = (int)position.Y;; y += (int)(height / resolution))
+        for (int y = 0;; y += (int)(height / resolution))
         {
             if (vy == this.nodeNetwork.GetLength(0))
                 break;
-            vx = 0;
-            for (int x = (int)position.X;; x += (int)(width / resolution))
+
+            int vx = 0;
+            for (int x = 0;; x += (int)(width / resolution))
             {
                 if (vx == this.nodeNetwork.GetLength(1))
                     break;
-                // Out.PrintLn(vx.ToString() + ", " + vy);
 
                 Vector2 globalPosition = new Vector2();
                 (Node.GetGlobalPosition() + new Vector3(new PointF(x, y).ToVector2(), 0)).Deconstruct(out globalPosition.X, out globalPosition.Y, out _);
 
-                // Out.PrintLn("collision");
-                // Out.PrintLn(globalPosition.ToString());
-                // Out.PrintLn(col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer).ToString());
                 this.nodeNetwork[vy, vx] = new Node(
                     new Point(x, y),
                     col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), makePointLayer)
-                    && !col.PointIsCollidingWithLayer(new PointF(x, y), cullPointLayer)
+                    && !col.PointIsCollidingWithLayer(new PointF(globalPosition.X, globalPosition.Y), cullPointLayer)
                     );
-                vx++;
 
+                vx++;
             }
             vy++;
         }

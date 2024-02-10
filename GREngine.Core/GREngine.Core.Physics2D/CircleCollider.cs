@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace GREngine.Core.Physics2D;
 
+using Debug;
 using PebbleRenderer;
 using Color = Microsoft.Xna.Framework.Color;
 
