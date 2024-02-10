@@ -7,13 +7,14 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using GREngine.Core.Physics2D;
 using System.Collections.Generic;
+using GREngine.Core.System;
+using System.Xml.Linq;
+using GREngine.Core.PebbleRenderer;
 
 namespace GREngine.Core.Physics2D;
 
-public abstract class VerletObject
+public abstract class Collider : Behaviour
 {
-
-    private Vector2 currentPosition = Vector2.Zero;
     private Vector2 oldPosition = Vector2.Zero;
     private Vector2 acceleration = Vector2.Zero;
     private float rotation;
@@ -22,22 +23,31 @@ public abstract class VerletObject
 
     private Vector2 externalVelocity = Vector2.Zero;
     private bool isStatic = false;
-
-    public VerletObject(Vector2 initialPosition)
+    protected ICollisionSystem collisionSystem;
+    public Collider()
     {
-        currentPosition = initialPosition;
-        oldPosition = initialPosition;
+    }
+
+    protected override void OnAwake()
+    {
+        collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
+    }
+
+    protected override void OnStart()
+    {
+        oldPosition = GetPosition();
     }
 
     public void updatePosition(float dt)
     {
         rotation %= 360; //ensure rotation never goes above 360 (resets to 0)
 
+        Vector2 currentPosition = GetPosition();
         Vector2 velocity = currentPosition - oldPosition;
         // save current position
         oldPosition = new Vector2(currentPosition.X, currentPosition.Y);
         // Perform verlet integration
-        currentPosition = currentPosition + velocity + acceleration * dt * dt;
+        SetPosition(currentPosition + velocity + acceleration * dt * dt);
         // Reset acceleration
         acceleration = Vector2.Zero;
     }
@@ -51,45 +61,49 @@ public abstract class VerletObject
         n.Normalize();
         Vector2 v = m * n;
 
-        currentPosition = new Vector2(oldPosition.X + v.X, oldPosition.Y + v.Y);
+        SetPosition(new Vector2(oldPosition.X + v.X, oldPosition.Y + v.Y));
     }
 
     public void accelerate(Vector2 acc)
     {
         acceleration = acc;
     }
-
-    public Vector2 GetPosition() { return currentPosition; }
     public Vector2 GetOldPosition() { return oldPosition; }
 
-    public void SetPosition(Vector2 position)
+    /// <summary>
+    /// Gets local position from the node as a Vector2
+    /// This method is used for velocity
+    /// </summary>
+    public Vector2 GetPosition()
     {
-        //oldPosition = currentPosition;
-        currentPosition = position;
-        //oldPosition = currentPosition;
-
+        Vector3 pos = Node.GetLocalPosition();
+        return new Vector2(pos.X, pos.Y);
     }
 
-    public void SetRotation(float rotation)
+    /// <summary>
+    /// Gets global position from the node as a Vector2
+    /// This method is used for collision detection
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetGlobalPosition()
     {
-        this.rotation = rotation;
+        Vector3 pos = Node.GetGlobalPosition();
+        return new Vector2(pos.X, pos.Y);
+    }
+    public void SetPosition(Vector2 position)
+    {
+        float z = Node.GetGlobalPosition().Z;
+        Vector3 pos = new Vector3(position.X, position.Y, z);
+        Node.SetLocalPosition(pos);
     }
 
     public float GetRotation()
     {
         return rotation;
     }
-
-    public void SolveCollision(VerletObject other, Vector2 velocity)
+    public void SetRotation(float r)
     {
-        if (other is CircleCollider circCol)
-        {
-            SolveCollision(circCol, velocity);
-        }
-        else if (other is PolygonCollider polyCol)
-        {
-            SolveCollision(polyCol, velocity);
-        }
+        rotation = r;
     }
 
     public AABB GetAABB() { return aabb; }
@@ -99,14 +113,25 @@ public abstract class VerletObject
     public bool IsAABBOverlapping() { return aabbOverlapping; }
     public void SetAABBOverlapping(bool b) { aabbOverlapping = b; }
 
-    public void SolveCollisions(List<VerletObject> others)
+    public void SolveCollisions(List<Collider> others)
     {
         SetAABBOverlapping(true);
         Vector2 velocityVector = new Vector2(GetPosition().X - GetOldPosition().X, GetPosition().Y - GetOldPosition().Y);
-        foreach (VerletObject other in others)
+        foreach (Collider other in others)
         {
             other.SetAABBOverlapping(true);
             SolveCollision(other, velocityVector);
+        }
+    }
+    public void SolveCollision(Collider other, Vector2 velocity)
+    {
+        if (other is CircleCollider circCol)
+        {
+            SolveCollision(circCol, velocity);
+        }
+        else if (other is PolygonCollider polyCol)
+        {
+            SolveCollision(polyCol, velocity);
         }
     }
     public abstract void SolveCollision(PolygonCollider other, Vector2 velocity);
@@ -121,5 +146,5 @@ public abstract class VerletObject
     /// Define how to draw the verlet object for debugging
     /// (eg, draw the collider outline)
     /// </summary>
-    public virtual void DrawDebug(SpriteBatch spriteBatch, Texture2D pixelTexture) { }
+    public virtual void DrawDebug() { }
 }

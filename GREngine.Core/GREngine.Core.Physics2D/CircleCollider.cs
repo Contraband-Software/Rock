@@ -1,3 +1,4 @@
+using GREngine.Core.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GREngine.Core.Physics2D;
 
-public class CircleCollider : VerletObject
+public class CircleCollider : Collider
 {
     float radius;
 
-    public CircleCollider(Vector2 initialPosition, float radius) : base(initialPosition)
+    public CircleCollider(float radius) : base()
     {
         this.radius = radius;
     }
@@ -31,7 +32,7 @@ public class CircleCollider : VerletObject
 
     public override void SolveCollision(CircleCollider obj2, Vector2 velocity)
     {
-        Vector2 collisionAxis = GetPosition() - obj2.GetPosition();
+        Vector2 collisionAxis = GetGlobalPosition() - obj2.GetGlobalPosition();
         float dist = collisionAxis.Length();
         float minDist = GetRadius() + obj2.GetRadius();
         if (dist < minDist)
