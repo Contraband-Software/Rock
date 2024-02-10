@@ -48,7 +48,7 @@ public class GraphicsTesting : Game
     protected override void LoadContent()
     {
         re.LoadShaders();
-        Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), null);
+        Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         Material puddleMat = new Material(null, new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
 
         //Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/oceanRoughness")));

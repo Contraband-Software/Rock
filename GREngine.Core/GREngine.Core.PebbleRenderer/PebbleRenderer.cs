@@ -149,7 +149,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         this.renderScale = renderScale;
         this.shadowRenderScale = shadowRenderScale;
         this.scaleFactor = (float)renderHeight / (float)REFERENCE_HEIGHT;
-        this.ambientLightColor = new Color(0.3f, 0.3f, 0.4f);
+        this.ambientLightColor = new Color(0.2f, 0.2f, 0.22f);
         this.randomGen = new Random();
 
         this.debugShapes = new Queue<DebugDrawable>();
@@ -218,6 +218,11 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     public void setCameraPosition(Vector2 cameraPostion)
     {
         this.cameraPosition = cameraPostion;
+    }
+
+    public void lookAt(Vector2 position)
+    {
+        this.cameraPosition = position - new Vector2(renderWidth/2,renderHeight/2);
     }
     public Vector2 getCameraPosition()
     {

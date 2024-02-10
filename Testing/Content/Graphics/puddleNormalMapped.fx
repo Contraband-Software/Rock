@@ -37,7 +37,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 
     float spriteSheetIndex = float2(0, 0);
     
-    int index = floor(time*2) % 4;
+    int index = floor(time*4) % 4;
 
     if (index == 1)
     {

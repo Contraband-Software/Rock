@@ -87,8 +87,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     
     float waveMask = 1 - ((waveMaskUV.x * sin(waveAngle) + waveMaskUV.y * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
 
-    float waveMaskoffset1 = 1 - (((waveMaskUV.x + 0.02 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.02 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
-    float waveMaskoffset2 = 1 - (((waveMaskUV.x + 0.04 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.04 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
+    float waveMaskoffset1 = 1 - (((waveMaskUV.x + 0.04 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.04 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
+    float waveMaskoffset2 = 1 - (((waveMaskUV.x + 0.08 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.08 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
 
 
     waveMask = pow(waveMask, 2);
@@ -111,7 +111,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 
     
     float4 sample = tex2D(SpriteTextureSampler, (waveMaskUV + time * 0.01) % 1);
-    return float4(sample.rgb * (waveMask + 0.2) + float3(0.5, 0.5, 1) * (1 - waveMask), 1);
+    return float4(sample.rgb * (waveMask + 1) + float3(0.5, 0.5, 1) * (1 - waveMask), 1);
 }
 
 technique SpriteDrawing
