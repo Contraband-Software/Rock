@@ -226,7 +226,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void lookAt(Vector2 position)
     {
-        this.cameraPosition = position - new Vector2(renderWidth/2,renderHeight/2);
+        this.cameraPosition = position - new Vector2(renderWidth,renderHeight);
     }
     public Vector2 getCameraPosition()
     {

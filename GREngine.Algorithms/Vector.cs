@@ -14,4 +14,13 @@ public static class Vector
     {
         return (float)Math.Atan2(normalizedVector.X, -normalizedVector.Y);
     }
+
+    public static Vector2 SafeNormalize(Vector2 vec)
+    {
+        if (vec.Length() == 0)
+            return Vector2.Zero;
+        Vector2 v2 = new Vector2(vec.X, vec.Y);
+        v2.Normalize();
+        return v2;
+    }
 }

@@ -71,6 +71,12 @@ public abstract class Node : AbstractGameObject
     {
         return this.GetGlobalTransform().Translation;
     }
+    public Vector2 GetGlobalPosition2D()
+    {
+        Vector2 pos = new Vector2();
+        this.GetGlobalTransform().Translation.Deconstruct(out pos.X, out pos.Y, out _);
+        return pos;
+    }
     #endregion
     #endregion
 

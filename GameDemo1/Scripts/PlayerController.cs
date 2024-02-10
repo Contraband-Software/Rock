@@ -1,13 +1,10 @@
 namespace GameDemo1.Scripts;
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.System;
 using GREngine.Algorithms;
 using GREngine.Core.Physics2D;
-using GREngine.Debug;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -27,10 +24,11 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private float walkSpeed = 10;
+    private float walkSpeed = 2;
     private float maxGunPower = 60;
     private float gunCooldown = 0.5f;
     private float gunKnockback = 1;
+    private float platformSpeedDamping = 0.68f;
 
     private string mapFloorCollisionLayer;
     #endregion
@@ -101,6 +99,7 @@ public class PlayerController : Behaviour
         if (this.isGrounded)
         {
             currentFallTime = 0;
+            this.rb.Velocity *= platformSpeedDamping;
         }
         else
         {
@@ -118,24 +117,14 @@ public class PlayerController : Behaviour
 
         isGrounded = false;
 
-        // List<Collider> mapColliders = this.Game.Services.GetService<ICollisionSystem>().GetCollidersOfLayer(this.mapFloorCollisionLayer);
-        //
-        // mapColliders.ForEach(c =>
-        // {
-        //     var p = new PointF(this.Node.GetGlobalPosition().X, this.Node.GetGlobalPosition().Y);
-        //     if (c.PointInsideCollider(p))
-        //     {
-        //         PrintLn(p.ToString());
-        //         isGrounded = true;
-        //     }
-        // });
-        // if (!this.isGrounded)
-        //     PrintLn("bye");
+        this.Game.Services.GetService<IPebbleRendererService>()
+            .lookAt(this.Node.GetGlobalPosition2D()); // - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
     }
 
     private void GameOver()
     {
-        PrintLn("Game Over");
+        PlayerDiedEvent?.Invoke();
+        // PrintLn("Game Over");
     }
 
     private void FireGun()
@@ -184,7 +173,7 @@ public class PlayerController : Behaviour
             forceVector += new Vector2(0, 1);
         }
 
-        forceVector.Normalize();
+        if (forceVector.Length() > 0) forceVector.Normalize();
 
         return forceVector;
     }
@@ -203,7 +192,7 @@ public class PlayerController : Behaviour
         MouseState mouseState = Mouse.GetState();
         Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
         Vector2 mouseDisplacement = mousePos - relativeTo;
-        mouseDisplacement.Normalize();
+        if (mouseDisplacement.Length() != 0) mouseDisplacement.Normalize();
         this.facingDirection = Vector.VectorToAngle(mouseDisplacement);
     }
 }

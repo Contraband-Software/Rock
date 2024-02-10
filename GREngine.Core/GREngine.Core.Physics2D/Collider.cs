@@ -51,16 +51,30 @@ public abstract class Collider : Behaviour
     {
     }
 
-    public Collider(Vector2 offset, string layer = "default", bool debug = false)
+    public Collider(Vector2 offset, string layer, bool debug)
     {
         this.offset = offset;
         this.collisionLayer = layer;
         Debug = debug;
     }
-    public Collider(string layer = "default", bool debug = false)
+    public Collider(string layer, bool debug)
     {
         this.offset = Vector2.Zero;
         this.collisionLayer = layer;
+        Debug = debug;
+    }
+
+    public Collider(bool debug)
+    {
+        this.offset = Vector2.Zero;
+        this.collisionLayer = "default";
+        Debug = debug;
+    }
+
+    public Collider(Vector2 offset, bool debug)
+    {
+        this.offset = offset;
+        this.collisionLayer = "default";
         Debug = debug;
     }
 

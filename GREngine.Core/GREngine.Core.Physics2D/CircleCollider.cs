@@ -24,20 +24,20 @@ public class CircleCollider : Collider
         this.radius = radius;
     }
 
-    public CircleCollider(float radius, bool debugged) : base(debug: debugged)
+    public CircleCollider(float radius, bool debugged) : base(debugged)
     {
         this.radius = radius;
     }
 
-    public CircleCollider(float radius, string collisionLayer, bool debugged=false) : base(layer: collisionLayer, debug: debugged)
+    public CircleCollider(float radius, string collisionLayer, bool debugged = false) : base(collisionLayer, debugged)
     {
         this.radius = radius;
     }
-    public CircleCollider(float radius, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset:offset)
+    public CircleCollider(float radius, Vector2 offset, string collisionLayer, bool debugged = false) : base(offset, collisionLayer, debugged)
     {
         this.radius = radius;
     }
-    public CircleCollider(float radius, Vector2 offset, bool debugged = false) : base(debug: debugged, offset: offset)
+    public CircleCollider(float radius, Vector2 offset, bool debugged = false) : base(offset, debugged)
     {
         this.radius = radius;
     }
@@ -84,7 +84,7 @@ public class CircleCollider : Collider
                 SetNodePosition(GetGlobalColliderPosition() + 0.5f * n * delta);
                 obj2.SetNodePosition(obj2.GetGlobalColliderPosition() - 0.5f * n * delta);
             }
-          
+
         }
     }
 
