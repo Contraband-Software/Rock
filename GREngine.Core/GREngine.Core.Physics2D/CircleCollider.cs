@@ -55,7 +55,7 @@ public class CircleCollider : Collider
     ///
     public override void SolveCollision(PolygonCollider other, Vector2 velocity)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public override void SolveCollision(CircleCollider obj2, Vector2 velocity)
@@ -69,8 +69,53 @@ public class CircleCollider : Collider
 
             Vector2 n = collisionAxis / dist;
             float delta = minDist - dist;
-            SetNodePosition(GetLocalNodePosition() + 0.5f * n * delta);
-            obj2.SetNodePosition(obj2.GetLocalNodePosition() - 0.5f * n * delta);
+            ResolveCollision(obj2, collisionAxis);
+        }
+    }
+
+    public void ResolveCollision(CircleCollider other, Vector2 collisionVector)
+    {
+        FireCorrectEvent(collisionVector, other);
+
+        Vector2 currentPos = GetGlobalColliderPosition();
+        Vector2 otherCurrentPos = other.GetGlobalColliderPosition();
+
+        Vector2 thisColliderResolution = new Vector2(collisionVector.X * -1, collisionVector.Y * -1);
+        if (IsTrigger() || other.IsTrigger())
+        {
+            return;
+        }
+        //normal to static, resolve only normal
+        else if (other.IsStatic())
+        {
+            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            SetNodePosition(resolvedPosition);
+        }
+        //Normal to normal, resolve both
+        else
+        {
+            float thisColliderResolutionScale = thisColliderResolution.Length() * 0.5f;
+
+            if (thisColliderResolution != Vector2.Zero)
+            {
+                thisColliderResolution.Normalize();
+                thisColliderResolution *= thisColliderResolutionScale;
+            }
+
+            Vector2 otherColliderResolution = collisionVector;
+            float otherColliderResolutionScale = otherColliderResolution.Length() * 0.5f;
+            if (otherColliderResolution != Vector2.Zero)
+            {
+                otherColliderResolution.Normalize();
+                otherColliderResolution *= otherColliderResolutionScale;
+            }
+
+            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 otherColliderResolvedPosition = new Vector2(
+                otherCurrentPos.X + otherColliderResolution.X,
+                otherCurrentPos.Y + otherColliderResolution.Y);
+            SetNodePosition(resolvedPosition);
+            other.SetNodePosition(otherColliderResolvedPosition);
         }
     }
 
@@ -83,5 +128,13 @@ public class CircleCollider : Collider
     public float GetRadius()
     {
         return radius;
+    }
+
+    public override void CalculateAABB()
+    {
+        Vector2 centre = GetGlobalColliderPosition();
+        PointF min = new PointF(centre.X - radius, centre.Y - radius);
+        PointF max = new PointF(centre.X + radius, centre.Y + radius);
+        SetAABB(new AABB(min, max));
     }
 }
