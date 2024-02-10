@@ -2,6 +2,8 @@ namespace Testing.SystemTesting;
 
 using GREngine.Core.System;
 using GREngine.Debug;
+using GREngine.GameBehaviour.Pathfinding;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 public class MyScene : Scene
@@ -15,8 +17,31 @@ public class MyScene : Scene
         MyNode myNode = new MyNode();
         MyBehaviour myBehaviour = new MyBehaviour();
 
-        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(myNode, myBehaviour);
+        ISceneControllerService sc = this.Game.Services.GetService<ISceneControllerService>();
 
-        this.Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(myNode);
+        sc.AddBehaviour(myNode, myBehaviour);
+        sc.AddBehaviour(myNode, new UpdateNotifier());
+        sc.AddNodeAtRoot(myNode);
+
+        GenericNode node = new GenericNode();
+        NodeNetwork network = new NodeNetwork();
+        sc.AddBehaviour(node, network);
+        sc.AddNode(myNode, node);
+
+        sc.QueueSceneAction(() =>
+        {
+            node.SetLocalPosition(new Vector2(100, 100));
+            network.BuildNetwork(600, 600, "", "", 10);
+
+            network.Navigate(new Point(10, 10), new Point(150, 260));
+        });
+    }
+}
+
+class UpdateNotifier : Behaviour
+{
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        this.Game.Services.GetService<ISceneControllerService>().DebugPrintGraph();
     }
 }

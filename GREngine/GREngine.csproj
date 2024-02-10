@@ -22,5 +22,6 @@
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.Physics2D\GREngine.Core.Physics2D.csproj" />
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.Sound\GREngine.Core.Sound.csproj" />
     <ProjectReference Include="..\GREngine.Core\GREngine.Core.System\GREngine.Core.System.csproj" />
+    <ProjectReference Include="..\GREngine.GameBehaviour\GREngine.GameBehaviour.csproj" />
   </ItemGroup>
 </Project>

@@ -147,12 +147,12 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     public void AddNodeAtPersistent(Node node)
     {
-        AddNode(node, this.persistantNode);
+        AddNode(this.persistantNode, node);
     }
 
     public void AddNodeAtRoot(Node node)
     {
-        AddNode(node, this.rootNode);
+        AddNode(this.rootNode, node);
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     /// </summary>
     /// <param name="node"></param>
     /// <param name="parent"></param>
-    public void AddNode(Node node, Node parent)
+    public void AddNode(Node parent, Node node)
     {
             // add node to parent's child list
             // set node parent to parent
