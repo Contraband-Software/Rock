@@ -41,14 +41,14 @@ public class GraphicsTesting : Game
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
-
+        re.lookAt(new Vector2(512, 512));
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
         re.LoadShaders();
-        Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), null);
+        Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         Material puddleMat = new Material(null, new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
 
         //Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/oceanRoughness")));
@@ -82,7 +82,8 @@ public class GraphicsTesting : Game
         }
 
         // sceneManager.DebugPrintGraph();
-
+        re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
+        //re.drawDebug(new DebugDrawable(new Vector2(1024, 1024), 124, Color.Green));
         base.Update(gameTime);
     }
 

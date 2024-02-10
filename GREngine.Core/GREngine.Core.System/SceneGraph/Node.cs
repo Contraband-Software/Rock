@@ -71,6 +71,12 @@ public abstract class Node : AbstractGameObject
     {
         return this.GetGlobalTransform().Translation;
     }
+    public Vector2 GetGlobalPosition2D()
+    {
+        Vector2 pos = new Vector2();
+        this.GetGlobalTransform().Translation.Deconstruct(out pos.X, out pos.Y, out _);
+        return pos;
+    }
     #endregion
     #endregion
 
@@ -98,7 +104,15 @@ public abstract class Node : AbstractGameObject
     // ReSharper disable once UnusedMember.Global
     public Behaviour? GetBehaviour<T>() where T : Behaviour
     {
-        return this.behaviours.FirstOrDefault(c => c.GetType() == typeof(T));
+        return this.behaviours.FirstOrDefault(c =>
+        {
+            for (var current = typeof(T); current != null; current = current.BaseType)
+            {
+                if (current == typeof(T))
+                    return true;
+            }
+            return false;
+        });
     }
 
     /// <summary>

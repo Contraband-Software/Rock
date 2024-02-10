@@ -31,6 +31,8 @@ public interface IPebbleRendererService
 
     public Vector2 getCameraPosition();
 
+    public void lookAt(Vector2 position);
+
     public void addMaterial(Material material);
 
     public void drawDebug(DebugDrawable drawable);
@@ -109,7 +111,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private RenderTarget2D shadowUpscaleTarget;
     private BlurPostProcess shadowBlurer;
 
-    private RenderTarget2D noiseTarget; 
+    private RenderTarget2D noiseTarget;
 
     //renderingparams
     private Vector2 cameraPosition = new Vector2(0);
@@ -149,7 +151,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         this.renderScale = renderScale;
         this.shadowRenderScale = shadowRenderScale;
         this.scaleFactor = (float)renderHeight / (float)REFERENCE_HEIGHT;
-        this.ambientLightColor = new Color(0.3f, 0.3f, 0.4f);
+        this.ambientLightColor = new Color(0.2f, 0.2f, 0.22f);
         this.randomGen = new Random();
 
         this.debugShapes = new Queue<DebugDrawable>();
@@ -185,9 +187,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth*2, renderHeight*2,false,SurfaceFormat.Alpha8,DepthFormat.None); //*2?
         shadowUpscaleTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
-        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); 
+        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None);
 
-        noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None); 
+        noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
         shadowBlurer = new BlurPostProcess(Game, renderWidth, renderHeight, 4, 0.5f);
 
@@ -198,6 +200,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         nullTexture.SetData(new Color[] { Color.White });
 
         spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+        LoadShaders();
     }
 
     public void LoadShaders()
@@ -218,6 +222,11 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     public void setCameraPosition(Vector2 cameraPostion)
     {
         this.cameraPosition = cameraPostion;
+    }
+
+    public void lookAt(Vector2 position)
+    {
+        this.cameraPosition = position - new Vector2(REFERENCE_WIDTH/2,REFERENCE_HEIGHT/2);
     }
     public Vector2 getCameraPosition()
     {
@@ -396,7 +405,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         }
         spriteBatch.End();
 
-        renderDebugShapes(null, view);
+        renderDebugShapes(null, view * Matrix.CreateScale(1/scaleFactor));
     }
 
     private void setEngineShaderParams(Effect effect)
@@ -528,14 +537,14 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             switch (drawable.shape)
             {
                 case DebugShape.LINE:
-                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,2);
+                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,4);
                     break;
 
                 case DebugShape.RECTANGLE:
-                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,2 );
+                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,4 );
                     break;
                 case DebugShape.CIRCLE:
-                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,2);
+                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,4);
                     break;
             }
         }

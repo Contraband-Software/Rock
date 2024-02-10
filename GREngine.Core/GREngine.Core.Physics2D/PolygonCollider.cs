@@ -382,14 +382,14 @@ public class PolygonCollider : Collider
                 circCenter.Y - intersectionPoint.Y); }
             if(centreToIntersection == Vector2.Zero) { continue; }
             Vector2 centreToIntersectionDir = centreToIntersection;
-            centreToIntersectionDir.Normalize();
+            if (centreToIntersectionDir.Length() == 0) centreToIntersectionDir.Normalize();
             Vector2 centreToRadiusEdge = centreToIntersectionDir * circRadius;
             if(centreToIntersection.Length() < centreToRadiusEdge.Length())
             {
                 Vector2 collisionVector = centreToIntersection - centreToRadiusEdge;
                 collisionVectors.Add(collisionVector);
             }
-            
+
         }
 
         //then we choose the vector of smallest magnitude

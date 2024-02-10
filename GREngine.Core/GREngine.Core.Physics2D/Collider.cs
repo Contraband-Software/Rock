@@ -15,6 +15,8 @@ using GREngine.Debug;
 
 namespace GREngine.Core.Physics2D;
 
+using Debug;
+
 public abstract class Collider : Behaviour
 {
     private Vector2 oldPosition = Vector2.Zero;
@@ -25,7 +27,7 @@ public abstract class Collider : Behaviour
 
     protected ICollisionSystem collisionSystem;
 
-    private Vector2 offset;
+    private Vector2 offset = Vector2.Zero;
     private bool isStatic = false;
     private bool isTrigger = false;
     private string collisionLayer = "default";
@@ -37,20 +39,42 @@ public abstract class Collider : Behaviour
 
     public bool Debug { get; set; } = false;
 
+    public float VelocityDampingMultiplier { get; set; } = 1;
+
+    public Vector2 Velocity
+    {
+        get => GetLocalNodePosition() - oldPosition;
+        set => SetVelocity(value);
+    }
+
     public Collider()
     {
     }
 
-    public Collider(Vector2 offset, string layer = "default", bool debug = false)
+    public Collider(Vector2 offset, string layer, bool debug)
     {
         this.offset = offset;
         this.collisionLayer = layer;
         Debug = debug;
     }
-    public Collider(string layer = "default", bool debug = false)
+    public Collider(string layer, bool debug)
     {
         this.offset = Vector2.Zero;
         this.collisionLayer = layer;
+        Debug = debug;
+    }
+
+    public Collider(bool debug)
+    {
+        this.offset = Vector2.Zero;
+        this.collisionLayer = "default";
+        Debug = debug;
+    }
+
+    public Collider(Vector2 offset, bool debug)
+    {
+        this.offset = offset;
+        this.collisionLayer = "default";
         Debug = debug;
     }
 
@@ -90,6 +114,7 @@ public abstract class Collider : Behaviour
             this.DrawDebug();
         }
 #endif
+        this.Velocity *= this.VelocityDampingMultiplier;
     }
 
     public void updatePosition(float dt)
@@ -101,7 +126,7 @@ public abstract class Collider : Behaviour
         // save current position
         oldPosition = new Vector2(currentPosition.X, currentPosition.Y);
         // Perform verlet integration
-        SetNodePosition(currentPosition + velocity + acceleration * dt * dt);
+        SetNodePosition(currentPosition + velocity + acceleration);
         // Reset acceleration
         acceleration = Vector2.Zero;
     }
@@ -112,7 +137,7 @@ public abstract class Collider : Behaviour
         // Set the velocity externally
         float m = externalVelocity.Length() * 1;
         Vector2 n = externalVelocity;
-        n.Normalize();
+        if (n.Length() > 0) n.Normalize();
         Vector2 v = m * n;
 
         SetNodePosition(new Vector2(oldPosition.X + v.X, oldPosition.Y + v.Y));
@@ -141,7 +166,7 @@ public abstract class Collider : Behaviour
     /// <returns></returns>
     public Vector2 GetGlobalColliderPosition()
     {
-        Vector3 pos = Node.GetGlobalPosition(); 
+        Vector3 pos = Node.GetGlobalPosition();
         return new Vector2(pos.X, pos.Y);
     }
 

@@ -122,7 +122,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         #if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
         {
-            throw new ArgumentOutOfRangeException("Tag does not exist: " + tag);
+            throw new ArgumentOutOfRangeException(tag, "Tag does not exist");
         }
         #endif
 
