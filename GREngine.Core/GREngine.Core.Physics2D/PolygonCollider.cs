@@ -9,10 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Color = Microsoft.Xna.Framework.Color;
 using GREngine.Core.Physics2D;
+using GREngine.Core.System;
+using GREngine.Core.PebbleRenderer;
 
 namespace GREngine.Core.Physics2D;
 
-public class PolygonCollider : VerletObject
+public class PolygonCollider : Collider
 {
     /// <summary>
     /// First points connects to second, last point connects to first
@@ -20,7 +22,7 @@ public class PolygonCollider : VerletObject
     /// </summary>
     public List<PointF> vertices;
 
-    public PolygonCollider(Vector2 initialPosition, List<PointF> vertices) : base(initialPosition)
+    public PolygonCollider(List<PointF> vertices) : base()
     {
         this.vertices = vertices;
     }
@@ -43,7 +45,7 @@ public class PolygonCollider : VerletObject
     private List<PointF> translateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
-        PointF origin = new PointF(GetPosition().X, GetPosition().Y);
+        PointF origin = new PointF(GetGlobalPosition().X, GetGlobalPosition().Y);
         foreach (PointF relativePoint in vertices)
         {
             // Translate points to be relative to shape centre in worldspace 
@@ -83,7 +85,7 @@ public class PolygonCollider : VerletObject
         List<Vector2> collisionVectors = new List<Vector2>();
 
         //calculate overlap region AABB
-        AABB overlapRegion = CollisionSystem.GetAABBOverlapRegion(GetAABB(), other.GetAABB());
+        AABB overlapRegion = collisionSystem.GetAABBOverlapRegion(GetAABB(), other.GetAABB());
 
         //if overlapregion size is like (0,x), (0,0), (x,0) then its not a collision
         if (overlapRegion.size().X == 0 || overlapRegion.size().Y == 0)
@@ -97,7 +99,7 @@ public class PolygonCollider : VerletObject
         {
             velocityVector.Normalize();
         }
-        AABB combinedAABB = CollisionSystem.GetCombinedAABBRegion(GetAABB(), other.GetAABB());
+        AABB combinedAABB = collisionSystem.GetCombinedAABBRegion(GetAABB(), other.GetAABB());
         float vectorScale = new Vector2(combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
         Vector2 forwardVector = velocityVector * vectorScale;
         Vector2 reverseVector = new Vector2(forwardVector.X * -1, forwardVector.Y * -1);
@@ -106,8 +108,8 @@ public class PolygonCollider : VerletObject
         List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
         List<PointF> otherVertices = other.translateVertices(other.rotateVertices(other.vertices));
 
-        Vector2 position = GetPosition();
-        Vector2 otherPostion = other.GetPosition();
+        Vector2 position = GetGlobalPosition();
+        Vector2 otherPostion = other.GetGlobalPosition();
         bool velocityTowardsCollision = false;
         float distToOtherObj = new Vector2(otherPostion.X - position.X, otherPostion.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
@@ -120,7 +122,7 @@ public class PolygonCollider : VerletObject
         foreach (PointF v in vertices)
         {
             //check if point is in AABB overlap region
-            if (!CollisionSystem.PointIsInAABB(v, overlapRegion))
+            if (!collisionSystem.PointIsInAABB(v, overlapRegion))
             {
                 continue;
             }
@@ -145,21 +147,21 @@ public class PolygonCollider : VerletObject
                 PointF b2 = i == otherVertices.Count - 1 ? otherVertices[0] : otherVertices[i + 1];
                 //check if this line equation intersects other collider line equation
                 //first check AABB overlap, then ensure they arent parallel
-                if (!CollisionSystem.LinesSegmentsOverlap(v, a2, b1, b2))
+                if (!collisionSystem.LinesSegmentsOverlap(v, a2, b1, b2))
                 {
                     continue;
                 }
                 Line l1 = new Line(v, a2);
                 Line l2 = new Line(b1, b2);
-                if (!CollisionSystem.LinesCanIntersect(l1, l2))
+                if (!collisionSystem.LinesCanIntersect(l1, l2))
                 {
                     continue;
                 }
 
                 //if they can intersect, find where
-                PointF intersectionPoint = CollisionSystem.LineIntersectionPoint(l1, l2);
+                PointF intersectionPoint = collisionSystem.LineIntersectionPoint(l1, l2);
                 //reject it if not in bounds,
-                if (!CollisionSystem.IntersectionIsWithinLineSegments(intersectionPoint, v, a2, b1, b2))
+                if (!collisionSystem.IntersectionIsWithinLineSegments(intersectionPoint, v, a2, b1, b2))
                 {
                     continue;
                 }
@@ -176,7 +178,7 @@ public class PolygonCollider : VerletObject
         foreach (PointF v in otherVertices)
         {
             //check if point is in AABB overlap region
-            if (!CollisionSystem.PointIsInAABB(v, overlapRegion))
+            if (!collisionSystem.PointIsInAABB(v, overlapRegion))
             {
                 continue;
             }
@@ -200,20 +202,20 @@ public class PolygonCollider : VerletObject
                 PointF b1 = vertices[i];
                 PointF b2 = i == vertices.Count - 1 ? vertices[0] : vertices[i + 1];
                 //check if this line equation intersects our collider line equation
-                if (!CollisionSystem.LinesSegmentsOverlap(v, a2, b1, b2))
+                if (!collisionSystem.LinesSegmentsOverlap(v, a2, b1, b2))
                 {
                     continue;
                 }
                 Line l1 = new Line(v, a2);
                 Line l2 = new Line(b1, b2);
-                if (!CollisionSystem.LinesCanIntersect(l1, l2))
+                if (!collisionSystem.LinesCanIntersect(l1, l2))
                 {
                     continue;
                 }
                 //if it does, find where
-                PointF intersectionPoint = CollisionSystem.LineIntersectionPoint(l1, l2);
+                PointF intersectionPoint = collisionSystem.LineIntersectionPoint(l1, l2);
                 //reject it if not in bounds,
-                if (!CollisionSystem.IntersectionIsWithinLineSegments(intersectionPoint, v, a2, b1, b2))
+                if (!collisionSystem.IntersectionIsWithinLineSegments(intersectionPoint, v, a2, b1, b2))
                 {
                     continue;
                 }
@@ -257,8 +259,8 @@ public class PolygonCollider : VerletObject
     /// <param name="other"></param>
     private void ResolveCollision(PolygonCollider other, Vector2 collisionVector)
     {
-        Vector2 currentPos = GetPosition();
-        Vector2 otherCurrentPos = other.GetPosition();
+        Vector2 currentPos = GetGlobalPosition();
+        Vector2 otherCurrentPos = other.GetGlobalPosition();
         Vector2 thisColliderResolution = new Vector2(collisionVector.X * -1, collisionVector.Y * -1);
         if (other.IsStatic())
         {
@@ -295,7 +297,7 @@ public class PolygonCollider : VerletObject
     /// <summary>
     /// Draws the Polygon onto the provided SpriteBatch
     /// </summary>
-    public override void DrawDebug(SpriteBatch spriteBatch, Texture2D pixelTexture)
+    public override void DrawDebug()
     {
         Color lineColor = new Color(16, 245, 0); // Light green color
         float lineThickness = 2f;
@@ -313,13 +315,13 @@ public class PolygonCollider : VerletObject
         {
             Vector2 start = vertices[i].ToVector2();
             Vector2 end = vertices[i + 1].ToVector2();
-            DrawLine(spriteBatch, pixelTexture, start, end, lineColor, lineThickness);
+            DrawLine(start, end, lineColor, lineThickness);
         }
 
         // Connect the last vertex to the first one
         Vector2 last = vertices[vertices.Count - 1].ToVector2();
         Vector2 first = vertices[0].ToVector2();
-        DrawLine(spriteBatch, pixelTexture, last, first, lineColor, lineThickness);
+        DrawLine(last, first, lineColor, lineThickness);
 
 
         CalculateAABB();
@@ -344,12 +346,13 @@ public class PolygonCollider : VerletObject
     }
 
 
-    private void DrawLine(SpriteBatch spriteBatch, Texture2D pixelTexture, Vector2 start, Vector2 end, Color color, float lineThickness)
+    private void DrawLine(Vector2 start, Vector2 end, Color color, float lineThickness)
     {
-        Vector2 edge = end - start;
-        float angle = (float)Math.Atan2(edge.Y, edge.X);
+        //Vector2 edge = end - start;
+        //float angle = (float)Math.Atan2(edge.Y, edge.X);
 
-        // Draw a 1-pixel wide rectangle for the line
-        spriteBatch.Draw(pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(edge.Length(), lineThickness), SpriteEffects.None, 0);
+        //// Draw a 1-pixel wide rectangle for the line
+        //spriteBatch.Draw(pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(edge.Length(), lineThickness), SpriteEffects.None, 0);
+        Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(start, end, color, DebugShape.LINE));
     }
 }

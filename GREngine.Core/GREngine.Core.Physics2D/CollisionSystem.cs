@@ -13,21 +13,32 @@ namespace GREngine.Core.Physics2D;
 
 public interface ICollisionSystem
 {
+    public bool AABBOverlap(AABB a, AABB b);
+    public AABB GetCombinedAABBRegion(AABB a, AABB b);
+    public AABB GetAABBOverlapRegion(AABB a, AABB b);
+    public bool PointIsInAABB(PointF p, AABB aabb);
+    public bool LinesSegmentsOverlap(PointF a1, PointF a2, PointF b1, PointF b2);
+    public bool LinesCanIntersect(Line l1, Line l2);
+    public PointF LineIntersectionPoint(Line l1, Line l2);
+    public bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2);
+    public void AddCollisionObject(Collider obj);
+    public HashSet<Collider> GetVerletObjects();
 }
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
-    HashSet<VerletObject> verletObjects = new HashSet<VerletObject>();
+    HashSet<Collider> verletObjects = new HashSet<Collider>();
     Vector2 gravity = new Vector2(0, 1000f);
 
     int subSteps = 1;
     public CollisionSystem(Game game) : base(game){}
 
-    public void Update(float dt)
+    public override void Update(GameTime gameTime)
     {
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         float subDt = dt / (float)subSteps;
         for (int i = 0; i < subSteps; i++)
         {
-            applyGravity();
+            //applyGravity();
             SolveCollisions();
             updatePositions(subDt);
         }
@@ -35,11 +46,11 @@ public class CollisionSystem : GameComponent, ICollisionSystem
 
     void applyGravity()
     {
-        foreach (VerletObject obj in verletObjects.OfType<CircleCollider>())
+        foreach (Collider obj in verletObjects.OfType<CircleCollider>())
         {
             obj.accelerate(gravity);
         }
-        foreach (VerletObject obj in verletObjects.OfType<PolygonCollider>())
+        foreach (Collider obj in verletObjects.OfType<PolygonCollider>())
         {
             if (!obj.IsStatic())
             {
@@ -53,15 +64,15 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         //discrete collision calculation
         //brute force approach
         int objCount = verletObjects.Count;
-        foreach (VerletObject obj1 in verletObjects)
+        foreach (Collider obj1 in verletObjects)
         {
             if (obj1.IsStatic()) { continue; }
 
             obj1.SetAABBOverlapping(false);
             obj1.CalculateAABB();
 
-            List<VerletObject> aabbOverlapObjects = new List<VerletObject>();
-            foreach (VerletObject obj2 in verletObjects)
+            List<Collider> aabbOverlapObjects = new List<Collider>();
+            foreach (Collider obj2 in verletObjects)
             {
                 obj2.CalculateAABB();
                 if (obj1 == obj2)
@@ -75,6 +86,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             }
 
             obj1.SolveCollisions(aabbOverlapObjects);
+            obj1.DrawDebug();
         }
     }
 
@@ -85,7 +97,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <returns></returns>
-    public static bool AABBOverlap(AABB a, AABB b)
+    public bool AABBOverlap(AABB a, AABB b)
     {
         bool xOverlap = a.min.X <= b.max.X && a.max.X >= b.min.X;
         bool yOverlap = a.min.Y <= b.max.Y && a.max.Y >= b.min.Y;
@@ -99,7 +111,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// </summary>
     /// <param name="a"></param>
     /// <param name="b"></param>
-    public static AABB GetCombinedAABBRegion(AABB a, AABB b)
+    public AABB GetCombinedAABBRegion(AABB a, AABB b)
     {
         PointF newMin = new PointF(
             Math.Min(a.min.X, b.min.X),
@@ -118,7 +130,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <returns></returns>
-    public static AABB GetAABBOverlapRegion(AABB a, AABB b)
+    public AABB GetAABBOverlapRegion(AABB a, AABB b)
     {
         PointF newMin = new PointF(
             Math.Max(a.min.X, b.min.X),
@@ -131,7 +143,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         return new AABB(newMin, newMax);
     }
 
-    public static bool PointIsInAABB(PointF p, AABB aabb)
+    public bool PointIsInAABB(PointF p, AABB aabb)
     {
         return (p.X <= aabb.max.X && p.X >= aabb.min.X &&
             p.Y <= aabb.max.Y && p.Y >= aabb.min.Y);
@@ -146,7 +158,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="b1">Origin of line 2</param>
     /// <param name="b2">end of line 2</param>
     /// <returns></returns>
-    public static bool LinesSegmentsOverlap(PointF a1, PointF a2, PointF b1, PointF b2)
+    public bool LinesSegmentsOverlap(PointF a1, PointF a2, PointF b1, PointF b2)
     {
         if (!(Math.Max(a1.X, a2.X) >= Math.Min(b1.X, b2.X) && Math.Max(b1.X, b2.X) >= Math.Min(a1.X, a2.X) &&
             Math.Max(a1.Y, a2.Y) >= Math.Min(b1.Y, b2.Y) && Math.Max(b1.Y, b2.Y) >= Math.Min(a1.Y, a2.Y)))
@@ -164,7 +176,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="l1">Primary Line</param>
     /// <param name="l2">Other colliders line</param>
     /// <returns></returns>
-    public static bool LinesCanIntersect(Line l1, Line l2)
+    public bool LinesCanIntersect(Line l1, Line l2)
     {
         return l1.m != l2.m;
     }
@@ -175,7 +187,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="l1">Primary Line</param>
     /// <param name="l2">Other colliders line</param>
     /// <returns></returns>
-    public static PointF LineIntersectionPoint(Line l1, Line l2)
+    public PointF LineIntersectionPoint(Line l1, Line l2)
     {
         float x, y;
 
@@ -209,7 +221,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     /// <param name="b1">Origin of line 2</param>
     /// <param name="b2">end of line 2</param>
     /// <returns></returns>
-    public static bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2)
+    public bool IntersectionIsWithinLineSegments(PointF intersection, PointF a1, PointF a2, PointF b1, PointF b2)
     {
         float x = intersection.X;
         float y = intersection.Y;
@@ -227,15 +239,15 @@ public class CollisionSystem : GameComponent, ICollisionSystem
 
     void updatePositions(float dt)
     {
-        foreach (VerletObject obj in verletObjects)
+        foreach (Collider obj in verletObjects)
         {
             obj.updatePosition(dt);
         }
     }
 
-    public void AddCollisionObject(VerletObject obj)
+    public void AddCollisionObject(Collider obj)
     {
         verletObjects.Add(obj);
     }
-    public HashSet<VerletObject> GetVerletObjects() { return verletObjects; }
+    public HashSet<Collider> GetVerletObjects() { return verletObjects; }
 }
