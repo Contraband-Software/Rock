@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GREngine.GameBehaviour", "GREngine.GameBehaviour\GREngine.GameBehaviour.csproj", "{36FCCDC3-0497-48D2-84AC-1E5CD8E0ECD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDemo1", "GameDemo1\GameDemo1.csproj", "{C83618C0-4241-4C3E-ACC4-37AA864905BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{36FCCDC3-0497-48D2-84AC-1E5CD8E0ECD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36FCCDC3-0497-48D2-84AC-1E5CD8E0ECD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36FCCDC3-0497-48D2-84AC-1E5CD8E0ECD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83618C0-4241-4C3E-ACC4-37AA864905BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83618C0-4241-4C3E-ACC4-37AA864905BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83618C0-4241-4C3E-ACC4-37AA864905BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83618C0-4241-4C3E-ACC4-37AA864905BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7B462971-E2CE-44AB-92D0-9A758485F962} = {2DFA445B-45BB-41E8-BF4E-598F86710492}

@@ -19,6 +19,11 @@ public abstract class Node : AbstractGameObject
         Name = "Node";
         this.transform.matrix = Matrix.Identity;
     }
+    protected Node(string name)
+    {
+        Name = name;
+        this.transform.matrix = Matrix.Identity;
+    }
 
     #region TRANSFORM_API
     public Matrix GetLocalTransform()

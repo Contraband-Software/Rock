@@ -150,7 +150,7 @@ public abstract class Collider : Behaviour
     /// <param name="position"></param>
     public void SetNodePosition(Vector2 position)
     {
-        float z = Node.GetGlobalPosition().Z;
+        float z = Node.GetLocalPosition().Z;
         Vector3 pos = new Vector3(position.X, position.Y, z);
         Node.SetLocalPosition(pos);
     }

@@ -12,10 +12,11 @@ public interface ISceneControllerService
     public RootNode GetPersistentNode();
 
     public void QueueSceneAction(Action<GameTime> action);
+    public Behaviour InitBehaviour(Node node, Behaviour behaviour);
     public void AddBehaviour(Node node, Behaviour behaviour);
     public void RemoveBehaviour(Behaviour behaviour);
     public void RemoveBehavioursWithTag(Node node, string tag);
-    public void AddNode(Node node, Node parent);
+    public void AddNode(Node parent, Node node);
     public void DestroyNode(Node node);
 
     public Node? FindNodeWithTag(string tag);
