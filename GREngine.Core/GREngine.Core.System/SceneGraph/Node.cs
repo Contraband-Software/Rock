@@ -17,6 +17,7 @@ public abstract class Node : AbstractGameObject
     protected Node()
     {
         Name = "Node";
+        this.transform.matrix = Matrix.Identity;
     }
 
     #region TRANSFORM_API

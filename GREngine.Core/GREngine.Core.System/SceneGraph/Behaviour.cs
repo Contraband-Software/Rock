@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework;
 /// </summary>
 public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
 {
+    private static uint Instances = 0;
+    protected readonly uint InstanceID;
+
     internal void Initialize(int lo, SceneManager sm, Game ga)
     {
         this.loadOrder = lo;
@@ -17,14 +20,18 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
     }
 
     private SceneManager sceneManager;
-    private int loadOrder = 0;
+    internal int loadOrder = 0;
     internal bool Initialized { get; private set; } = false;
 
     protected Game Game { get; private set; }
     internal protected Node? Node { get; internal set; }
 
 #pragma warning disable CS8618
-    protected Behaviour() { Name = "Behaviour"; }
+    protected Behaviour()
+    {
+        Name = "Behaviour";
+        this.InstanceID = ++Instances;
+    }
 #pragma warning restore CS8618
 
     #region USER_IMPLEMENTATION_API
@@ -49,6 +56,9 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
         // If other is not a valid object reference, this instance is greater.
         if (other == null) return 1;
 
-        return this.loadOrder.CompareTo(other.loadOrder);
+        float thisHash = float.Parse(this.loadOrder.ToString()   + '.' + this.InstanceID);
+        float otherHash = float.Parse(other.loadOrder.ToString() + '.' + other.InstanceID);
+
+        return thisHash.CompareTo(otherHash);
     }
 }

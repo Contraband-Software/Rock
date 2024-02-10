@@ -23,7 +23,6 @@ public class GraphicsTestScene : Scene
 
         Debug.WriteLine("hellow world");
 
-
         Sprite spriteRenderer = new Sprite(0f, new Vector2(1),
             Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_albedo"),
             Game.Content.Load<Texture2D>("Graphics/space-cruiser-panels2_normal-ogl"),
@@ -31,11 +30,8 @@ public class GraphicsTestScene : Scene
 
         Light lightRenderer = new Light(new Vector3(1000000, 100000, 100000), true, 1f, 0.9f);
 
-
-
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(testObject, spriteRenderer);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(light, lightRenderer);
-
 
         this.Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(root);
         this.Game.Services.GetService<ISceneControllerService>().AddNode(testObject, root);

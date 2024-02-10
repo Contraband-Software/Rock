@@ -27,7 +27,7 @@ public class GraphicsTesting : Game
         IsMouseVisible = true;
 
 
-        re = new PebbleRenderer(this, graphics, 1920, 1080, 1f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 1000, 600, 1f, 0.5f);
 
         sceneManager = new SceneManager(this);
 
@@ -39,23 +39,20 @@ public class GraphicsTesting : Game
         this.Components.Add(sceneManager);
         this.Services.AddService(typeof(ISceneControllerService), sceneManager);
 
-
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
 
         base.Initialize();
-
-
     }
 
     protected override void LoadContent()
     {
-        re.LoadShaders();   
+        re.LoadShaders();
         //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
-       
+
         this.sceneManager.ChangeScene("GraphicsTestScene");
 
         // TODO: use this.Content to load your game content here
@@ -69,9 +66,11 @@ public class GraphicsTesting : Game
 
         if (!done)
         {
-            sceneManager.DebugPrintGraph();
+            // sceneManager.DebugPrintGraph();
             done = true;
         }
+
+        // sceneManager.DebugPrintGraph();
 
         base.Update(gameTime);
     }
@@ -84,6 +83,6 @@ public class GraphicsTesting : Game
 
         //base.Draw(gameTime);
 
-        re.Draw(gameTime);  
+        re.Draw(gameTime);
     }
 }

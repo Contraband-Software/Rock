@@ -15,6 +15,8 @@ using GREngine.Core.System;
 
 namespace GREngine.Core.PebbleRenderer;
 
+using Debug;
+
 public class Sprite : Behaviour
 {
     private Texture2D[] textures;
@@ -49,6 +51,7 @@ public class Sprite : Behaviour
     {
         Game.Services.GetService<IPebbleRendererService>().addSprite(this);
         //base.OnStart();
+        Out.PrintLn(this.InstanceID.ToString());
     }
 
     protected override void OnUpdate(GameTime gameTime)

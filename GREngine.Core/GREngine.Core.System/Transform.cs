@@ -2,7 +2,7 @@ namespace GREngine.Core.System;
 
 using Microsoft.Xna.Framework;
 
-internal struct Transform
+public struct Transform
 {
     public Matrix matrix;
 }

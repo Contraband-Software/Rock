@@ -52,7 +52,7 @@ public struct DebugDrawable
 
     public Vector2 position2;
 
-    public DebugDrawable(Vector2 position, float radius,Color color) 
+    public DebugDrawable(Vector2 position, float radius,Color color)
     { //circle
         this.position = position;
         this.color = color;
@@ -60,7 +60,7 @@ public struct DebugDrawable
         this.shape = DebugShape.CIRCLE;
     }
 
-    public DebugDrawable(Vector2 v1, Vector2 v2, Color color, DebugShape shape) 
+    public DebugDrawable(Vector2 v1, Vector2 v2, Color color, DebugShape shape)
     {//line or rect
         this.position = v1;
         this.color = color;
@@ -88,7 +88,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     private List<Sprite>[,] lmsTensor;
 
-    private Dictionary<Light,Tuple<RenderTarget2D,RenderTarget2D>> lights; 
+    private Dictionary<Light,Tuple<RenderTarget2D,RenderTarget2D>> lights;
 
     private Material[] materials;
     private int materialCount = 1; //the default matarial/shaders
@@ -96,7 +96,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     private SpriteBatch spriteBatch;
 
-    private RenderTarget2D? output; // null by default, will get set to something for offscreen rendering 
+    private RenderTarget2D? output; // null by default, will get set to something for offscreen rendering
 
     //gbuffer
     private RenderTarget2D diffuseTarget;
@@ -160,7 +160,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             }
         }
         materials = new Material[MAX_MATERIALS];
-        lights = new Dictionary<Light, Tuple<RenderTarget2D, RenderTarget2D>>(); 
+        lights = new Dictionary<Light, Tuple<RenderTarget2D, RenderTarget2D>>();
         postProcesses = new List<PostProcess>();
 
 
@@ -182,7 +182,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth*2, renderHeight*2,false,SurfaceFormat.Alpha8,DepthFormat.None); //*2?
         shadowUpscaleTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
-        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); //optimise can get rid of depth 
+        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None); //optimise can get rid of depth
 
         shadowBlurer = new BlurPostProcess(Game, renderWidth, renderHeight, 4, 0.5f);
 
@@ -229,7 +229,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             throw new ArgumentException("shader uses material Index: " + sprite.material+" but this shader is not registered.");
         }
         lmsTensor[sprite.layer, sprite.material].Add(sprite);
-           
+
     }
 
     public void removeSprite(Sprite sprite)
@@ -253,7 +253,6 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             Game.GraphicsDevice.SetRenderTarget(null);
             lights.Add(light, new Tuple<RenderTarget2D,RenderTarget2D>(whiteTarget, whiteTarget));
         }
-            
     }
 
     public void removeLight(Light light)
@@ -343,7 +342,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         setEngineShaderParams(pointLightShader.shader);
         Game.GraphicsDevice.SetRenderTarget(litTarget);
 
-        foreach (KeyValuePair<Light,Tuple<RenderTarget2D, RenderTarget2D>> light in lights) 
+        foreach (KeyValuePair<Light,Tuple<RenderTarget2D, RenderTarget2D>> light in lights)
         {
             //the aproach I have in mind might be too cpu/ draw call intesive, so I will try raymarching first, but maybe come back to the 1d occlusion map approach with some optimisation later.
             spriteBatch.Begin(effect: pointLightShader.shader, blendState: BlendState.Additive);
@@ -493,7 +492,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
                 foreach (Sprite sprite in lmsTensor[i, j])
                 {
-                    if (sprite.isShadowCaster) 
+                    if (sprite.isShadowCaster)
                     {
                         sprite.draw(spriteBatch, 4);
                     }
