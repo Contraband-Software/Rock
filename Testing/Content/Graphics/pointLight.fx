@@ -1,4 +1,4 @@
-﻿#if OPENGL
+#if OPENGL
 #define SV_POSITION POSITION
 #define VS_SHADERMODEL vs_3_0
 #define PS_SHADERMODEL ps_3_0
@@ -69,7 +69,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     }
 	
     //float shadingFactor = max(dot(normal.xyz, normalize(float3(-distAxis.x, distAxis.y, 100))), 0);
-    float3 vecToCamera = normalize(float3(screenCords.x - width / 2, screenCords.y - height / 2, -1000)); //-1000?
+    float3 vecToCamera = normalize(float3(screenCords.x - width / 2, screenCords.y - height / 2, 10)); //-1000? is this right???
     
     float diffuseFactor = max(dot(normal, normalize(float3(distAxis.x, distAxis.y, LIGHT_HEIGHT))), 0.0);
     float glossyFactor = min(pow(dot(reflect(normalize(distAxis), normal), vecToCamera), 32), 1.0); //20?

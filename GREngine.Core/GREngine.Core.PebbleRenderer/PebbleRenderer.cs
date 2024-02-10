@@ -149,7 +149,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         this.renderScale = renderScale;
         this.shadowRenderScale = shadowRenderScale;
         this.scaleFactor = (float)renderHeight / (float)REFERENCE_HEIGHT;
-        this.ambientLightColor = new Color(0.02f, 0.02f, 0.02f);
+        this.ambientLightColor = new Color(0.3f, 0.3f, 0.4f);
         this.randomGen = new Random();
 
         this.debugShapes = new Queue<DebugDrawable>();
