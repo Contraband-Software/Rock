@@ -104,6 +104,12 @@
 /processorParam:DebugMode=Auto
 /build:Graphics/isolate.fx
 
+#begin Graphics/LaserShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/LaserShader.fx
+
 #begin Graphics/oceanDiffuse.fx
 /importer:EffectImporter
 /processor:EffectProcessor

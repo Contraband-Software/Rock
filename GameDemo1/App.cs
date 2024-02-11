@@ -73,9 +73,12 @@ public class App : Game
 
         this.sceneManager.AddScene(new GameScene());
         this.sceneManager.AddScene(new DeathScene());
+        this.sceneManager.AddScene(new GunTestingScene());
 
         //this.sceneManager.ChangeScene("GameScene");
         this.sceneManager.ChangeScene("GameScene");
+
+        //this.sceneManager.ChangeScene("GunTestingScene");
     }
 
     protected override void Update(GameTime gameTime)
