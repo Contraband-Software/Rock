@@ -31,7 +31,7 @@ public class UIElement : Behaviour
         this.scale = scale;
         this.font = font;
 
-        drawable = new UIDrawable(new Vector2(Node.GetGlobalPosition().X, Node.GetGlobalPosition().X), scale,color, font, text);
+        drawable = new UIDrawable(Vector2.Zero, scale,color, font, text);
     }
 
 
@@ -43,6 +43,8 @@ public class UIElement : Behaviour
 
     protected override void OnUpdate(GameTime gameTime)
     {
+        drawable.position.X = Node.GetGlobalPosition().X;
+        drawable.position.Y = Node.GetGlobalPosition().Y;
         Game.Services.GetService<IPebbleRendererService>().DrawUI(drawable);
     }
 

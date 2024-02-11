@@ -75,7 +75,6 @@ public class GameScene : Scene
         CircleCollider cc = sceneManager.InitBehaviour(n1, new CircleCollider(40, true)) as CircleCollider;
         cc.SetLayer(playerCollisionLayer);
         cc.SetAllowedCollisionLayers(new List<string>(){GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer});
-
         PlayerController pc = new PlayerController(mapFloorCollisionLayer);
         sceneManager.AddBehaviour(n1, pc);
 

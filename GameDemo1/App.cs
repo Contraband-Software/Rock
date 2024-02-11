@@ -1,4 +1,4 @@
-﻿global using static GREngine.Debug.Out;
+global using static GREngine.Debug.Out;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +10,7 @@ using GREngine.Core.PebbleRenderer;
 using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using Scenes;
+//using Testing.SystemTesting;
 
 public class App : Game
 {
@@ -71,8 +72,10 @@ public class App : Game
         //renderManager.addPostProcess(new BlurPostProcess(this, 1920, 1080, 1, 0.9f));
 
         this.sceneManager.AddScene(new GameScene());
+        this.sceneManager.AddScene(new DeathScene());
 
-        this.sceneManager.ChangeScene("GameScene");
+        //this.sceneManager.ChangeScene("GameScene");
+        this.sceneManager.ChangeScene("DeathScene");
     }
 
     protected override void Update(GameTime gameTime)
