@@ -361,7 +361,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 Game.GraphicsDevice.SetRenderTarget(light.Value.Item1);
                 Game.GraphicsDevice.Clear(Color.White);
                 spriteBatch.Begin(effect: pointLightShaderShadowed.shader);
-                pointLightShaderShadowed.shader.Parameters["lightPosition"]?.SetValue(light.Key.position * scaleFactor * shadowRenderScale);
+                pointLightShaderShadowed.shader.Parameters["lightPosition"]?.SetValue(light.Key.getPosition() * scaleFactor * shadowRenderScale);
                 pointLightShaderShadowed.shader.Parameters["lightDirection"]?.SetValue(light.Key.getLightDir());
                 spriteBatch.Draw(shadowCasterTarget, new Vector2(0), Color.White);
                 spriteBatch.End();
@@ -390,7 +390,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             spriteBatch.Begin(effect: pointLightShader.shader, blendState: BlendState.Additive);
             pointLightShader.shader.Parameters["shadowMapSampler"]?.SetValue(light.Value.Item2);
             pointLightShader.shader.Parameters["lightColor"]?.SetValue(light.Key.color * MathF.Sqrt(scaleFactor) * scaleFactor);//this is slightly wrong, figure out later
-            pointLightShader.shader.Parameters["lightPosition"]?.SetValue(light.Key.position * scaleFactor);
+            pointLightShader.shader.Parameters["lightPosition"]?.SetValue(light.Key.getPosition() * scaleFactor);
             pointLightShader.shader.Parameters["lightDirection"]?.SetValue(light.Key.getLightDir());
 
             spriteBatch.Draw(normalTarget, new Vector2(0f), Color.White);

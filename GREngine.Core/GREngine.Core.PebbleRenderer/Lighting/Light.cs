@@ -13,14 +13,16 @@ namespace GREngine.Core.PebbleRenderer;
 
 public class Light : Behaviour
 {
-    public Vector2 position;
+    private Vector2 position;
+    public Vector2 offset; 
     public Vector3 color;
     private Vector3 coneEdges;// t1 & t2 are the angles of the egdes of the light cone
     private float rotation = 0;
     public bool isShadowCasting;
 
-    public Light(Vector3 color,bool isShadowCasting = false ,float rotation = 0,float arc = 1) { //anything else?
+    public Light(Vector2 offset, Vector3 color,bool isShadowCasting = false ,float rotation = 0,float arc = 1) { //anything else?
         this.position = new Vector2(0);
+        this.offset = offset;
         this.color = color;
         this.rotation = rotation;
         this.isShadowCasting = isShadowCasting;
@@ -33,6 +35,13 @@ public class Light : Behaviour
     {
         Game.Services.GetService<IPebbleRendererService>().addLight(this);
     }
+
+    public Vector2 getPosition()
+    {
+        return position + offset;
+    }
+
+
 
     protected override void OnUpdate(GameTime gameTime)
     {

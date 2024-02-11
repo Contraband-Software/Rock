@@ -44,7 +44,7 @@ public class GraphicsTesting : Game
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
-        //re.lookAt(new Vector2(512, 512));
+        re.lookAt(new Vector2(512, 512));
 
 
         base.Initialize();
@@ -91,7 +91,7 @@ public class GraphicsTesting : Game
         }
 
         // sceneManager.DebugPrintGraph();
-        //re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
+        re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
         //re.drawDebug(new DebugDrawable(new Vector2(1024, 1024), 124, Color.Green));
 
 
