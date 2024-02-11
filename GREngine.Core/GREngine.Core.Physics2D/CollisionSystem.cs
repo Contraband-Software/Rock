@@ -9,6 +9,8 @@ using System.Drawing;
 
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Xml;
+
 namespace GREngine.Core.Physics2D;
 
 public interface ICollisionSystem
@@ -27,6 +29,8 @@ public interface ICollisionSystem
     public HashSet<Collider> GetColliderObjects();
     public bool PointIsCollidingWithLayer(PointF point, string layer);
     public List<Collider> GetCollidersOfLayer(string layer);
+
+    public Raycast2DResult Raycast2D(PointF origin, Vector2 direction, float distance, List<string> layers);
 }
 public class CollisionSystem : GameComponent, ICollisionSystem
 {
@@ -78,6 +82,8 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             List<Collider> aabbOverlapObjects = new List<Collider>();
             foreach (Collider obj2 in verletObjects)
             {
+                if(obj1.GetLayer() != obj2.GetLayer()) { continue; }
+
                 obj2.CalculateAABB();
                 if (obj1 == obj2)
                 {
@@ -292,5 +298,130 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     public List<Collider> GetCollidersOfLayer(string layer)
     {
         return this.verletObjects.Where(c => c.GetLayer() == layer).ToList();
+    }
+
+    /// <summary>
+    /// Casts a ray from a point in given direction for given distance.
+    /// Will stop at the first collider hit
+    /// </summary>
+    /// <param name="origin">Point the raycast starts</param>
+    /// <param name="direction">direction in which it is cast</param>
+    /// <param name="distance">max distance the ray will extend</param>
+    /// <param name="layers">the layers the ray is allowed to collide with</param>
+    /// <returns>A Raycast2DResult that stores the collider hit reference, hit point, and collision normal</returns>
+    public Raycast2DResult Raycast2D(PointF origin, Vector2 direction, float distance, List<string> layers)
+    {
+        //initialise list of all first intersection points
+        // have parellel list of what colliders they correspond to
+        // and another parellel list of the corresponding normal
+        List<PointF> intersectionPoints = new List<PointF>();
+        List<Collider> hitColliders = new List<Collider>();
+        List<Vector2> normals = new List<Vector2>();
+
+        // get all colliders where the AABB overlaps with the raycast
+        List<Collider> possibleColliders = new List<Collider>();
+
+        direction = GREngine.Algorithms.Vector.SafeNormalize(direction);
+        PointF endPoint = new PointF(origin.X + direction.X * distance, origin.Y + direction.Y * distance);
+        PointF min = new PointF(Math.Min(origin.X, endPoint.X), Math.Min(origin.Y, endPoint.Y));
+        PointF max = new PointF(Math.Max(origin.X, endPoint.X), Math.Min(origin.Y, endPoint.Y));
+        AABB rayAABB = new AABB(min, max);
+
+        Line rayAsLine = new Line(origin, endPoint);
+
+        //collect colliders within AABB overlap region of ray, and of allowed layer
+        foreach(Collider collider in verletObjects)
+        {
+            collider.CalculateAABB();
+            if (!layers.Contains(collider.GetLayer())){ continue; }
+            if(!AABBOverlap(rayAABB, collider.GetAABB())) { continue; }
+            possibleColliders.Add(collider);
+        }
+
+        //for all polygon colliders, find all points of intersection (if any), and store the closest one
+        foreach(Collider obj in verletObjects.OfType<PolygonCollider>())
+        {
+            PolygonCollider polyCol = (PolygonCollider)obj;
+            List<PointF> vertices = polyCol.GetVertices();
+
+            //for all lines in the collider:
+            List<PointF> foundIntersectionPoints = new List<PointF>();
+            List<Vector2> foundIntersectionPointNormals = new List<Vector2>();
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                PointF b1 = vertices[i];
+                PointF b2 = i == vertices.Count - 1 ? vertices[0] : vertices[i + 1];
+                //check if ray intersects this collider line
+                if (!LinesSegmentsOverlap(origin, endPoint, b1, b2))
+                {
+                    continue;
+                }
+                Line colliderLine = new Line(b1, b2);
+
+                //check if ray CAN intersect the colliderLine
+                if (!LinesCanIntersect(rayAsLine, colliderLine))
+                {
+                    continue;
+                }
+
+                //if it does, find where
+                PointF intersectionPoint = LineIntersectionPoint(rayAsLine, colliderLine);
+                //reject it if not in bounds,
+                if (!IntersectionIsWithinLineSegments(intersectionPoint, origin, endPoint, b1, b2))
+                {
+                    continue;
+                }
+                //otherwise, add it to our found intersection points
+                foundIntersectionPoints.Add(intersectionPoint);
+                foundIntersectionPointNormals.Add(colliderLine.GetNormal().GetNormalAsDirection(intersectionPoint, origin));
+            }
+
+            //add the closest found intersection point to intersection points
+            if(foundIntersectionPoints.Count == 0)
+            {
+                continue;
+            }
+            int closestPointIndex = 0;
+            float closestPointDistance = float.PositiveInfinity;
+            for(int i = 0; i < foundIntersectionPoints.Count; i++)
+            {
+                PointF p1 = origin;
+                PointF p2 = foundIntersectionPoints[i];
+                float dist = new Vector2(p2.X - p1.X, p2.Y - p1.Y).Length();
+                if (dist < closestPointDistance)
+                {
+                    closestPointDistance = dist;
+                    closestPointIndex = i;
+                }
+            }
+            intersectionPoints.Add(foundIntersectionPoints[closestPointIndex]);
+            hitColliders.Add(polyCol);
+            normals.Add(foundIntersectionPointNormals[closestPointIndex]);
+
+        }
+
+
+        //if its a circle
+        //does it intersect the circle (twice)? if so, where
+        //take closest intersection point
+
+        //finally, choose the intersection point closest to the raycast origin
+        int closestPointIndex2 = 0;
+        float closestPointDistance2 = float.PositiveInfinity;
+        for (int i = 0; i < intersectionPoints.Count; i++)
+        {
+            PointF p1 = origin;
+            PointF p2 = intersectionPoints[i];
+            float dist = new Vector2(p2.X - p1.X, p2.Y - p1.Y).Length();
+            if (dist < closestPointDistance2)
+            {
+                closestPointDistance2 = dist;
+                closestPointIndex2 = i;
+            }
+        }
+        return new Raycast2DResult(
+            hitColliders[closestPointIndex2],
+            intersectionPoints[closestPointIndex2],
+            normals[closestPointIndex2] );
     }
 }
