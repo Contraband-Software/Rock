@@ -44,14 +44,22 @@ public class GeneralCollisionTesting : Scene
         PolygonCollider col1 = new PolygonCollider(squarePointFList, true);
         sceneManager.AddBehaviour(node1, col1);
 
+        //Circle collider 1
+        GenericNode node2 = new GenericNode();
+        node2.SetLocalPosition(new Vector2(100f, 160f));
+        sceneManager.AddNodeAtRoot(node2);
+        CircleCollider circ1 = new CircleCollider(20f);
+        sceneManager.AddBehaviour(node2, circ1);
+
         List<string> rayLayers = new List<string> {
             "default"
         };
 
         sceneManager.QueueSceneAction((_) =>
         {
-            Raycast2DResult ray = collisionSystem.Raycast2D(new PointF(100f, 0f), new Vector2(0, 1f), 1000f, rayLayers);
-            Out.PrintLn(ray.collisionNormal.ToString());
+            col1.SetRotation(45f);
+            Raycast2DResult ray = collisionSystem.Raycast2D(new PointF(100f, 300f), new Vector2(0f, -1f), 1000f, rayLayers);
+            //Out.PrintLn(ray.collisionNormal.ToString());
         });
     }
 }
