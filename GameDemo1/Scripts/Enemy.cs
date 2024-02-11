@@ -50,14 +50,14 @@ public class Enemy : Behaviour
     {
         if (this.tracePath.Count > 0)
         {
-            if (DestinationDistanceToPlayer > this.diveDistance)
-            {
-                MakePathToPlayer();
-            }
-            else
-            {
-
-            }
+            // if (DestinationDistanceToPlayer > this.diveDistance)
+            // {
+            //     MakePathToPlayer();
+            // }
+            // else
+            // {
+            //
+            // }
         }
         else
         {

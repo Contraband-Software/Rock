@@ -109,7 +109,7 @@ public class GameScene : Scene
 
         Enemy e = new Enemy();
         GenericNode enemyNode = new GenericNode("EnemyNode");
-        enemyNode.SetLocalPosition(100, 50);
+        enemyNode.SetLocalPosition(300, -130);
         sceneManager.AddNodeAtRoot(enemyNode);
         sceneManager.AddBehaviour(enemyNode, e);
 

@@ -109,7 +109,7 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                GameOver();
+                // GameOver();
             }
         }
         isGrounded = false;
