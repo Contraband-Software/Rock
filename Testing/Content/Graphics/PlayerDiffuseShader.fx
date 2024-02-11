@@ -37,6 +37,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float2 uv = input.TextureCoordinates;
 	float4 sample =  tex2D(SpriteTextureSampler,uv) * input.Color; //remember input.col\ifadsjiogr
 
+    float alpha = sample.a;
+
     float len = length(abs(uv-0.5));
 
     float fresnell = len + sin(len * 16 + time * pulseSpeed) * 0.1;
@@ -47,9 +49,16 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float2 rotatedUV = mul((uv - 0.5)*0.9, rotationMatrix(time * rotationSpeed)) + 0.5;
     float4 noiseSample =  tex2D(SpriteTextureSampler, rotatedUV);
 
-    fresnell += (noiseSample / len)*0.2;
+    fresnell += (noiseSample / len) * 0.2 + pow((fresnell) % 0.5, 8) * 10;
+
+    alpha = pow(step(0.2, max(fresnell - len, 0)) * step(len, 0.4 + fresnell * 0.1), 30);
     //return float4(noiseSample.rgb*sample.a, sample.a);
-    return float4(fresnell * sample.a, fresnell * sample.a, fresnell * sample.a, sample.a);
+
+    fresnell = floor(fresnell * 8) / 8;
+    
+    float3 color = fresnell * float3(1, 0.6, 0.6) + alpha*0.2;
+
+    return float4(color * alpha, alpha);
     
     
 }
