@@ -47,7 +47,7 @@ namespace GameDemo1.Scenes
                 null, 2, 2, false);
             this.sceneController.AddBehaviour(mapNode, platformRenderer);
 
-            EnemySpawner es = new EnemySpawner(col.GetRadius() + 10);
+            EnemySpawner es = new EnemySpawner(col.GetRadius() + 10, 4);
             this.sceneController.AddBehaviour(mapNode, es);
 
             return mapNode;

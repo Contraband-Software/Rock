@@ -26,11 +26,11 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private static float walkSpeed = 5;
+    private static float walkSpeed = 3;
     private static float maxGunPower = 50;
     private static float gunCooldown = 0.3f;
-    private static float gunKnockback = 1;
-    private static float platformSpeedDamping = 0.68f;
+    private static float gunKnockback = 2;
+    private static float platformSpeedDamping = 0.78f;
 
     private string mapFloorCollisionLayer;
     #endregion
@@ -44,7 +44,7 @@ public class PlayerController : Behaviour
     private int scrollDelta = 0;
     private float currentGunCooldown = 0;
     private float facingDirection = 0;
-    private float maxFallTime = 3;
+    private float maxFallTime = 1;
 
     private float Size
     {

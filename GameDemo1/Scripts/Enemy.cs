@@ -76,6 +76,7 @@ public class Enemy : Behaviour
 
     private Vector2 velocity = Vector2.Zero;
     private bool lastValue;
+    private bool ping = false;
     protected override void OnUpdate(GameTime gameTime)
     {
         float delta = (float)gameTime.TotalGameTime.TotalSeconds;
@@ -85,7 +86,7 @@ public class Enemy : Behaviour
 
         if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius)
         {
-            this.Game.Services.GetService<ISceneControllerService>().DestroyNode(this.Node);
+            // this.Game.Services.GetService<ISceneControllerService>().DestroyNode(this.Node);
         }
         else
         {
@@ -93,7 +94,7 @@ public class Enemy : Behaviour
             {
                 if (this.spawner.PlayerTouchingFrame != lastValue)
                 {
-                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * this.walkSpeed;
+                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * 10;
                 }
                 if (this.GetPlayerDirection().Length() < this.diveDistance)
                 {
@@ -110,6 +111,21 @@ public class Enemy : Behaviour
                 float r = 0.1f;
                 this.velocity -= this.Node.GetLocalPosition2D() / 10;
             }
+        }
+        if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius * 1.5f)
+        {
+            if (!ping)
+            {
+                if (rand.NextSingle() > 0.8f)
+                {
+                    this.velocity -= this.Node.GetLocalPosition2D() / 15;
+                    this.ping = true;
+                }
+            }
+        }
+        else
+        {
+            ping = false;
         }
 
         this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.velocity);

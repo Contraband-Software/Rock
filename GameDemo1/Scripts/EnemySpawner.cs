@@ -1,6 +1,7 @@
 namespace GameDemo1.Scripts;
 
 using System;
+using System.Linq;
 using GREngine.Algorithms;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.System;
@@ -12,7 +13,7 @@ public class EnemySpawner : Behaviour
     #region SETTINGS
     private static bool debug = true;
 
-    private static uint maxEnemies = 10;
+    private uint maxEnemies = 4;
     #endregion
 
     #region STATE
@@ -23,9 +24,10 @@ public class EnemySpawner : Behaviour
     public bool PlayerTouchingFrame { get; private set; } = false;
     #endregion
 
-    public EnemySpawner(float radius)
+    public EnemySpawner(float radius, uint enemies)
     {
         this.Radius = radius;
+        this.maxEnemies = enemies;
     }
 
     public void PlayerFrameTouch()
@@ -48,22 +50,14 @@ public class EnemySpawner : Behaviour
 
         Random r = new Random();
 
-        // if (PlayerTouchingFrame)
-        // {
-        //     if ((gameTime.TotalGameTime.Milliseconds) % 700 == 0)
-        //     {
-        //         // PrintLn(gameTime.TotalGameTime.Seconds.ToString());
-        //         if (r.NextSingle() > 0.5)
-        //             this.SpawnRandomEnemy();
-        //     }
-        // }
-
-        // if (gameTime.TotalGameTime.Milliseconds % 200 == 0)
-        // {
-        //     if (r.NextSingle() > 0.5)
-        //         this.SpawnRandomEnemy();
-        // }
-
+        if (this.Node.GetChildren().ToList().Count < maxEnemies)
+        {
+            if (gameTime.TotalGameTime.Milliseconds % 200 == 0)
+            {
+                if (r.NextSingle() > 0.5)
+                    this.SpawnRandomEnemy();
+            }
+        }
 
         PlayerTouchingFrame = false;
     }
