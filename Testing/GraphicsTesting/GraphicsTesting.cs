@@ -1,7 +1,11 @@
+
+global using static GREngine.Debug.Out;
+
 using GREngine.Core.PebbleRenderer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 
 namespace Testing;
 
@@ -13,10 +17,10 @@ using SystemTesting;
 public class GraphicsTesting : Game
 {
     private GraphicsDeviceManager graphics;
-    //private SpriteBatch _spriteBatch;
+    private SpriteBatch _spriteBatch;
 
     private readonly PebbleRenderer re;
-
+    SpriteFont Font;
 
     private SceneManager sceneManager;
 
@@ -25,7 +29,6 @@ public class GraphicsTesting : Game
         graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-
 
         re = new PebbleRenderer(this, graphics, 1920, 1080, 0.25f, 0.5f);
 
@@ -41,7 +44,9 @@ public class GraphicsTesting : Game
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
-        re.lookAt(new Vector2(512, 512));
+        //re.lookAt(new Vector2(512, 512));
+
+
         base.Initialize();
     }
 
@@ -57,9 +62,13 @@ public class GraphicsTesting : Game
 
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
         re.addPostProcess(new BloomPostProcess(this, Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
-        //re.addPostProcess(new BlurPostProcess(this, 1920, 1080, 1, 0.9f));
+ 
         re.addPostProcess(new DitherPostProcess(this, Content.Load<Effect>("Graphics/dither"), Content.Load<Texture2D>("Graphics/bayer")));
+        //re.addPostProcess(new BlurPostProcess(this, 1920, 1080, 3, 0.9f));
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
+
+        Font = Content.Load<SpriteFont>("Graphics/DefaultFont");
+        PrintLn(Font.ToString());
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
@@ -82,8 +91,19 @@ public class GraphicsTesting : Game
         }
 
         // sceneManager.DebugPrintGraph();
-        re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
+        //re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
         //re.drawDebug(new DebugDrawable(new Vector2(1024, 1024), 124, Color.Green));
+
+
+
+
+        UIDrawable fuckoff = new UIDrawable(new Vector2(100, 100), 4, Color.AntiqueWhite, Font, "hello world!");
+
+
+        re.DrawUI(fuckoff);
+
+
+
         base.Update(gameTime);
     }
 
