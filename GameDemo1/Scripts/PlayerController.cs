@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Input;
 using static GREngine.Debug.Out;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using System.Drawing;
+using System.Collections.Generic;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -58,6 +60,9 @@ public class PlayerController : Behaviour
     private float currentFallTime = 0;
     #endregion
     #endregion
+
+    private PointF lastGunBeamStart = new PointF(0, 0);
+    private PointF lastGunBeamEnd = new PointF(0, 0);
 
     public PlayerController(string mapFloorCollisionLayer = "mapFloor")
     {
@@ -109,7 +114,7 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                // GameOver();
+                GameOver();
             }
         }
         isGrounded = false;
@@ -123,13 +128,27 @@ public class PlayerController : Behaviour
     private void GameOver()
     {
         PlayerDiedEvent?.Invoke();
+        this.Game.Services.GetService<ISceneControllerService>().ChangeScene("DeathScene");
         // PrintLn("Game Over");
     }
 
     private void FireGun()
     {
+        ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
 
+        Vector2 direction = Vector.AngleToVector(this.facingDirection);
+        List<string> layers = new List<string>
+        {
+            "enemy"
+        };
+        PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
+
+        Raycast2DResult ray = collisionSystem.Raycast2D(origin, direction, 100000f, layers);
+        if(ray.colliderHit != null)
+        {
+            PrintLn(ray.ToString());
+        }
     }
 
     private void ManageGunInput(GameTime gameTime)

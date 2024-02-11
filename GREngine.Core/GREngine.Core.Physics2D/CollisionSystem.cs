@@ -369,7 +369,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         }
 
         //for all polygon colliders, find all points of intersection (if any), and store the closest one
-        foreach(Collider obj in verletObjects.OfType<PolygonCollider>())
+        foreach(Collider obj in possibleColliders.OfType<PolygonCollider>())
         {
             PolygonCollider polyCol = (PolygonCollider)obj;
             List<PointF> vertices = polyCol.GetVertices();
@@ -432,7 +432,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         //for each circle
         //does it intersect the circle (twice)? if so, where
         //take closest intersection point
-        foreach (Collider obj in verletObjects.OfType<CircleCollider>())
+        foreach (Collider obj in possibleColliders.OfType<CircleCollider>())
         {
             CircleCollider circCol = (CircleCollider)obj;
             float radius = circCol.GetRadius();
