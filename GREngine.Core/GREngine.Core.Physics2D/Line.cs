@@ -115,7 +115,7 @@ public struct Line
         //translate line so that it goes through the fromPoint
         Line line;
         if (this.a == 0) { line = new Line(0, -(fromPoint.X), 1); }
-        else if (this.m == 0) { line = new Line(1, fromPoint.Y, 1); }
+        else if (this.m == 0) { line = new Line(1, fromPoint.Y, 0); }
         else { line = new Line(1, fromPoint.Y - (this.m * fromPoint.X), this.m); }
 
         if (!line.PointIsOnLine(fromPoint))
@@ -141,20 +141,30 @@ public struct Line
         //standard line
         else
         {
-            //use X of towardsPoint, find Y on line
-            float endY = (line.m * towardsPoint.X) + line.c;
             Vector2 incoming = new Vector2(fromPoint.X - towardsPoint.X, fromPoint.Y - towardsPoint.Y);
-            Vector2 normal = new Vector2(towardsPoint.X - fromPoint.X, endY - fromPoint.Y);
+            Vector2 normal = Vector2.Zero;
+            //incoming ray is vertical, use towardPos.Y position as reference
+            if(fromPoint.X == towardsPoint.X)
+            {
+                float endX = (towardsPoint.Y - line.c) / line.m;
+                normal = new Vector2(endX - fromPoint.X, towardsPoint.Y - fromPoint.Y);
+            }
+            else
+            {
+                //use X of towardsPoint, find Y on line
+                float endY = (line.m * towardsPoint.X) + line.c;
+                normal = new Vector2(towardsPoint.X - fromPoint.X, endY - fromPoint.Y);
 
+            }
             //dot product: fromPoint - towardsPoint, endPoint - fromPoint
             //if dot product is positive, flip the normal
-            if(Vector2.Dot(incoming, normal) > 0f)
+            if (Vector2.Dot(incoming, normal) > 0f)
             {
                 normal *= -1f;
             }
             if (normal != Vector2.Zero) { normal.Normalize(); }
             return normal;
-            
+
         }
     }
 }

@@ -246,6 +246,27 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     }
     #endregion
 
+    /// <summary>
+    /// Return whether a line segment intersect a circle in TWO PLACES
+    /// </summary>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
+    /// <param name="c"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public bool LineCanIntersectCircle(PointF p1, PointF p2, PointF c, float r)
+    {
+        p1 = new PointF(p1.X - c.X, p1.Y - c.Y);
+        p2 = new PointF(p2.X - c.X, p2.Y - c.Y);
+
+        float dx = p2.X - p1.X;
+        float dy = p2.Y - p1.Y;
+        float dr = MathF.Sqrt((dx * dx) + (dy * dy));
+        float D = (p1.X * p2.Y) - (p2.X * p1.Y);
+
+        return ((r * r) * (dr * dr) - (D * D) > 0);
+    }
+
     public List<PointF> LineIntersectsCircle(PointF p1, PointF p2, PointF c, float r)
     {
         p1 = new PointF(p1.X - c.X, p1.Y - c.Y);
@@ -324,7 +345,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         direction = GREngine.Algorithms.Vector.SafeNormalize(direction);
         PointF endPoint = new PointF(origin.X + direction.X * distance, origin.Y + direction.Y * distance);
         PointF min = new PointF(Math.Min(origin.X, endPoint.X), Math.Min(origin.Y, endPoint.Y));
-        PointF max = new PointF(Math.Max(origin.X, endPoint.X), Math.Min(origin.Y, endPoint.Y));
+        PointF max = new PointF(Math.Max(origin.X, endPoint.X), Math.Max(origin.Y, endPoint.Y));
         AABB rayAABB = new AABB(min, max);
 
         Line rayAsLine = new Line(origin, endPoint);
@@ -335,6 +356,15 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             collider.CalculateAABB();
             if (!layers.Contains(collider.GetLayer())){ continue; }
             if(!AABBOverlap(rayAABB, collider.GetAABB())) { continue; }
+
+            //RAYCASTS CANT BE FIRED FROM WITHIN A COLLIDER
+            if (collider.PointInsideCollider(origin))
+            {
+                return new Raycast2DResult(
+                null,
+                new PointF(float.NaN, float.NaN),
+                new Vector2(float.NaN, float.NaN));
+            }
             possibleColliders.Add(collider);
         }
 
@@ -399,14 +429,43 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             normals.Add(foundIntersectionPointNormals[closestPointIndex]);
 
         }
-        //if its a circle
+        //for each circle
         //does it intersect the circle (twice)? if so, where
         //take closest intersection point
+        foreach (Collider obj in verletObjects.OfType<CircleCollider>())
+        {
+            CircleCollider circCol = (CircleCollider)obj;
+            float radius = circCol.GetRadius();
+            Vector2 circPos = circCol.GetGlobalColliderPosition();
+            PointF centre = new PointF(circPos.X, circPos.Y);
+            if(!LineCanIntersectCircle(origin, endPoint, centre, radius)){ continue; }
+
+            //get the two intersection points
+            List<PointF> intersections = LineIntersectsCircle(origin, endPoint, centre, radius);
+            float distToP1 = new Vector2(intersections[0].X - origin.X, intersections[0].Y - origin.Y).Length();
+            float distToP2 = new Vector2(intersections[1].X - origin.X, intersections[1].Y - origin.Y).Length();
+
+            if(distToP1 < distToP2)
+            {
+                intersectionPoints.Add(intersections[0]);
+                Vector2 normal = new Vector2(intersections[0].X - centre.X, intersections[0].Y - centre.Y);
+                if(normal != Vector2.Zero) { normal.Normalize(); }
+                normals.Add(normal);
+            }
+            else
+            {
+                intersectionPoints.Add(intersections[1]);
+                Vector2 normal = new Vector2(intersections[1].X - centre.X, intersections[1].Y - centre.Y);
+                if (normal != Vector2.Zero) { normal.Normalize(); }
+                normals.Add(normal);
+            }
+
+            hitColliders.Add(circCol);
+
+        }
 
 
-
-
-        if(intersectionPoints.Count == 0)
+        if (intersectionPoints.Count == 0)
         {
             return new Raycast2DResult(null, new PointF(float.NaN, float.NaN), new Vector2(float.NaN, float.NaN));
         }
