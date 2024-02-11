@@ -96,7 +96,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 //                    ?? throw new InvalidOperationException("Active behaviour sorting resulted in a null list!");
 
                 enabledBehaviours.ForEach(b => this.activeBehaviours.Add(b));
-                this.initializationSet.Clear();
+                this.initializationSet.RemoveWhere(b => b.Initialized);
 
                 GC.Collect();
             }

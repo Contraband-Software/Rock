@@ -30,7 +30,7 @@ public class MyScene : Scene
         sc.AddNodeAtRoot(myNode);
 
         GenericNode map = new GenericNode("map parent");
-        NodeNetwork nodeNetwork = sc.InitBehaviour(map, new NodeNetwork()) as NodeNetwork;
+        PathfindingSearchNetwork pathfindingSearchNetwork = sc.InitBehaviour(map, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
         Collider c0 = sc.InitBehaviour(map, new CircleCollider(230, "mapFloor", true)) as Collider;
         c0.SetStatic(true);
         sc.AddNodeAtRoot(map);
@@ -57,9 +57,9 @@ public class MyScene : Scene
 
         sc.QueueSceneAction((GameTime gt) =>
         {
-            nodeNetwork.BuildNetwork(600, 600, "mapFloor", "mapWall", 20);
+            pathfindingSearchNetwork.BuildNetwork(600, 600, "mapFloor", "mapWall", 20);
 
-            List<Point> path = nodeNetwork.Navigate(new Point(10, 10), new Point(300, 300));
+            List<Point> path = pathfindingSearchNetwork.Navigate(new Point(10, 10), new Point(300, 300));
 
             if (path != null)
             {

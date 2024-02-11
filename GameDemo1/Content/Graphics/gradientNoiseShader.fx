@@ -48,7 +48,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float2 uv = input.TextureCoordinates;
 	//float4 sample =  tex2D(SpriteTextureSampler,uv);
-    float noise = gnoise(uv * 8 + float2(time, time));
+    float noise = gnoise(uv * 8 + float2(time, time)*0.1);
     
     return float4(noise,noise,noise, 1);
 }

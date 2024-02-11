@@ -24,11 +24,11 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private float walkSpeed = 2;
-    private float maxGunPower = 60;
-    private float gunCooldown = 0.5f;
-    private float gunKnockback = 1;
-    private float platformSpeedDamping = 0.68f;
+    private static float walkSpeed = 2;
+    private static float maxGunPower = 60;
+    private static float gunCooldown = 0.5f;
+    private static float gunKnockback = 1;
+    private static float platformSpeedDamping = 0.68f;
 
     private string mapFloorCollisionLayer;
     #endregion
@@ -37,7 +37,7 @@ public class PlayerController : Behaviour
     private IPebbleRendererService render;
     private Collider rb;
 
-    private int currentGunPower = 0;
+    private int currentGunPower = (int)(maxGunPower / 2);
     private bool isGrounded = true;
     private int scrollDelta = 0;
     private float currentGunCooldown = 0;
@@ -78,6 +78,8 @@ public class PlayerController : Behaviour
             if (c.GetLayer() == mapFloorCollisionLayer)
             {
                 this.isGrounded = true;
+
+                (c.Node.GetBehaviour<EnemySpawner>() as EnemySpawner).PlayerFrameTouch();
             }
         };
     }
@@ -90,7 +92,7 @@ public class PlayerController : Behaviour
         Vector2 m = this.ManageMovementInput();
         if (isGrounded && m.Length() > 0)
         {
-            this.rb.Velocity += m * this.walkSpeed;
+            this.rb.Velocity += m * walkSpeed;
         }
 
         this.ManageGunInput(gameTime);
@@ -107,12 +109,10 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                GameOver();
+                // GameOver();
             }
         }
         isGrounded = false;
-
-        render.drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 20, Color.Orange));
 
         this.Game.Services.GetService<IPebbleRendererService>()
             .setCameraPosition(this.Node.GetGlobalPosition2D() - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
@@ -133,11 +133,11 @@ public class PlayerController : Behaviour
     {
         currentGunPower = (int)Math.Clamp(this.currentGunPower + this.scrollDelta / 30, 0, maxGunPower);
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Space))// || Mouse.GetState().LeftButton == ButtonState.Pressed)
+        if (Keyboard.GetState().IsKeyDown(Keys.Space) || Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
             if (this.currentGunCooldown == 0)
             {
-                this.currentGunCooldown = this.gunCooldown;
+                this.currentGunCooldown = gunCooldown;
                 this.FireGun();
             }
         }

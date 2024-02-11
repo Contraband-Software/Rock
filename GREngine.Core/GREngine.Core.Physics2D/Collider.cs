@@ -37,6 +37,8 @@ public abstract class Collider : Behaviour
     public delegate void CollisionEvent(Collider collidedWith);
     public event CollisionEvent? OnCollisionEnter;
 
+    List<string> allowedCollisionLayers = new List<string>();
+
     public bool Debug { get; set; } = false;
 
     public float VelocityDampingMultiplier { get; set; } = 1;
@@ -204,6 +206,16 @@ public abstract class Collider : Behaviour
     public string GetLayer() { return collisionLayer; }
     public bool IsAABBOverlapping() { return aabbOverlapping; }
     public void SetAABBOverlapping(bool b) { aabbOverlapping = b; }
+
+    /// <summary>
+    /// Pass in a list of layers with which this collider should be able to collide with
+    /// </summary>
+    /// <param name="layers"></param>
+    public void SetAllowedCollisionLayers(List<string> layers)
+    {
+        this.allowedCollisionLayers = layers;
+    }
+    public List<string> GetAllowedCollisionLayers() { return allowedCollisionLayers; }
 
     public void SolveCollisions(List<Collider> others)
     {
