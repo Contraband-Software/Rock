@@ -131,7 +131,7 @@ public class Enemy : Behaviour
         this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.velocity);
         this.velocity *= 0.7f;
         // PrintLn((this.Node.GetLocalPosition2D() + this.velocity).ToString());
-        this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
+        //this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
 
         lastValue = this.spawner.PlayerTouchingFrame;
     }

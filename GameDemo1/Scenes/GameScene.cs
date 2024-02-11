@@ -35,7 +35,9 @@ public class GameScene : Scene
     private Node MakeLevelBlock(CircleCollider col, Vector2 position)
     {
         GenericNode mapNode = new GenericNode("MapGround");
-        col.SetTrigger(true);
+        Light light = new Light(new Vector3(200000,220000,280000),true,0,1);
+
+        sceneController.AddBehaviour(mapNode, light); 
         col.SetLayer(mapFloorCollisionLayer);
         sceneController.AddBehaviour(mapNode, col);
         mapNode.SetLocalPosition(position);

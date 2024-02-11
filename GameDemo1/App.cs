@@ -58,7 +58,10 @@ public class App : Game
             new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")),
             new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         renderManager.addMaterial(puddleMat);
-
+        Material playerMat = new Material(new Shader(Content.Load<Effect>("Graphics/PlayerDiffuseShader")), null, null);
+        Material laserMat = new Material(new Shader(Content.Load<Effect>("Graphics/LaserShader")), null, null);
+        renderManager.addMaterial(playerMat);
+        renderManager.addMaterial(laserMat);
         renderManager.addPostProcess(
             new BloomPostProcess(this,
                 Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
@@ -67,9 +70,9 @@ public class App : Game
                 Content.Load<Effect>("Graphics/dither"),
                 Content.Load<Texture2D>("Graphics/bayer")));
 
-        //renderManager.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
         //renderManager.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
-        //renderManager.addPostProcess(new BlurPostProcess(this, 1920, 1080, 1, 0.9f));
+        //renderManager.addPostProcess(new BloomPostProcess(this, 1920, 1080, 1, 0.9f));
+        renderManager.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
 
         this.sceneManager.AddScene(new GameScene());
         this.sceneManager.AddScene(new DeathScene());

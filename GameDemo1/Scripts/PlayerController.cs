@@ -13,6 +13,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using System.Drawing;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -20,6 +21,9 @@ public class Player : Node {}
 [GRExecutionOrder(10)]
 public class PlayerController : Behaviour
 {
+
+    Sprite laser;
+    int animcounter = 0;
     #region EVENTS
     public delegate void PlayerDied();
     public event PlayerDied? PlayerDiedEvent;
@@ -84,10 +88,32 @@ public class PlayerController : Behaviour
                 (c.Node.GetBehaviour<EnemySpawner>() as EnemySpawner).PlayerFrameTouch();
             }
         };
+
+
+        Texture2D allWhite = new Texture2D(Game.GraphicsDevice, 1, 1);
+        allWhite.SetData(new Color[] { Color.White });
+
+
+
+        laser = new Sprite(0, new Vector2(0, currentGunPower * 2), allWhite, null, null, 6, 4);
+        //laser.offset = new Vector2(0, 100);
+        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
+
+        Sprite playerSprite = new Sprite(0, new Vector2(0.2f), Game.Content.Load<Texture2D>("Graphics/PlayerDiffuse"), null, null, 6, 3);
+        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, playerSprite);
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
+
+        if (animcounter <= 0)
+        {
+            laser.setScale(new Vector2(0, currentGunPower * 2));
+        }
+        else
+        {
+            animcounter--;
+        }
         #region INPUT
         this.ManageMouseInput();
 
@@ -134,6 +160,9 @@ public class PlayerController : Behaviour
         ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
 
+        
+        
+
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>
         {
@@ -148,6 +177,16 @@ public class PlayerController : Behaviour
         {
             PrintLn(ray.ToString());
         }
+
+
+        Texture2D allWhite = new Texture2D(Game.GraphicsDevice, 1, 1);
+        allWhite.SetData(new Color[] { Color.White });
+
+        //Sprite laser = new Sprite(MathF.Sin(direction.X), new Vector2(4000, currentGunPower * 2), allWhite, null, null,6,4);
+        //this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
+        laser.rotation = MathF.Atan2(direction.Y,direction.X);
+        laser.setScale(new Vector2(3000, currentGunPower * 2));
+        animcounter = 60;
     }
 
     private void ManageGunInput(GameTime gameTime)

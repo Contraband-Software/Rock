@@ -63,6 +63,18 @@
 /processorParam:DebugMode=Auto
 /build:Graphics/dither.fx
 
+#begin Graphics/EnemyDiffuseSS.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/EnemyDiffuseSS.png
+
 #begin Graphics/gradientNoiseShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -74,6 +86,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Graphics/isolate.fx
+
+#begin Graphics/LaserShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/LaserShader.fx
 
 #begin Graphics/oceanDiffuse.fx
 /importer:EffectImporter
@@ -128,6 +146,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Graphics/Platform1Roughness.png
+
+#begin Graphics/PlayerDiffuse.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/PlayerDiffuse.png
+
+#begin Graphics/PlayerDiffuseShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/PlayerDiffuseShader.fx
 
 #begin Graphics/pointLight.fx
 /importer:EffectImporter

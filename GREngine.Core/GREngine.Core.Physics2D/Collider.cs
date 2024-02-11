@@ -113,7 +113,7 @@ public abstract class Collider : Behaviour
 #if DEBUG
         if (Debug)
         {
-            this.DrawDebug();
+            //this.DrawDebug();
         }
 #endif
         this.Velocity *= this.VelocityDampingMultiplier;

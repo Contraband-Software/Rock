@@ -242,7 +242,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void drawDebug(DebugDrawable drawable)
     {
-        debugShapes.Enqueue(drawable);
+        //debugShapes.Enqueue(drawable);
     }
 
     public void DrawUI(UIDrawable drawable)
@@ -405,6 +405,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         spriteBatch.Begin(transformMatrix: Matrix.CreateScale(1 / renderScale),samplerState: samplerState); // maybe dont create the matrix every frame
         spriteBatch.Draw(diffuseTarget, new Vector2(0f), Color.White);
         spriteBatch.End();
+
+        renderDebugShapes(postProcessTarget1, view * Matrix.CreateScale(1 / renderScale));
+        renderUI(postProcessTarget1);
         Game.GraphicsDevice.SetRenderTarget(null);
         postProcessPingPong = true;
 
@@ -435,8 +438,6 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         }
         spriteBatch.End();
 
-        renderDebugShapes(null, view * Matrix.CreateScale(1/renderScale));
-        renderUI(null);
     }
 
     private void setEngineShaderParams(Effect effect)
