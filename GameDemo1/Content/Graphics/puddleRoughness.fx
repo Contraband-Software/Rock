@@ -8,7 +8,6 @@
 #endif
 
 Texture2D SpriteTexture;
-float threshold = 0.9;// add param
 
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -25,8 +24,8 @@ struct VertexShaderOutput
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 sample = tex2D(SpriteTextureSampler, input.TextureCoordinates);
-
-    return float4(step(0.9, dot(sample.rgb, sample.rgb)) * sample.rgb*2, sample.a)*0.2;
+    return float4(sample.rgb, step(0.1, sample.r)); //float4(0.2,0.2,0.2,1); //????
+    //return float4(0,0,0,1);
 }
 
 technique SpriteDrawing

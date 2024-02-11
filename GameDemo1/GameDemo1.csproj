@@ -25,9 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\GREngine\GREngine.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Graphics\" />
-  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />

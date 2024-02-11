@@ -14,7 +14,6 @@ using Scenes;
 public class App : Game
 {
     private readonly GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
 
     private readonly SceneManager sceneManager;
     private readonly PebbleRenderer renderManager;
@@ -39,6 +38,7 @@ public class App : Game
         this.Components.Add(renderManager);
         this.Services.AddService(typeof(IPebbleRendererService), renderManager);
 
+
         this.Components.Add(collisionManager);
         this.Services.AddService(typeof(ICollisionSystem), collisionManager);
 
@@ -47,7 +47,28 @@ public class App : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        Material oceanMat = new Material(
+            new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")),
+            new Shader(Content.Load<Effect>("Graphics/oceanNormal")),
+            new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
+        renderManager.addMaterial(oceanMat);
+        Material puddleMat = new Material(
+            null,
+            new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")),
+            new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
+        renderManager.addMaterial(puddleMat);
+
+        renderManager.addPostProcess(
+            new BloomPostProcess(this,
+                Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
+        renderManager.addPostProcess(
+            new DitherPostProcess(this,
+                Content.Load<Effect>("Graphics/dither"),
+                Content.Load<Texture2D>("Graphics/bayer")));
+
+        //renderManager.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
+        //renderManager.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
+        //renderManager.addPostProcess(new BlurPostProcess(this, 1920, 1080, 1, 0.9f));
 
         this.sceneManager.AddScene(new GameScene());
 
