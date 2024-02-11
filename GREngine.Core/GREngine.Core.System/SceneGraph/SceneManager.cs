@@ -518,7 +518,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         string tags = "";
         node.Tags.ToList().ForEach(c => { tags += c + ","; });
 
-        Vector3 position = node.GetGlobalPosition();
+        Vector3 position = node.GetLocalPosition();
         string format = "{0,10:####0.000}";
         PrintLn(
             "[" + String.Format(format, position.X) + ", " + String.Format(format, position.Y) + ", " + String.Format(format, position.Z) + "]" +
