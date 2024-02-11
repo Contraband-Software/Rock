@@ -114,7 +114,7 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                // GameOver();
+                GameOver();
             }
         }
         isGrounded = false;
@@ -128,6 +128,7 @@ public class PlayerController : Behaviour
     private void GameOver()
     {
         PlayerDiedEvent?.Invoke();
+        this.Game.Services.GetService<ISceneControllerService>().ChangeScene("DeathScene");
         // PrintLn("Game Over");
     }
 
