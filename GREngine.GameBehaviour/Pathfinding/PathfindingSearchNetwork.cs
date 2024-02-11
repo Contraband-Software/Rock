@@ -138,7 +138,7 @@ public class PathfindingSearchNetwork : Behaviour
         #endif
 
         List<Point> path = this.FindPath();
-        if (path.Count < 0)
+        if (path.Count == 0)
             return null;
 
         path.Insert(0, start);
@@ -244,7 +244,7 @@ public class PathfindingSearchNetwork : Behaviour
 
     internal static float GetTraversalCost(Point p1, Point p2)
     {
-        return MathF.Sqrt(MathF.Pow(p1.X - p2.X, 2) + MathF.Pow(p1.Y - p2.Y, 2));
+        return (p1.ToVector2() - p2.ToVector2()).Length();
     }
 
     private IEnumerable<Point> GetAdjacentLocations(Point p)
