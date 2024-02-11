@@ -24,7 +24,7 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
     internal bool Initialized { get; private set; } = false;
 
     protected Game Game { get; private set; }
-    internal protected Node? Node { get; internal set; }
+    public Node? Node { get; internal set; }
 
 #pragma warning disable CS8618
     protected Behaviour()

@@ -106,7 +106,7 @@ public abstract class Node : AbstractGameObject
     {
         return this.behaviours.FirstOrDefault(c =>
         {
-            for (var current = typeof(T); current != null; current = current.BaseType)
+            for (var current = c.GetType(); current != null; current = current.BaseType)
             {
                 if (current == typeof(T))
                     return true;

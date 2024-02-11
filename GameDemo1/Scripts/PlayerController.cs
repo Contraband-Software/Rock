@@ -15,7 +15,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 [GRETagWith("Player")]
 public class Player : Node {}
 
-[GRExecutionOrder(1000)]
+[GRExecutionOrder(10)]
 public class PlayerController : Behaviour
 {
     #region EVENTS
@@ -109,16 +109,13 @@ public class PlayerController : Behaviour
             {
                 GameOver();
             }
-
-            // PrintLn(Size.ToString());
         }
+        isGrounded = false;
 
         render.drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 20, Color.Orange));
 
-        isGrounded = false;
-
         this.Game.Services.GetService<IPebbleRendererService>()
-            .lookAt(this.Node.GetGlobalPosition2D()); // - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
+            .setCameraPosition(this.Node.GetGlobalPosition2D() - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
     }
 
     private void GameOver()
