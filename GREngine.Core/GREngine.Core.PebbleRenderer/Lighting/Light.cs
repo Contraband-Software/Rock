@@ -30,6 +30,18 @@ public class Light : Behaviour
         calculateThetas();
 
     }
+    public Light(Vector3 color, bool isShadowCasting = false, float rotation = 0, float arc = 1)
+    { //anything else?
+        this.position = new Vector2(0);
+        this.offset = Vector2.Zero;
+        this.color = color;
+        this.rotation = rotation;
+        this.isShadowCasting = isShadowCasting;
+        this.coneEdges.Z = arc;
+        calculateThetas();
+
+    }
+
 
     protected override void OnStart()
     {

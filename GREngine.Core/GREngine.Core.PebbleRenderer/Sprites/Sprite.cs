@@ -50,6 +50,23 @@ public class Sprite : Behaviour
         calculateSize();
     }
 
+    public Sprite(float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true)
+    {
+
+        this.textures = new Texture2D[3] { diffuse, normal, roughness };
+        this.position = new Vector2(0);
+        this.offset = Vector2.Zero;
+        this.offsetToCeneter = new Vector2(0);
+        this.rotation = rotation;
+        this.material = material;
+        this.layer = layer; //layer0 = behind everything
+        this.isShadowCaster = isShadowCaster;
+        this.isLit = isLit;
+        this.scale = scale;
+        calculateOffset();
+        calculateSize();
+    }
+
     protected override void OnStart()
     {
         Game.Services.GetService<IPebbleRendererService>().addSprite(this);
