@@ -23,7 +23,7 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
     internal int loadOrder = 0;
     internal bool Initialized { get; private set; } = false;
 
-    protected Game Game { get; private set; }
+    internal protected Game Game { get; internal set; }
     public Node? Node { get; internal set; }
 
 #pragma warning disable CS8618

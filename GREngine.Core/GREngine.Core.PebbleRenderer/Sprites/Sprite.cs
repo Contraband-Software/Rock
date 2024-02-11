@@ -19,12 +19,12 @@ using Debug;
 
 public class Sprite : Behaviour
 {
-    private Texture2D[] textures;
+    internal Texture2D[] textures;
 
-    private Vector2 position;
+    internal Vector2 position;
     public Vector2 offset;
     public Vector2 offsetToCeneter;
-    private Vector2 scale = new Vector2(1);
+    internal Vector2 scale = new Vector2(1);
 
     public Point size;
     public float rotation = 0;
@@ -87,12 +87,12 @@ public class Sprite : Behaviour
     }
 
 
-    private void calculateOffset()
+    internal virtual void calculateOffset()
     {
         offsetToCeneter = new Vector2(textures[0].Width / 2, textures[0].Height / 2);
     }
 
-    private void calculateSize()
+    internal void calculateSize()
     {
         size.X = (int)Math.Floor(textures[0].Width * scale.X);
         size.Y = (int)Math.Floor(textures[0].Height * scale.Y);

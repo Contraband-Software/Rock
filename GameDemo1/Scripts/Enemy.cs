@@ -10,6 +10,7 @@ using GREngine.GameBehaviour.Pathfinding;
 using Microsoft.Xna.Framework;
 using Scenes;
 
+[GRExecutionOrder(8)]
 public class Enemy : Behaviour
 {
     #region SETTINGS
@@ -23,9 +24,8 @@ public class Enemy : Behaviour
     private PlayerController player;
     private CircleCollider collider;
 
-    private bool onPlatform;
-
     private int randomMovement = 0;
+    private int isGrounded = 0;
     #endregion
 
     public Enemy(EnemySpawner spawner)
@@ -51,13 +51,15 @@ public class Enemy : Behaviour
 
         this.collider.OnTriggerEnter += with =>
         {
-            if (with.GetLayer() == GameScene.playerCollisionLayer)
-            {
-                (this.player.Node.GetBehaviour<CircleCollider>() as CircleCollider).SetVelocity(GetPlayerDirection() * hitStrength);
-            }
             if (with.GetLayer() == GameScene.mapFloorCollisionLayer)
             {
-                onPlatform = true;
+                this.isGrounded = 0;
+            }
+            if (with.GetLayer() == GameScene.playerCollisionLayer)
+            {
+                Node playerNode = this.player.Node;
+                if (playerNode != null)
+                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(this.GetPlayerDirection() * this.hitStrength);
             }
         };
     }
@@ -71,17 +73,29 @@ public class Enemy : Behaviour
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (this.spawner.PlayerTouchingFrame)
+        if (this.isGrounded > 10)
         {
-            this.collider.SetVelocity(GetPlayerDirection() * this.walkSpeed);
+            this.Game.Services.GetService<ISceneControllerService>().DestroyNode(this.Node);
         }
         else
         {
-            this.collider.SetVelocity(Vector2.Zero);
-            if ((this.randomMovement + gameTime.TotalGameTime.Seconds) % (this.spawner.Radius / 20) == 0)
+            if (this.spawner.PlayerTouchingFrame)
             {
-                // this.collider.SetVelocity(-Node.GetLocalPosition2D() / 20);
+                // this.collider.SetVelocity(GetPlayerDirection() * this.walkSpeed);
+                this.collider.SetVelocity(Vector2.Zero);
             }
+            else
+            {
+                this.collider.SetVelocity(Vector2.Zero);
+                // if ((this.randomMovement + gameTime.TotalGameTime.Seconds) % (this.spawner.Radius / 20) == 0)
+                // {
+                //       this.collider.SetVelocity(-Node.GetLocalPosition2D() / 20);
+                // }
+            }
+
         }
+
+        this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
+        this.isGrounded++;
     }
 }
