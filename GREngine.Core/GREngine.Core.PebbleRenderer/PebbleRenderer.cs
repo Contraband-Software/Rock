@@ -435,7 +435,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         }
         spriteBatch.End();
 
-        renderDebugShapes(null, view * Matrix.CreateScale(1/scaleFactor));
+        renderDebugShapes(null, view * Matrix.CreateScale(1/renderScale));
         renderUI(null);
     }
 
@@ -585,7 +585,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private void renderUI(RenderTarget2D target)
     {
         Game.GraphicsDevice.SetRenderTarget(target);
-        spriteBatch.Begin();
+        spriteBatch.Begin(samplerState: samplerState);
         while (UIShapes.Count > 0)
         {
             UIDrawable drawable = UIShapes.Dequeue();
