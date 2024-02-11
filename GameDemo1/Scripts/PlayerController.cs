@@ -61,9 +61,6 @@ public class PlayerController : Behaviour
     #endregion
     #endregion
 
-    private PointF lastGunBeamStart = new PointF(0, 0);
-    private PointF lastGunBeamEnd = new PointF(0, 0);
-
     public PlayerController(string mapFloorCollisionLayer = "mapFloor")
     {
         this.mapFloorCollisionLayer = mapFloorCollisionLayer;
@@ -144,6 +141,8 @@ public class PlayerController : Behaviour
         };
         PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
 
+        direction.Y = direction.Y * -1;
+        PrintLn(direction.ToString());
         Raycast2DResult ray = collisionSystem.Raycast2D(origin, direction, 100000f, layers);
         if(ray.colliderHit != null)
         {
