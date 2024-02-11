@@ -46,7 +46,7 @@ public abstract class Node : AbstractGameObject
     public Vector2 GetLocalPosition2D()
     {
         Vector2 pos = new Vector2();
-        GetGlobalPosition().Deconstruct(out pos.X, out pos.Y, out _);
+        this.GetLocalPosition().Deconstruct(out pos.X, out pos.Y, out _);
         return pos;
     }
     public void SetLocalPosition(float x, float y)

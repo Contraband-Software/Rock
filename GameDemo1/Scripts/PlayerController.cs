@@ -26,9 +26,9 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private static float walkSpeed = 2;
-    private static float maxGunPower = 60;
-    private static float gunCooldown = 0.5f;
+    private static float walkSpeed = 5;
+    private static float maxGunPower = 50;
+    private static float gunCooldown = 0.3f;
     private static float gunKnockback = 1;
     private static float platformSpeedDamping = 0.68f;
 
