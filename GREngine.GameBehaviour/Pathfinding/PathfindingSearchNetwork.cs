@@ -13,7 +13,13 @@ using GREngine.Core.PebbleRenderer;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
 
-public class NodeNetwork : Behaviour
+[GRETagWith("GREngine.GameBehaviour.Pathfinding.NodeNetwork")]
+public class PathfindingNetworkNode
+{
+
+}
+
+public class PathfindingSearchNetwork : Behaviour
 {
     private Node startNode;
     private Node endNode;
@@ -24,7 +30,7 @@ public class NodeNetwork : Behaviour
 
     public List<Point> LastPath { get; private set; }
 
-    public NodeNetwork()
+    public PathfindingSearchNetwork()
     {
 
     }

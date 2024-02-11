@@ -69,6 +69,20 @@ float voronoi(float2 x)
     return sqrt(m.x);
 }
 
+float3 scatter(float2 uv)
+{
+    float3 accumulatedLight = float3(0,0,0);
+    for (int i = -2; i < 2; i++)
+    {
+        for (int j = -2; j < 2; j++)
+        {
+            accumulatedLight += tex2D(lightMap, (uv + float2(i, j) * 0.02)%1).rgb;
+
+        }
+    }
+    return accumulatedLight / 16;
+}
+
 
 struct VertexShaderOutput
 {
@@ -79,63 +93,67 @@ struct VertexShaderOutput
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    float scaledTime = time *0.1;
-    float scale = 4;
+    float scaledTime = time *0.01;
+    float scale = 8;
     float waveSpeed = 250;
     float waveAngle = 0.5;
+    float waveSize = 1.4;
     
-    float2 ligtmapUV = float2(input.Position.x / width, input.Position.y / height);
-    float3 lightColor = tex2D(lightMap, ligtmapUV).rgb + ambientColor; //baked in ambient todo make it a parameter
-	
+    float2 lightmapUV = float2(input.Position.x / width, input.Position.y / height);
+    //float3 lightColor = tex2D(lightMap, lightmapUV).rgb + ambientColor; //baked in ambient todo make it a parameter
+    float3 lightColor = tex2D(lightMap, lightmapUV).rgb*0.2 + ambientColor*0.8 +scatter(lightmapUV)*0.2;
     float2 uv = input.TextureCoordinates * scale;
 
     //float hlUVNoise = tex2D(noiseMap, uv *scale/8).r;
     //float4 sample = tex2D(diffuseSampler, uv + hlUVNoise*0.1);
 
-    float noiseSample = tex2D(noiseMap, uv/2).r;
+    float noiseSample = gnoise(uv * scale);
 
-    float noiseSample2 = tex2D(noiseMap, uv*0.1 + float2(sin(uv.x*0.1), 0.5*cos(uv.x*0.1))).r;
+    float noiseSample2 = gnoise(uv * 0.8 + float2(sin(uv.x * 0.1), 0.5 * cos(uv.x * 0.1)));
     noiseSample2 = pow(noiseSample2 + 0.4, 0.5);
 
     float noiseSample3 = tex2D(noiseMap, uv/16 + float2(sin(uv.x/16), 0.5 * cos(uv.x/16))).r;
     //noiseSample3 = pow(noiseSample2 + 0.4, 0.5);
     noiseSample3 = max(pow(noiseSample3, 0.25) - 0.1, 0);
 
-    
-    
-    //float waveRippleMask = sin(uv.y * scale * 4 + scaledTime * waveSpeed) + tex2D(noiseMap, uv * scale * float2(0.02, 0.02) + scaledTime).r;
-    //float ripple = tex2D(noiseMap, uv * scale * float2(0.12,0.02) + scaledTime).r * waveRippleMask;
-    
-    //float waveNoise = gnoise((uv + float2(0, scaledTime)) * float2(10, 100) + ripple + hlUVNoise);
-    //float foam = step(0.8, waveNoise + waveRippleMask*0.12);
+   
+    float2 waveMaskUV = uv + float2(scaledTime, scaledTime) + noiseSample * 0.05 * waveSize + noiseSample2 * 0.5 * waveSize + noiseSample3 * 0.5 * waveSize; //+ float2(sin(uv.x +scaledTime*10), cos(uv.y+scaledTime*10)); //+ 0.1*float2(sin(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)),cos(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)));
 
-    
-    //float3 waveColor = float3(foam, foam, foam) + float3(0.2, 0.4, 0.9) * (floor(pow(waveNoise, 0.2) * 5) / 8 + 0.4);
+    float noiseSample4 = gnoise(waveMaskUV * scale * 16);
 
-    float2 waveMaskUV = uv + float2(scaledTime, scaledTime) + noiseSample * 0.05 + noiseSample2*0.5 + noiseSample3*0.5; //+ float2(sin(uv.x +scaledTime*10), cos(uv.y+scaledTime*10)); //+ 0.1*float2(sin(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)),cos(uv.x * sin(waveAngle) + uv.y * cos(waveAngle)));
-    
-    float waveMask = 1 - ((waveMaskUV.x * sin(waveAngle) + waveMaskUV.y * cos(waveAngle)) % (1 / scale)) * scale;
+    float waveMask = 1 - ((waveMaskUV.x * sin(waveAngle) + waveMaskUV.y * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
 
-    float waveMaskoffset1 = 1 - (((waveMaskUV.x + 0.01) * sin(waveAngle) + (waveMaskUV.y + 0.01) * cos(waveAngle)) % (1 / scale)) * scale;
-    float waveMaskoffset2 = 1 - (((waveMaskUV.x + 0.02) * sin(waveAngle) + (waveMaskUV.y + 0.02) * cos(waveAngle)) % (1 / scale)) * scale;
+    float waveMaskoffset1 = 1 - (((waveMaskUV.x + 0.04 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.04 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
+    float waveMaskoffset2 = 1 - (((waveMaskUV.x + 0.08 / scale) * sin(waveAngle) + (waveMaskUV.y + 0.08 / scale) * cos(waveAngle) + noiseSample3 * 0.1 * waveSize) % (1 / scale)) * scale;
+    float beforeNoise = waveMask + waveMaskoffset1 + waveMaskoffset2;
 
     waveMask = pow(waveMask, 2);
     float vorn = voronoi(uv*scale);
+    float4 diffuse = tex2D(diffuseSampler, (waveMaskUV*scale + scaledTime * 8) % 1);
 
     waveMask *= vorn;
 
-    waveMask += pow(waveMaskoffset1, 4) * 0.5;
-    waveMask += pow(waveMaskoffset2, 4) * 0.5;
+    waveMask += pow(waveMaskoffset1, 2);
+    waveMask += pow(waveMaskoffset2, 2);
+
+    waveMask *= pow(noiseSample, 1);
+    //waveMask += pow(noiseSample4, 1)*waveMask*0.1;
+    //waveMask *= pow(noiseSample4, 1) ;
+    waveMask += pow(vorn, 4) * 0.1;
 
     //waveMask *= 2;
     
     waveMask = min(waveMask, 1);
-    waveMask = smoothstep(0.3, 1,waveMask);
-    
-    
-    return float4(waveMask, waveMask, waveMask, 1) * input.Color; //a is alpha right?
-    //return float4(hlUVNoise, hlUVNoise, hlUVNoise, 1);
 
+    //waveMask = floor(waveMask * 16) / 16;
+    
+    float3 waveColor = min(pow(beforeNoise / 2.5, 8) * min(diffuse.r+0.8, 1)*0.5 + (min(pow(beforeNoise / 2, 1.5), 1)) * diffuse.r * 1.5 + pow(waveMask + 0.3, 0.3) * float3(0.047, 0.086, 0.12) * 4, float3(1, 1, 1)); //should be all float(1,1,1) beforeNoise realism
+
+    //waveMask = smoothstep(0.4,1,waveMask);
+    
+    
+    //return float4(waveColor * lightColor, 1) * input.Color; //a is alpha right?
+    return float4(waveColor* lightColor, 1);
 }
 
 technique SpriteDrawing

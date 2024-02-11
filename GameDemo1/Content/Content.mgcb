@@ -79,6 +79,42 @@
 /processorParam:DebugMode=Auto
 /build:Graphics/oceanRoughness.fx
 
+#begin Graphics/Platform1Diffuse.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Platform1Diffuse.png
+
+#begin Graphics/Platform1Normal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Platform1Normal.png
+
+#begin Graphics/Platform1Roughness.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Platform1Roughness.png
+
 #begin Graphics/pointLight.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -90,6 +126,18 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Graphics/pointLightShaderShadowCasting.fx
+
+#begin Graphics/puddleNormalMapped.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/puddleNormalMapped.fx
+
+#begin Graphics/puddleRoughness.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/puddleRoughness.fx
 
 #begin Graphics/space-cruiser-panels2_albedo.png
 /importer:TextureImporter
@@ -150,4 +198,28 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Graphics/tonemapping.fx
+
+#begin Graphics/waterColor.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/waterColor.jpg
+
+#begin Graphics/waterNormal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphics/waterNormal.jpg
 
