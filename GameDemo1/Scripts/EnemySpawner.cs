@@ -72,7 +72,7 @@ public class EnemySpawner : Behaviour
     {
         Random rand = new Random();
         float angle = (float)rand.NextDouble() * MathF.Tau - MathF.PI;
-        Vector2 position = Vector.AngleToVector(angle) * (this.Radius - 10);
+        Vector2 position = Vector.AngleToVector(angle) * (this.Radius - 30);
 
         Enemy e = new Enemy(this);
         GenericNode enemyNode = new GenericNode("EnemyNode");

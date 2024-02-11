@@ -14,8 +14,8 @@ using Scenes;
 public class Enemy : Behaviour
 {
     #region SETTINGS
-    private float diveDistance = 2;
-    private float walkSpeed = 3;
+    private float diveDistance = 80;
+    private float walkSpeed = 0.2f;
     private float hitStrength = 70;
     #endregion
 
@@ -44,7 +44,10 @@ public class Enemy : Behaviour
             .FindNodeWithTag("Player")!
             .GetBehaviour<PlayerController>() as PlayerController;
 
+        // PrintLn(Node.GetLocalPosition2D().ToString());
+
         collider = this.Game.Services.GetService<ISceneControllerService>().InitBehaviour(this.Node, new CircleCollider(50, true)) as CircleCollider;
+        this.collider.SetStatic(true);
         this.collider.SetTrigger(true);
         this.collider.SetLayer(GameScene.enemyCollisionLayer);
         this.collider.SetAllowedCollisionLayers(new List<string>(){GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer, GameScene.playerCollisionLayer});
@@ -59,7 +62,7 @@ public class Enemy : Behaviour
             {
                 Node playerNode = this.player.Node;
                 if (playerNode != null)
-                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(this.GetPlayerDirection() * this.hitStrength);
+                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(Vector.SafeNormalize(this.GetPlayerDirection()) * this.hitStrength);
             }
         };
     }
@@ -68,12 +71,19 @@ public class Enemy : Behaviour
     {
         Vector2 pos = this.Node.GetGlobalPosition2D();
         Vector2 playerPos = this.player.Node.GetGlobalPosition2D();
-        return Vector.SafeNormalize(playerPos - pos);
+        return playerPos - pos;
     }
 
+    private Vector2 velocity = Vector2.Zero;
+    private bool lastValue;
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (this.isGrounded > 10)
+        float delta = (float)gameTime.TotalGameTime.TotalSeconds;
+        this.velocity = Vector2.Zero;
+
+        Random rand = new Random();
+
+        if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius)
         {
             this.Game.Services.GetService<ISceneControllerService>().DestroyNode(this.Node);
         }
@@ -81,21 +91,32 @@ public class Enemy : Behaviour
         {
             if (this.spawner.PlayerTouchingFrame)
             {
-                // this.collider.SetVelocity(GetPlayerDirection() * this.walkSpeed);
-                this.collider.SetVelocity(Vector2.Zero);
+                if (this.spawner.PlayerTouchingFrame != lastValue)
+                {
+                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * this.walkSpeed;
+                }
+                if (this.GetPlayerDirection().Length() < this.diveDistance)
+                {
+                    this.velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed * 10;
+                }
+                else
+                {
+                    this.velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed;
+                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) / 2f;
+                }
             }
             else
             {
-                this.collider.SetVelocity(Vector2.Zero);
-                // if ((this.randomMovement + gameTime.TotalGameTime.Seconds) % (this.spawner.Radius / 20) == 0)
-                // {
-                //       this.collider.SetVelocity(-Node.GetLocalPosition2D() / 20);
-                // }
+                float r = 0.1f;
+                this.velocity -= this.Node.GetLocalPosition2D() / 10;
             }
-
         }
 
-        this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetLocalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
-        this.isGrounded++;
+        this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.velocity);
+        this.velocity *= 0.7f;
+        // PrintLn((this.Node.GetLocalPosition2D() + this.velocity).ToString());
+        this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
+
+        lastValue = this.spawner.PlayerTouchingFrame;
     }
 }

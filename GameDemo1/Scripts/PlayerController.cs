@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Input;
 using static GREngine.Debug.Out;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using System.Drawing;
+using System.Collections.Generic;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -24,9 +26,9 @@ public class PlayerController : Behaviour
     #endregion
 
     #region SETTINGS
-    private static float walkSpeed = 2;
-    private static float maxGunPower = 60;
-    private static float gunCooldown = 0.5f;
+    private static float walkSpeed = 5;
+    private static float maxGunPower = 50;
+    private static float gunCooldown = 0.3f;
     private static float gunKnockback = 1;
     private static float platformSpeedDamping = 0.68f;
 
@@ -129,8 +131,23 @@ public class PlayerController : Behaviour
 
     private void FireGun()
     {
+        ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
 
+        Vector2 direction = Vector.AngleToVector(this.facingDirection);
+        List<string> layers = new List<string>
+        {
+            "enemy"
+        };
+        PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
+
+        direction.Y = direction.Y * -1;
+        PrintLn(direction.ToString());
+        Raycast2DResult ray = collisionSystem.Raycast2D(origin, direction, 100000f, layers);
+        if(ray.colliderHit != null)
+        {
+            PrintLn(ray.ToString());
+        }
     }
 
     private void ManageGunInput(GameTime gameTime)

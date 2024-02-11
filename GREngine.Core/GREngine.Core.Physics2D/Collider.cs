@@ -161,6 +161,11 @@ public abstract class Collider : Behaviour
         return new Vector2(pos.X, pos.Y);
     }
 
+    public void SetFuckingOldPosition(Vector2 yourmother)
+    {
+        this.oldPosition = yourmother;
+    }
+
     /// <summary>
     /// Gets global position from the node as a Vector2
     /// This method is used for collision detection
