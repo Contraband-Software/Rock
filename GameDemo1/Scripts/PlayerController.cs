@@ -109,13 +109,13 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                // GameOver();
+                GameOver();
             }
         }
         isGrounded = false;
 
         this.Game.Services.GetService<IPebbleRendererService>()
-            .setCameraPosition(this.Node.GetGlobalPosition2D() - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
+            .lookAt(this.Node.GetGlobalPosition2D());// - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
     }
 
     private void GameOver()
@@ -127,6 +127,7 @@ public class PlayerController : Behaviour
     private void FireGun()
     {
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
+
     }
 
     private void ManageGunInput(GameTime gameTime)
