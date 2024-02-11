@@ -565,6 +565,15 @@ public class PolygonCollider : Collider
         return hitCount == 4;
 
     }
+    /// <summary>
+    /// Get all vertices of this polygon collider,
+    /// translated and rotated to the correct world position
+    /// </summary>
+    /// <returns></returns>
+    public List<PointF> GetVertices()
+    {
+        return translateVertices(rotateVertices(this.vertices));
+    }
 
     /// <summary>
     /// Draws the Polygon onto the provided SpriteBatch
