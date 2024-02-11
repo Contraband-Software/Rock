@@ -24,7 +24,7 @@ internal class Node
 
     public void InitCosts(Point start, Point end)
     {
-        G = NodeNetwork.GetTraversalCost(Location, start);
-        H = NodeNetwork.GetTraversalCost(Location, end);
+        G = PathfindingSearchNetwork.GetTraversalCost(Location, start);
+        H = PathfindingSearchNetwork.GetTraversalCost(Location, end);
     }
 }

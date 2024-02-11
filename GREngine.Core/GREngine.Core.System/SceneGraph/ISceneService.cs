@@ -1,6 +1,6 @@
 namespace GREngine.Core.System;
 
-public interface ISceneService
+internal interface ISceneService
 {
     public void OnSceneReset(bool sceneChanged);
 }
