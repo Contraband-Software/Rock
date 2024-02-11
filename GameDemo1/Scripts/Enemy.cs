@@ -1,5 +1,6 @@
 namespace GameDemo1.Scripts;
 
+using System;
 using System.Collections.Generic;
 using GREngine.Algorithms;
 using GREngine.Core.PebbleRenderer;
@@ -7,85 +8,80 @@ using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using GREngine.GameBehaviour.Pathfinding;
 using Microsoft.Xna.Framework;
+using Scenes;
 
 public class Enemy : Behaviour
 {
     #region SETTINGS
     private float diveDistance = 2;
-    private float walkSpeed = 10;
+    private float walkSpeed = 3;
+    private float hitStrength = 70;
     #endregion
 
     #region STATE
-    public float DestinationDistanceToPlayer => (this.player.Node.GetGlobalPosition2D() - this.tracePath[^1].ToVector2()).Length();
-
-    private PathfindingSearchNetwork network;
+    private EnemySpawner spawner;
     private PlayerController player;
     private CircleCollider collider;
 
-    private List<Point> tracePath = new List<Point>();
+    private bool onPlatform;
+
+    private int randomMovement = 0;
     #endregion
+
+    public Enemy(EnemySpawner spawner)
+    {
+        this.spawner = spawner;
+
+        Random rand = new Random();
+
+        this.randomMovement = (int)(rand.NextSingle() * 500);
+    }
 
     protected override void OnStart()
     {
         ISceneControllerService sc = this.Game.Services.GetService<ISceneControllerService>();
-        this.network = sc
-            .FindNodeWithTag("GREngine.GameBehaviour.Pathfinding.NodeNetwork")!
-            .GetBehaviour<PathfindingSearchNetwork>() as PathfindingSearchNetwork;
         this.player = sc
             .FindNodeWithTag("Player")!
             .GetBehaviour<PlayerController>() as PlayerController;
 
         collider = this.Game.Services.GetService<ISceneControllerService>().InitBehaviour(this.Node, new CircleCollider(50, true)) as CircleCollider;
         this.collider.SetTrigger(true);
+        this.collider.SetLayer(GameScene.enemyCollisionLayer);
+        this.collider.SetAllowedCollisionLayers(new List<string>(){GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer, GameScene.playerCollisionLayer});
+
+        this.collider.OnTriggerEnter += with =>
+        {
+            if (with.GetLayer() == GameScene.playerCollisionLayer)
+            {
+                (this.player.Node.GetBehaviour<CircleCollider>() as CircleCollider).SetVelocity(GetPlayerDirection() * hitStrength);
+            }
+            if (with.GetLayer() == GameScene.mapFloorCollisionLayer)
+            {
+                onPlatform = true;
+            }
+        };
     }
 
-    private void MakePathToPlayer()
+    private Vector2 GetPlayerDirection()
     {
         Vector2 pos = this.Node.GetGlobalPosition2D();
         Vector2 playerPos = this.player.Node.GetGlobalPosition2D();
-        tracePath = this.network.Navigate(new Point((int)pos.X, (int)pos.Y), new Point((int)playerPos.X, (int)playerPos.Y));
+        return Vector.SafeNormalize(playerPos - pos);
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (this.tracePath.Count > 0)
+        if (this.spawner.PlayerTouchingFrame)
         {
-            // if (DestinationDistanceToPlayer > this.diveDistance)
-            // {
-            //     MakePathToPlayer();
-            // }
-            // else
-            // {
-            //
-            // }
+            this.collider.SetVelocity(GetPlayerDirection() * this.walkSpeed);
         }
         else
         {
-            MakePathToPlayer();
+            this.collider.SetVelocity(Vector2.Zero);
+            if ((this.randomMovement + gameTime.TotalGameTime.Seconds) % (this.spawner.Radius / 20) == 0)
+            {
+                // this.collider.SetVelocity(-Node.GetLocalPosition2D() / 20);
+            }
         }
-
-        // if (this.tracePath.Count > 0)
-        // {
-        //     if (this.currentlyGoingTo == null)
-        //     {
-        //         currentlyGoingTo = this.tracePath[0];
-        //         this.tracePath.RemoveAt(0);
-        //     }
-        //     else
-        //     {
-        //         if ((currentlyGoingTo.Value.ToVector2() - this.Node.GetGlobalPosition2D()).Length() < 20)
-        //         {
-        //             currentlyGoingTo = this.tracePath[0];
-        //             this.tracePath.RemoveAt(0);
-        //         }
-        //
-        //         Vector2 go = currentlyGoingTo.Value.ToVector2() - this.Node.GetGlobalPosition2D();
-        //         // go = Vector.SafeNormalize(go);
-        //
-        //         this.collider.SetVelocity(go * walkSpeed * 100);
-        //     }
-        // }
     }
-
-    private Point? currentlyGoingTo = null;
 }

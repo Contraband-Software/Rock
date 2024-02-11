@@ -2,6 +2,7 @@
 
 namespace GameDemo1.Scenes;
 
+using System.Collections.Generic;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.Physics2D;
 using GREngine.Core.System;
@@ -14,7 +15,11 @@ public class GameScene : Scene
 {
     private ISceneControllerService sceneController;
     private IPebbleRendererService rendererService;
-    private const string mapFloorCollisionLayer = "mapFloor";
+
+    internal static readonly string mapFloorCollisionLayer = "mapFloor";
+    internal static readonly string mapWallCollisionLayer = "mapWall";
+    internal static readonly string enemyCollisionLayer = "enemy";
+    internal static readonly string playerCollisionLayer = "player";
 
     #region STATE
     private Texture2D platform1Diffuse;
@@ -65,10 +70,15 @@ public class GameScene : Scene
         #region MANAGERS
         Player n1 = new Player();
         sceneManager.AddNodeAtRoot(n1);
-        n1.SetLocalPosition(100, 100);
+        n1.SetLocalPosition(-100, 140);
+
         CircleCollider cc = sceneManager.InitBehaviour(n1, new CircleCollider(40, true)) as CircleCollider;
+        cc.SetLayer(playerCollisionLayer);
+        cc.SetAllowedCollisionLayers(new List<string>(){GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer});
+
         PlayerController pc = new PlayerController(mapFloorCollisionLayer);
         sceneManager.AddBehaviour(n1, pc);
+
 
         GenericNode gameManager = new GenericNode("GameManager");
         GameController gc = new GameController();
@@ -79,16 +89,16 @@ public class GameScene : Scene
         #region MAP
         GenericNode mapRoot = new GenericNode("MapRoot");
         sceneManager.AddNodeAtRoot(mapRoot);
-        Sprite oceanRenderer = new Sprite(0f, new Vector2(16f),
-            waterDiffuse,
-            waterNormal,
-            null, 1, 1, false);
-        sceneManager.AddBehaviour(mapRoot, oceanRenderer);
+        // Sprite oceanRenderer = new Sprite(0f, new Vector2(16f),
+        //     waterDiffuse,
+        //     waterNormal,
+        //     null, 1, 1, false);
+        // sceneManager.AddBehaviour(mapRoot, oceanRenderer);
 
-        PathfindingNetworkNode pathNode = new PathfindingNetworkNode(Game);
-        pathNode.SetLocalPosition(-1000, -1000);
+        // PathfindingNetworkNode pathNode = new PathfindingNetworkNode(Game);
+        // pathNode.SetLocalPosition(-1000, -1000);
         // PathfindingSearchNetwork pathfindingNetwork = sceneManager.InitBehaviour(pathNode, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
-        sceneManager.AddNodeAtRoot(pathNode);
+        // sceneManager.AddNodeAtRoot(pathNode);
 
         this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(400), new Vector2(100, 101)));
         this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(240), new Vector2(-600, -700)));
@@ -96,22 +106,16 @@ public class GameScene : Scene
         this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(200), new Vector2(1000, -170)));
         this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(150), new Vector2(-900, 570)));
 
-        sceneManager.QueueSceneAction(_ =>
-        {
-            pathNode.Network.BuildNetwork(3000, 3000, mapFloorCollisionLayer, "", 30);
-        });
+        // sceneManager.QueueSceneAction(_ =>
+        // {
+        //     pathNode.Network.BuildNetwork(3000, 3000, mapFloorCollisionLayer, "", 30);
+        // });
 
         #region LIGHTING
         Light lightRenderer = new Light(new Vector2(101, 100), new Vector3(1, 1, 1) * 100000, false);
         sceneManager.AddBehaviour(mapRoot, lightRenderer);
         #endregion
         #endregion
-
-        Enemy e = new Enemy();
-        GenericNode enemyNode = new GenericNode("EnemyNode");
-        enemyNode.SetLocalPosition(300, -130);
-        sceneManager.AddNodeAtRoot(enemyNode);
-        sceneManager.AddBehaviour(enemyNode, e);
 
         sceneManager.QueueSceneAction(_ =>
         {
