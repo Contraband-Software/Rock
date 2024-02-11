@@ -2,6 +2,7 @@
 
 namespace GameDemo1.Scenes;
 
+using System;
 using System.Collections.Generic;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.Physics2D;
@@ -46,7 +47,7 @@ public class GameScene : Scene
             null, 2, 2, false);
         this.sceneController.AddBehaviour(mapNode, platformRenderer);
 
-        EnemySpawner es = new EnemySpawner(col.GetRadius() + 10);
+        EnemySpawner es = new EnemySpawner(col.GetRadius() + 10, (uint)(col.GetRadius() / 100));
         this.sceneController.AddBehaviour(mapNode, es);
 
         return mapNode;
@@ -70,7 +71,6 @@ public class GameScene : Scene
         #region MANAGERS
         Player n1 = new Player();
         sceneManager.AddNodeAtRoot(n1);
-        n1.SetLocalPosition(-100, 140);
 
         CircleCollider cc = sceneManager.InitBehaviour(n1, new CircleCollider(40, true)) as CircleCollider;
         cc.SetLayer(playerCollisionLayer);
@@ -89,27 +89,56 @@ public class GameScene : Scene
         #region MAP
         GenericNode mapRoot = new GenericNode("MapRoot");
         sceneManager.AddNodeAtRoot(mapRoot);
-        // Sprite oceanRenderer = new Sprite(0f, new Vector2(16f),
-        //     waterDiffuse,
-        //     waterNormal,
-        //     null, 1, 1, false);
-        // sceneManager.AddBehaviour(mapRoot, oceanRenderer);
+        Sprite oceanRenderer = new Sprite(0f, new Vector2(16f),
+            waterDiffuse,
+            waterNormal,
+            null, 1, 1, false);
+        sceneManager.AddBehaviour(mapRoot, oceanRenderer);
 
-        // PathfindingNetworkNode pathNode = new PathfindingNetworkNode(Game);
-        // pathNode.SetLocalPosition(-1000, -1000);
-        // PathfindingSearchNetwork pathfindingNetwork = sceneManager.InitBehaviour(pathNode, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
-        // sceneManager.AddNodeAtRoot(pathNode);
+        // this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(400), new Vector2(100, 101)));
+        // this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(240), new Vector2(-600, -700)));
+        // this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(200), new Vector2(80, 700)));
+        // this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(200), new Vector2(1000, -170)));
+        // this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(150), new Vector2(-900, 570)));
 
-        this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(400), new Vector2(100, 101)));
-        this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(240), new Vector2(-600, -700)));
-        this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(200), new Vector2(80, 700)));
-        this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(200), new Vector2(1000, -170)));
-        this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(150), new Vector2(-900, 570)));
+        List<float> radii = new List<float>();
+        List<Vector2> poses = new List<Vector2>();
 
-        // sceneManager.QueueSceneAction(_ =>
-        // {
-        //     pathNode.Network.BuildNetwork(3000, 3000, mapFloorCollisionLayer, "", 30);
-        // });
+        float biggestPlat = 0;
+        Vector2 biggestCentre = Vector2.Zero;
+
+        Random r = new Random();
+        for (int i = 0; i < 15; i++)
+        {
+            Vector2 pos = Vector2.Zero;
+            float radius = 0;
+
+            bool goodSpawn = false;
+            while (!goodSpawn)
+            {
+                goodSpawn = true;
+                pos = new Vector2(r.NextSingle() * 4000, r.NextSingle() * 4000);
+                radius = r.NextSingle() * 350 + 150;
+                for (int j = 0; j < radii.Count; j++)
+                {
+                    if ((poses[j] - pos).Length() < radius + radii[j] + 50)
+                    {
+                        goodSpawn = false;
+                    }
+                }
+            }
+            radii.Add(radius);
+            poses.Add(pos);
+            this.sceneController.AddNode(mapRoot, MakeLevelBlock(new CircleCollider(radius), pos));
+
+            if (radius > biggestPlat)
+            {
+                biggestPlat = radius;
+                biggestCentre = pos;
+            }
+        }
+
+        n1.SetLocalPosition(biggestCentre + new Vector2(biggestPlat) * 0.7f);
 
         #region LIGHTING
         Light lightRenderer = new Light(new Vector2(101, 100), new Vector3(1, 1, 1) * 100000, false);
