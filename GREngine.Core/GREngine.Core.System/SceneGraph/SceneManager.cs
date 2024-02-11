@@ -62,11 +62,6 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 // take behaviours that are enabled, drop the rest
                 // merge initialization queue and activeBehaviours list
 
-            foreach (Behaviour b in this.activeBehaviours)
-            {
-                b.OnUpdate(gameTime);
-            }
-
             if (this.initializationSet.Count != 0)
             {
                 List<Behaviour> initializationQueue = this.initializationSet.ToList();
@@ -99,6 +94,11 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 this.initializationSet.RemoveWhere(b => b.Initialized);
 
                 GC.Collect();
+            }
+
+            foreach (Behaviour b in this.activeBehaviours)
+            {
+                b.OnUpdate(gameTime);
             }
 
             if (this.lateUpdateQueue.Count > 0)
@@ -199,9 +199,15 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
         node.behaviours.ForEach(b =>
         {
-            b.Node = node;
-            if (!b.Initialized) this.initializationSet.Add(b);
+            BootstrapBehaviour(b, node);
         });
+    }
+
+    private void BootstrapBehaviour(Behaviour b, Node node)
+    {
+        b.Node = node;
+        b.Game = Game;
+        if (!b.Initialized) this.initializationSet.Add(b);
     }
 
     public void DestroyNode(Node node)
@@ -222,6 +228,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
             {
                 n.Tags.ToList().ForEach(t => RemoveTagIndex(t, node));
                 n.behaviours.FindAll(b => b.Initialized).ForEach(b => this.disposeSet.Add(b));
+                n.behaviours.ForEach(b => this.initializationSet.Remove(b));
                 return n.children;
             });
     }
@@ -248,9 +255,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         // add reference to node's behaviour list
         // if enabled, add behaviour to initialization list
 
-        behaviour.Node = node;
         node.behaviours.Add(behaviour);
-        if (!behaviour.Initialized) this.initializationSet.Add(behaviour);
+        BootstrapBehaviour(behaviour, node);
     }
     public Behaviour InitBehaviour(Node node, Behaviour behaviour)
     {
@@ -264,6 +270,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         // remove behaviour from node list
 
         // DeInitBehaviour(behaviour);
+        this.initializationSet.Remove(behaviour);
         this.disposeSet.Add(behaviour);
     }
     public void RemoveBehavioursWithTag(Node node, string tag)

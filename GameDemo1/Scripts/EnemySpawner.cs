@@ -38,7 +38,8 @@ public class EnemySpawner : Behaviour
         render = this.Game.Services.GetService<IPebbleRendererService>();
         sceneManager = this.Game.Services.GetService<ISceneControllerService>();
 
-        SpawnRandomEnemy();
+
+        this.SpawnRandomEnemy();
     }
 
     protected override void OnUpdate(GameTime gameTime)
@@ -47,20 +48,21 @@ public class EnemySpawner : Behaviour
 
         Random r = new Random();
 
-        if (PlayerTouchingFrame)
-        {
-            if (gameTime.TotalGameTime.Seconds % 5 == 0)
-            {
-                if (r.NextSingle() > 0.7)
-                    this.SpawnRandomEnemy();
-            }
-        }
+        // if (PlayerTouchingFrame)
+        // {
+        //     if ((gameTime.TotalGameTime.Milliseconds) % 700 == 0)
+        //     {
+        //         // PrintLn(gameTime.TotalGameTime.Seconds.ToString());
+        //         if (r.NextSingle() > 0.5)
+        //             this.SpawnRandomEnemy();
+        //     }
+        // }
 
-        if (gameTime.TotalGameTime.Seconds % 10 == 0)
-        {
-            if (r.NextSingle() > 0.5)
-                this.SpawnRandomEnemy();
-        }
+        // if (gameTime.TotalGameTime.Milliseconds % 200 == 0)
+        // {
+        //     if (r.NextSingle() > 0.5)
+        //         this.SpawnRandomEnemy();
+        // }
 
 
         PlayerTouchingFrame = false;
@@ -70,7 +72,7 @@ public class EnemySpawner : Behaviour
     {
         Random rand = new Random();
         float angle = (float)rand.NextDouble() * MathF.Tau - MathF.PI;
-        Vector2 position = Vector.AngleToVector(angle) * this.Radius;
+        Vector2 position = Vector.AngleToVector(angle) * (this.Radius - 10);
 
         Enemy e = new Enemy(this);
         GenericNode enemyNode = new GenericNode("EnemyNode");

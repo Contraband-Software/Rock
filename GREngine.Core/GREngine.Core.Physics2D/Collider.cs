@@ -105,7 +105,7 @@ public abstract class Collider : Behaviour
 
     protected override void OnDestroy()
     {
-        this.collisionSystem.RemoveCollisionObject(this);
+        this.Game.Services.GetService<ICollisionSystem>().RemoveCollisionObject(this);
     }
 
     protected override void OnUpdate(GameTime gameTime)
