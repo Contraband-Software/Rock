@@ -30,7 +30,7 @@ public class GraphicsTesting : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        re = new PebbleRenderer(this, graphics, 1920, 1080, 0.25f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 1011, 517, 1.4212f, 0.5f);
 
         sceneManager = new SceneManager(this);
 
@@ -44,7 +44,7 @@ public class GraphicsTesting : Game
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);
-        re.lookAt(new Vector2(512, 512));
+        //re.lookAt(new Vector2(512, 512));
 
 
         base.Initialize();
@@ -55,10 +55,12 @@ public class GraphicsTesting : Game
         re.LoadShaders();
         Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         Material puddleMat = new Material(null, new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
+        Material playerMat = new Material(new Shader(Content.Load<Effect>("Graphics/PlayerDiffuseShader")), null, null);
 
         //Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/oceanRoughness")));
         re.addMaterial(oceanMat);
         re.addMaterial(puddleMat);
+        re.addMaterial(playerMat);
 
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
         re.addPostProcess(new BloomPostProcess(this, Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
@@ -68,7 +70,7 @@ public class GraphicsTesting : Game
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));
 
         Font = Content.Load<SpriteFont>("Graphics/DefaultFont");
-        PrintLn(Font.ToString());
+        //PrintLn(Font.ToString());
 
         Scene myScene = new GraphicsTestScene();
         this.sceneManager.AddScene(myScene);
@@ -91,7 +93,9 @@ public class GraphicsTesting : Game
         }
 
         // sceneManager.DebugPrintGraph();
-        re.drawDebug(new DebugDrawable(new Vector2(512, 512), 64, Color.Green));
+        re.drawDebug(new DebugDrawable(new Vector2(512, 512), 450, Color.Green));
+
+        re.drawDebug(new DebugDrawable(new Vector2(64, 64), 32, Color.Green));
         //re.drawDebug(new DebugDrawable(new Vector2(1024, 1024), 124, Color.Green));
 
 

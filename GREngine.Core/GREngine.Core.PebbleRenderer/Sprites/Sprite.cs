@@ -71,7 +71,7 @@ public class Sprite : Behaviour
     {
         Game.Services.GetService<IPebbleRendererService>().addSprite(this);
         //base.OnStart();
-        Out.PrintLn(this.InstanceID.ToString());
+        //Out.PrintLn(this.InstanceID.ToString());
     }
 
     protected override void OnUpdate(GameTime gameTime)
