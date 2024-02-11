@@ -56,7 +56,7 @@ public class GeneralCollisionTesting : Scene
         //Collider object 3
         GenericNode node3 = new GenericNode();
 
-        node3.SetLocalPosition(new Vector2(100f, 400f));
+        node3.SetLocalPosition(new Vector2(80f, 400f));
         sceneManager.AddNodeAtRoot(node3);
 
         PolygonCollider col3 = new PolygonCollider(squarePointFList, true);
@@ -70,7 +70,7 @@ public class GeneralCollisionTesting : Scene
         circCol1.SetLayer("map");
         sceneManager.AddBehaviour(node4, circCol1);
 
-        //Circle collider object 2
+        /*//Circle collider object 2
         GenericNode node5 = new GenericNode();
         node5.SetLocalPosition(new Vector2(600, 300));
         sceneManager.AddNodeAtRoot(node5);
@@ -84,7 +84,7 @@ public class GeneralCollisionTesting : Scene
         sceneManager.AddNodeAtRoot(node6);
         CircleCollider circCol3 = new CircleCollider(15f, new Vector2(0f, 100f), true);
         circCol1.SetLayer("map");
-        sceneManager.AddBehaviour(node6, circCol3);
+        sceneManager.AddBehaviour(node6, circCol3);*/
 
         sceneManager.QueueSceneAction((_) =>
         {
@@ -92,9 +92,10 @@ public class GeneralCollisionTesting : Scene
             //col3.SetRotation(45);
             //col1.SetVelocity(new Vector2(0.2f, 0f));
             //col2.SetVelocity(new Vector2(-0.2f, 0f));
+            col3.SetRotation(45f);
             col3.SetVelocity(new Vector2(0f, -0.2f));
-            circCol2.SetTrigger(true);
-            circCol3.SetVelocity(new Vector2(0f, -0.2f));
+            //circCol2.SetTrigger(true);
+            //circCol3.SetVelocity(new Vector2(0f, -0.2f));
 
             collisionSystem.PointIsCollidingWithLayer(new PointF(130, 130), "map");
         });
