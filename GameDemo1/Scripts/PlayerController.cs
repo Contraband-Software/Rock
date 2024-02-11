@@ -139,7 +139,7 @@ public class PlayerController : Behaviour
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>
         {
-            GunTestingScene.enemyCollisionLayer
+            GameScene.enemyCollisionLayer
         };
         PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
 
@@ -159,7 +159,7 @@ public class PlayerController : Behaviour
         Collider hitCollider = null;
         if(ray.colliderHit != null) { hitCollider = ray.colliderHit; }
         else if(ray2.colliderHit != null) { hitCollider = ray2.colliderHit; }
-        else if(ray3.colliderHit == null) { hitCollider = ray3.colliderHit; }
+        else if(ray3.colliderHit != null) { hitCollider = ray3.colliderHit; }
 
         if(hitCollider != null)
         {
@@ -170,7 +170,11 @@ public class PlayerController : Behaviour
             Vector2 originVector = new Vector2(origin.X, origin.Y);
             Vector2 beamEndPoint = originVector + (direction * distanceToHitCollider);
 
+            Enemy e = (hitCollider.Node.GetBehaviour<Enemy>() as Enemy);
 
+
+            Vector2 v = direction * currentGunPower * 2f;
+            e.Node.SetLocalPosition(e.Node.GetLocalPosition2D() + v);
         }
     }
 
