@@ -66,6 +66,7 @@ public class GeneralCollisionTesting : Scene
 
         sceneManager.QueueSceneAction((_) =>
         {
+            circ2.SetVelocity(new Vector2(-1f, -1f));
             //col1.SetRotation(45f);
             Raycast2DResult ray = collisionSystem.Raycast2D(new PointF(50f, 50f), new Vector2(1f, 1f), 1000f, rayLayers);
             Out.PrintLn(ray.collisionNormal.ToString());

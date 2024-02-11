@@ -67,8 +67,12 @@ public class CircleCollider : Collider
         {
             FireCorrectEvent(collisionAxis, obj2);
 
-            Vector2 n = collisionAxis / dist;
+            Vector2 n = collisionAxis;
             float delta = minDist - dist;
+            if(dist != 0)
+            {
+                n = collisionAxis / dist;
+            }
 
             if (IsTrigger() || obj2.IsTrigger())
             {
