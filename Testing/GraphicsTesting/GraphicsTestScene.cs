@@ -21,9 +21,12 @@ public class GraphicsTestScene : Scene
         GenericNode ocean = new GenericNode();
         GenericNode testObject = new GenericNode();
         GenericNode player = new GenericNode();
+
+        GenericNode laser = new GenericNode();
+        laser.SetLocalPosition(200, 200);
         player.SetLocalPosition(new Vector2(200));
         GenericNode enemy = new GenericNode();
-        enemy.SetLocalPosition(new Vector2(700,300));
+        enemy.SetLocalPosition(new Vector2(700,500));
         testObject.SetLocalPosition(new Vector2(1700, 1000));
         GenericNode testObject2 = new GenericNode();
         testObject2.SetLocalPosition(new Vector2(512, 512));
@@ -55,10 +58,19 @@ public class GraphicsTestScene : Scene
          null,
            null,7, 3, false);
 
+        Texture2D allWhite = new Texture2D(Game.GraphicsDevice, 1, 1);
+        allWhite.SetData(new Color[] { Color.White });
+
+
+        Sprite laserRenderer = new Sprite(0f, new Vector2(4000,50),
+          allWhite,
+        null,
+          null, 7, 4, false);
+
         Sprite enemyRenderer = new AnimatedSprite(1f, new Vector2(0.2f),
            Game.Content.Load<Texture2D>("Graphics/EnemyDiffuseSS"),
          null,
-           null, 6, 0, false);
+           null, 6, 0, true);
 
 
         Light lightRenderer = new Light(new Vector2(0), new Vector3(300000, 300000, 260000), true);
@@ -69,6 +81,7 @@ public class GraphicsTestScene : Scene
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(testObject2, platformRenderer2);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(player, playerRenderer);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(enemy, enemyRenderer);
+        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(laser, laserRenderer);
 
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(light, lightRenderer);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(light2, lightRenderer2); // check this expected behaviour???
@@ -81,6 +94,7 @@ public class GraphicsTestScene : Scene
         this.Game.Services.GetService<ISceneControllerService>().AddNode(testObject2, root);
         this.Game.Services.GetService<ISceneControllerService>().AddNode(light, root);
         this.Game.Services.GetService<ISceneControllerService>().AddNode(light2, root); //bug?
+        this.Game.Services.GetService<ISceneControllerService>().AddNode(laser, root); //bug?
 
     }
 }

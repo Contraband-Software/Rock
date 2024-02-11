@@ -30,7 +30,7 @@ public class GraphicsTesting : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        re = new PebbleRenderer(this, graphics, 2560, 1440, 0.25f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 2560, 1440, 0.25f, 1f);
 
         sceneManager = new SceneManager(this);
 
@@ -56,11 +56,15 @@ public class GraphicsTesting : Game
         Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         Material puddleMat = new Material(null, new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")), new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         Material playerMat = new Material(new Shader(Content.Load<Effect>("Graphics/PlayerDiffuseShader")), null, null);
+        Material laserMat = new Material(new Shader(Content.Load<Effect>("Graphics/LaserShader")), null, null);
 
         //Material oceanMat = new Material(new Shader(Content.Load<Effect>("Graphics/oceanDiffuse")), new Shader(Content.Load<Effect>("Graphics/oceanNormal")), new Shader(Content.Load<Effect>("Graphics/oceanRoughness")));
         re.addMaterial(oceanMat);
         re.addMaterial(puddleMat);
         re.addMaterial(playerMat);
+        re.addMaterial(laserMat);
+
+
 
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
         re.addPostProcess(new BloomPostProcess(this, Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));

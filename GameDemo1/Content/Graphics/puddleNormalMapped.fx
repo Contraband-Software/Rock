@@ -54,7 +54,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 
     if (dot(sample.rgb, float3(0.5, 0.5, 1)) < 1.1)
     {
-        float2 puddleNormalUV = float2(0.75, 0.75) + 0.14 * (uv * 4) % 0.12 + spriteSheetIndex;
+        float2 puddleNormalUV = float2(0.75, 0.75) + 0.14 * ((uv+0.03) * 3.9) % 0.12 + spriteSheetIndex;
         float4 puddleNormal = tex2D(SpriteTextureSampler, puddleNormalUV);
         return float4(puddleNormal.rgb, sample.a);
     }
