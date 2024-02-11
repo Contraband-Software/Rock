@@ -36,20 +36,29 @@ public class GeneralCollisionTesting : Scene
         };
 
         //Collider object 1
-        GenericNode node1 = new GenericNode();
+/*        GenericNode node1 = new GenericNode();
 
         node1.SetLocalPosition(new Vector2(100f, 100f));
         sceneManager.AddNodeAtRoot(node1);
 
         PolygonCollider col1 = new PolygonCollider(squarePointFList, true);
-        sceneManager.AddBehaviour(node1, col1);
+        sceneManager.AddBehaviour(node1, col1);*/
 
         //Circle collider 1
         GenericNode node2 = new GenericNode();
-        node2.SetLocalPosition(new Vector2(100f, 160f));
+        node2.SetLocalPosition(new Vector2(100f, 100f));
         sceneManager.AddNodeAtRoot(node2);
         CircleCollider circ1 = new CircleCollider(20f);
         sceneManager.AddBehaviour(node2, circ1);
+
+        //Circle collider 2
+        GenericNode node3 = new GenericNode();
+        node3.SetLocalPosition(new Vector2(200f, 200f));
+        sceneManager.AddNodeAtRoot(node3);
+        CircleCollider circ2 = new CircleCollider(30f);
+        sceneManager.AddBehaviour(node3, circ2);
+
+        circ2.SetAllowedCollisionLayers(new List<string> { "default"});
 
         List<string> rayLayers = new List<string> {
             "default"
@@ -57,9 +66,9 @@ public class GeneralCollisionTesting : Scene
 
         sceneManager.QueueSceneAction((_) =>
         {
-            col1.SetRotation(45f);
-            Raycast2DResult ray = collisionSystem.Raycast2D(new PointF(100f, 300f), new Vector2(0f, -1f), 1000f, rayLayers);
-            //Out.PrintLn(ray.collisionNormal.ToString());
+            //col1.SetRotation(45f);
+            Raycast2DResult ray = collisionSystem.Raycast2D(new PointF(50f, 50f), new Vector2(1f, 1f), 1000f, rayLayers);
+            Out.PrintLn(ray.collisionNormal.ToString());
         });
     }
 }
