@@ -30,7 +30,7 @@ public class GraphicsTesting : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        re = new PebbleRenderer(this, graphics, 1011, 517, 1.4212f, 0.5f);
+        re = new PebbleRenderer(this, graphics, 2560, 1440, 0.25f, 0.5f);
 
         sceneManager = new SceneManager(this);
 
@@ -95,7 +95,7 @@ public class GraphicsTesting : Game
         // sceneManager.DebugPrintGraph();
         re.drawDebug(new DebugDrawable(new Vector2(512, 512), 450, Color.Green));
 
-        re.drawDebug(new DebugDrawable(new Vector2(64, 64), 32, Color.Green));
+        re.drawDebug(new DebugDrawable(new Vector2(700, 300), 32, Color.Green));
         //re.drawDebug(new DebugDrawable(new Vector2(1024, 1024), 124, Color.Green));
 
 
