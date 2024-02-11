@@ -356,6 +356,15 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             collider.CalculateAABB();
             if (!layers.Contains(collider.GetLayer())){ continue; }
             if(!AABBOverlap(rayAABB, collider.GetAABB())) { continue; }
+
+            //RAYCASTS CANT BE FIRED FROM WITHIN A COLLIDER
+            if (collider.PointInsideCollider(origin))
+            {
+                return new Raycast2DResult(
+                null,
+                new PointF(float.NaN, float.NaN),
+                new Vector2(float.NaN, float.NaN));
+            }
             possibleColliders.Add(collider);
         }
 
