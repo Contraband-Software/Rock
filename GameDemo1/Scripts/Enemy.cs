@@ -26,7 +26,17 @@ public class Enemy : Behaviour
 
     private int randomMovement = 0;
     private int isGrounded = 0;
+
+    public Vector2 Velocity { get; internal set; } = Vector2.Zero;
+    private bool lastValue;
+    private bool ping = false;
     #endregion
+
+    float curremtCock = 0;
+    public void Cockback(float cockPower)
+    {
+        curremtCock = cockPower;
+    }
 
     public Enemy(EnemySpawner spawner)
     {
@@ -74,15 +84,16 @@ public class Enemy : Behaviour
         return playerPos - pos;
     }
 
-    private Vector2 velocity = Vector2.Zero;
-    private bool lastValue;
-    private bool ping = false;
     protected override void OnUpdate(GameTime gameTime)
     {
         float delta = (float)gameTime.TotalGameTime.TotalSeconds;
-        this.velocity = Vector2.Zero;
+
+        this.Velocity = Vector2.Zero;
 
         Random rand = new Random();
+
+        //if (curremtCock <= 0)
+        this.Velocity *= 0.7f;
 
         if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius)
         {
@@ -94,22 +105,22 @@ public class Enemy : Behaviour
             {
                 if (this.spawner.PlayerTouchingFrame != lastValue)
                 {
-                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * 10;
+                    this.Velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * 10;
                 }
                 if (this.GetPlayerDirection().Length() < this.diveDistance)
                 {
-                    this.velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed * 10;
+                    this.Velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed * 10;
                 }
                 else
                 {
-                    this.velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed;
-                    this.velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) / 2f;
+                    this.Velocity = Vector.SafeNormalize(this.GetPlayerDirection()) * this.walkSpeed;
+                    this.Velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) / 2f;
                 }
             }
             else
             {
                 float r = 0.1f;
-                this.velocity -= this.Node.GetLocalPosition2D() / 10;
+                this.Velocity -= this.Node.GetLocalPosition2D() / 10;
             }
         }
         if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius * 1.5f)
@@ -118,7 +129,7 @@ public class Enemy : Behaviour
             {
                 if (rand.NextSingle() > 0.8f)
                 {
-                    this.velocity -= this.Node.GetLocalPosition2D() / 15;
+                    this.Velocity -= this.Node.GetLocalPosition2D() / 15;
                     this.ping = true;
                 }
             }
@@ -128,8 +139,7 @@ public class Enemy : Behaviour
             ping = false;
         }
 
-        this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.velocity);
-        this.velocity *= 0.7f;
+        this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.Velocity);
         // PrintLn((this.Node.GetLocalPosition2D() + this.velocity).ToString());
         //this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
 

@@ -13,7 +13,8 @@ using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using System.Drawing;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
+using GameDemo1.Scenes;
+using System.Threading;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -166,16 +167,42 @@ public class PlayerController : Behaviour
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>
         {
-            "enemy"
+            GameScene.enemyCollisionLayer
         };
         PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
 
         direction.Y = direction.Y * -1;
+        if (direction != Vector2.Zero) { direction.Normalize(); }
+        Vector2 normal1 = new Vector2(-direction.Y, direction.X);
+        Vector2 normal2 = new Vector2(direction.Y, -direction.X);
         PrintLn(direction.ToString());
+
+        PointF origin2 = new PointF(origin.X + (normal1.X * 10f), origin.Y + (normal1.Y * 10f));
+        PointF origin3 = new PointF(origin.X + (normal2.X * 10f), origin.Y + (normal2.Y * 10f));
+
         Raycast2DResult ray = collisionSystem.Raycast2D(origin, direction, 100000f, layers);
-        if(ray.colliderHit != null)
+        Raycast2DResult ray2 = collisionSystem.Raycast2D(origin2, direction, 100000f, layers);
+        Raycast2DResult ray3 = collisionSystem.Raycast2D(origin3, direction, 100000f, layers);
+
+        Collider hitCollider = null;
+        if(ray.colliderHit != null) { hitCollider = ray.colliderHit; }
+        else if(ray2.colliderHit != null) { hitCollider = ray2.colliderHit; }
+        else if(ray3.colliderHit != null) { hitCollider = ray3.colliderHit; }
+
+        if(hitCollider != null)
         {
-            PrintLn(ray.ToString());
+            float distanceToHitCollider = new Vector2(
+                hitCollider.GetGlobalColliderPosition().X - origin.X,
+                hitCollider.GetGlobalColliderPosition().Y - origin.Y).Length();
+
+            Vector2 originVector = new Vector2(origin.X, origin.Y);
+            Vector2 beamEndPoint = originVector + (direction * distanceToHitCollider);
+
+            Enemy e = (hitCollider.Node.GetBehaviour<Enemy>() as Enemy);
+
+
+            Vector2 v = direction * currentGunPower * 2f;
+            e.Node.SetLocalPosition(e.Node.GetLocalPosition2D() + v);
         }
 
 
