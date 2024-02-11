@@ -37,6 +37,8 @@ public interface IPebbleRendererService
 
     public void drawDebug(DebugDrawable drawable);
 
+    public void DrawUI(UIDrawable drawable);
+
 
 }
 
@@ -70,6 +72,27 @@ public struct DebugDrawable
         this.shape = shape;
     }
 }
+
+
+public struct UIDrawable
+{
+    public Color color;
+    public Vector2 position;
+    public float scale;
+    public string text;
+    public SpriteFont font;
+    
+
+    public UIDrawable(Vector2 position, float scale, Color color,SpriteFont font, String message)
+    { 
+        this.position = position;
+        this.color = color;
+        this.scale = scale;
+        this.text = message;
+        this.font = font;
+    }
+}
+
 
 public class PebbleRenderer : GameComponent, IPebbleRendererService
 {
@@ -138,8 +161,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private RenderTarget2D postProcessTarget2;
     private bool postProcessPingPong;
 
-    //debug
+    //debug and UI
     private Queue<DebugDrawable> debugShapes;
+    private Queue<UIDrawable> UIShapes;
 
     public PebbleRenderer(Game game, GraphicsDeviceManager graphics, int outputWidth, int outputHeight,float renderScale = 1,float shadowRenderScale = 0.2f) : base(game)
     {
@@ -155,6 +179,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         this.randomGen = new Random();
 
         this.debugShapes = new Queue<DebugDrawable>();
+        this.UIShapes = new Queue<UIDrawable>();
 
 
 
@@ -218,6 +243,11 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     public void drawDebug(DebugDrawable drawable)
     {
         debugShapes.Enqueue(drawable);
+    }
+
+    public void DrawUI(UIDrawable drawable)
+    {
+        UIShapes.Enqueue(drawable); 
     }
     public void setCameraPosition(Vector2 cameraPostion)
     {
@@ -331,7 +361,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 Game.GraphicsDevice.SetRenderTarget(light.Value.Item1);
                 Game.GraphicsDevice.Clear(Color.White);
                 spriteBatch.Begin(effect: pointLightShaderShadowed.shader);
-                pointLightShaderShadowed.shader.Parameters["lightPosition"]?.SetValue(light.Key.position * scaleFactor * shadowRenderScale);
+                pointLightShaderShadowed.shader.Parameters["lightPosition"]?.SetValue(light.Key.getPosition() * scaleFactor * shadowRenderScale);
                 pointLightShaderShadowed.shader.Parameters["lightDirection"]?.SetValue(light.Key.getLightDir());
                 spriteBatch.Draw(shadowCasterTarget, new Vector2(0), Color.White);
                 spriteBatch.End();
@@ -360,7 +390,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             spriteBatch.Begin(effect: pointLightShader.shader, blendState: BlendState.Additive);
             pointLightShader.shader.Parameters["shadowMapSampler"]?.SetValue(light.Value.Item2);
             pointLightShader.shader.Parameters["lightColor"]?.SetValue(light.Key.color * MathF.Sqrt(scaleFactor) * scaleFactor);//this is slightly wrong, figure out later
-            pointLightShader.shader.Parameters["lightPosition"]?.SetValue(light.Key.position * scaleFactor);
+            pointLightShader.shader.Parameters["lightPosition"]?.SetValue(light.Key.getPosition() * scaleFactor);
             pointLightShader.shader.Parameters["lightDirection"]?.SetValue(light.Key.getLightDir());
 
             spriteBatch.Draw(normalTarget, new Vector2(0f), Color.White);
@@ -406,6 +436,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         spriteBatch.End();
 
         renderDebugShapes(null, view * Matrix.CreateScale(1/scaleFactor));
+        renderUI(null);
     }
 
     private void setEngineShaderParams(Effect effect)
@@ -547,6 +578,19 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                     spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,4);
                     break;
             }
+        }
+        spriteBatch.End();
+    }
+
+    private void renderUI(RenderTarget2D target)
+    {
+        Game.GraphicsDevice.SetRenderTarget(target);
+        spriteBatch.Begin();
+        while (UIShapes.Count > 0)
+        {
+            UIDrawable drawable = UIShapes.Dequeue();
+            spriteBatch.DrawString(drawable.font,drawable.text,drawable.position,drawable.color, 0, Vector2.Zero,drawable.scale,SpriteEffects.None,0);
+            
         }
         spriteBatch.End();
     }
