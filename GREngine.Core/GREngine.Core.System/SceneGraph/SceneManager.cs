@@ -24,6 +24,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     private SortedSet<Behaviour> activeBehaviours = new SortedSet<Behaviour>();
     private HashSet<Behaviour> initializationSet = new HashSet<Behaviour>();
     private Dictionary<string, HashSet<Node>> nodeTagIndex = new Dictionary<string, HashSet<Node>>();
+    private HashSet<Behaviour> disposeSet = new HashSet<Behaviour>();
 
     private HashSet<Action<GameTime>> lateUpdateQueue = new HashSet<Action<GameTime>>();
 
@@ -105,6 +106,16 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 this.lateUpdateQueue.ToList().ForEach(a => a.Invoke(gameTime));
                 this.lateUpdateQueue.Clear();
             }
+
+            if (this.disposeSet.Count != 0)
+            {
+                foreach (Behaviour b in this.disposeSet)
+                {
+                    DeInitBehaviour(b);
+                }
+                this.disposeSet.Clear();
+                GC.Collect();
+            }
         }
 
         base.Update(gameTime);
@@ -122,7 +133,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         #if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
         {
-            throw new ArgumentOutOfRangeException("Tag does not exist: " + tag);
+            throw new ArgumentOutOfRangeException(tag, "Tag does not exist");
         }
         #endif
 
@@ -210,11 +221,9 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
             n =>
             {
                 n.Tags.ToList().ForEach(t => RemoveTagIndex(t, node));
-                n.behaviours.FindAll(b => b.Initialized).ForEach(this.DeInitBehaviour);
+                n.behaviours.FindAll(b => b.Initialized).ForEach(b => this.disposeSet.Add(b));
                 return n.children;
             });
-
-        GC.Collect();
     }
 
     public RootNode GetRootNode()
@@ -254,9 +263,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         // remove behaviour from active list
         // remove behaviour from node list
 
-        DeInitBehaviour(behaviour);
-        behaviour.Node.behaviours.Remove(behaviour);
-        behaviour.Node = null;
+        // DeInitBehaviour(behaviour);
+        this.disposeSet.Add(behaviour);
     }
     public void RemoveBehavioursWithTag(Node node, string tag)
     {
@@ -302,6 +310,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     {
         behaviour.OnDestroy();
         this.activeBehaviours.Remove(behaviour);
+        behaviour.Node.behaviours.Remove(behaviour);
+        behaviour.Node = null;
     }
 
     private void DestroyGraphComponents(Node node)

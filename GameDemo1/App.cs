@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿global using static GREngine.Debug.Out;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -25,7 +27,7 @@ public class App : Game
         IsMouseVisible = true;
 
         sceneManager = new SceneManager(this);
-        renderManager = new PebbleRenderer(this, _graphics, 1000, 600, 1f, 0.5f);
+        renderManager = new PebbleRenderer(this, _graphics, 1920, 1080, 1f, 0.5f);
         collisionManager = new CollisionSystem(this);
     }
 

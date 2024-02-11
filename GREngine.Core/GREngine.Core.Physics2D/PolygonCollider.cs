@@ -361,8 +361,9 @@ public class PolygonCollider : Collider
             Line l1 = l2.GetNormal();
 
             //vertical line
-            if (l1.a == 0) { l1 = new Line(0, 1, -(circCenter.X)); }
-            else if (l1.m == 0) { l1 = new Line(1, 1, circCenter.Y); }
+            if (l1.a == 0) { l1 = new Line(0, -(circCenter.X), 1); }
+            else if (l1.m == 0) { l1 = new Line(1, circCenter.Y, 1); }
+            else { l1 = new Line(1, circCenter.Y - (l1.m * circCenter.X), l1.m); }
 
             if (!collisionSystem.LinesCanIntersect(l1, l2))
             {
@@ -370,6 +371,10 @@ public class PolygonCollider : Collider
             }
             //if it can intersect, find where
             PointF intersectionPoint = collisionSystem.LineIntersectionPoint(l1, l2);
+            if(!collisionSystem.PointIsInAABB(intersectionPoint, overlapRegion))
+            {
+                continue;
+            }
 
             Vector2 centreToIntersection = new Vector2(intersectionPoint.X - circCenter.X, intersectionPoint.Y - circCenter.Y);
             if (!velocityTowardsCollision) { centreToIntersection = new Vector2(
@@ -377,14 +382,14 @@ public class PolygonCollider : Collider
                 circCenter.Y - intersectionPoint.Y); }
             if(centreToIntersection == Vector2.Zero) { continue; }
             Vector2 centreToIntersectionDir = centreToIntersection;
-            centreToIntersectionDir.Normalize();
+            if (centreToIntersectionDir.Length() == 0) centreToIntersectionDir.Normalize();
             Vector2 centreToRadiusEdge = centreToIntersectionDir * circRadius;
-            if(centreToIntersection.Length() > centreToRadiusEdge.Length())
+            if(centreToIntersection.Length() < centreToRadiusEdge.Length())
             {
                 Vector2 collisionVector = centreToIntersection - centreToRadiusEdge;
                 collisionVectors.Add(collisionVector);
             }
-            
+
         }
 
         //then we choose the vector of smallest magnitude
@@ -401,7 +406,7 @@ public class PolygonCollider : Collider
                 }
             }
 
-            ResolveCollision(other, vectorWithGreatestMagnitude);
+            ResolveCollision(other, vectorWithSmallestMagnitude);
         }
     }
 

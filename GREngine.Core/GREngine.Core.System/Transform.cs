@@ -4,5 +4,10 @@ using Microsoft.Xna.Framework;
 
 public struct Transform
 {
-    public Matrix matrix;
+    public Matrix matrix = Matrix.Identity;
+
+    public Transform(Matrix m)
+    {
+        this.matrix = m;
+    }
 }
