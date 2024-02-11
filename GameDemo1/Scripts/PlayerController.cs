@@ -109,13 +109,15 @@ public class PlayerController : Behaviour
 
             if (currentFallTime > this.maxFallTime)
             {
-                GameOver();
+                // GameOver();
             }
         }
         isGrounded = false;
 
         this.Game.Services.GetService<IPebbleRendererService>()
             .lookAt(this.Node.GetGlobalPosition2D());// - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
+
+        // this.Game.Services.GetService<ISceneControllerService>().DebugPrintGraph();
     }
 
     private void GameOver()
