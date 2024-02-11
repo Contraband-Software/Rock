@@ -118,7 +118,7 @@ public struct Line
         else if (this.m == 0) { line = new Line(1, fromPoint.Y, 1); }
         else { line = new Line(1, fromPoint.Y - (this.m * fromPoint.X), this.m); }
 
-        if (!PointIsOnLine(fromPoint))
+        if (!line.PointIsOnLine(fromPoint))
         {
             throw new InvalidOperationException("fromPoint is not on the line");
         }

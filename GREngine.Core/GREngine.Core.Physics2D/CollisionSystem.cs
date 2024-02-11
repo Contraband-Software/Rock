@@ -82,7 +82,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             List<Collider> aabbOverlapObjects = new List<Collider>();
             foreach (Collider obj2 in verletObjects)
             {
-                if(obj1.GetLayer() != obj2.GetLayer()) { continue; }
+                if(!obj1.GetAllowedCollisionLayers().Contains(obj2.GetLayer())) { continue; }
 
                 obj2.CalculateAABB();
                 if (obj1 == obj2)
@@ -399,11 +399,17 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             normals.Add(foundIntersectionPointNormals[closestPointIndex]);
 
         }
-
-
         //if its a circle
         //does it intersect the circle (twice)? if so, where
         //take closest intersection point
+
+
+
+
+        if(intersectionPoints.Count == 0)
+        {
+            return new Raycast2DResult(null, new PointF(float.NaN, float.NaN), new Vector2(float.NaN, float.NaN));
+        }
 
         //finally, choose the intersection point closest to the raycast origin
         int closestPointIndex2 = 0;
