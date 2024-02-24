@@ -14,11 +14,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
     steps:
+    - uses: actions/checkout@v3
+    - uses: myci-actions/export-env-var@latest
+      with:
+        name: DOTNET_CLI_TELEMETRY_OPTOUT
+        value: 1
     - name: Install fonts
       run: |
         echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections 
         sudo apt-get install -y ttf-mscorefonts-installer
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
     - name: Bootsrap Wine
       run: |
         sudo apt-get install ppa-purge && sudo ppa-purge -y ppa:ubuntu-toolchain-r/test
@@ -29,14 +40,11 @@ jobs:
         sudo apt install --install-recommends winehq-stable
         sudo mkdir -p /opt/wine/mono && sudo wget "https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.tar.xz" -P /opt/wine/mono && sudo tar -xf /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz -C /opt/wine/mono && sudo rm /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz
     - name: Set up Monogame shader compiler
-      run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/master/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
+      run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        dotnet restore
+        dotnet tool restore
     - name: Build
       run: dotnet build
     - name: Package
