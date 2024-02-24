@@ -30,6 +30,8 @@ To get started immediately, create your game project in a sister folder to the r
 
 Documentation is TBA, currently `GameDemo1` gives a good demonstration of how to build a game with this library.
 
+ - It is important to note that this demo project depends on the `D3 Digitalism` and `Arial` fonts being present on your system.
+
 ## License TLDR - If you want to make something awesome
 
 We have licensed this project under LGPL, here are the broad strokes:
