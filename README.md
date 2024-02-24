@@ -28,6 +28,8 @@ To get started immediately, create your game project in a sister folder to the r
  - `dotnet add package software.contraband.GREngine -s "../GreenRockEngine/Build/"`
  - Start game dev!
 
+Documentation is TBA, currently `GameDemo1` gives a good demonstration of how to build a game with this library.
+
 ## License TLDR - If you want to make something awesome
 
 We have licensed this project under LGPL, here are the broad strokes:
