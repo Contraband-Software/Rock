@@ -24,8 +24,9 @@ jobs:
         value: 1
     - name: Install fonts
       run: |
-        echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections 
+        echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections
         sudo apt-get install -y ttf-mscorefonts-installer
+        sudo cp ./GameDemo1/Content/D3Digitalism.ttf /usr/local/share/fonts && sudo fc-cache -f -v
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -41,6 +42,11 @@ jobs:
         sudo mkdir -p /opt/wine/mono && sudo wget "https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.tar.xz" -P /opt/wine/mono && sudo tar -xf /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz -C /opt/wine/mono && sudo rm /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz
     - name: Set up Monogame shader compiler
       run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
+    - name: Debug
+      run: |
+        echo $MGFXC_WINE_PATH
+        ls ~
+        ls ~/.winemonogame
     - name: Restore dependencies
       run: |
         dotnet restore --disable-parallel
@@ -51,4 +57,4 @@ jobs:
       run: chmod +x ./BUILD_NUPKG.sh & ./BUILD_NUPKG.sh
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal
- 
+
