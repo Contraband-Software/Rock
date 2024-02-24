@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     # export DOTNET_CLI_TELEMETRY_OPTOUT=1
+    # MGFXC_WINE_PATH
 
     steps:
     - uses: actions/checkout@v3
@@ -42,6 +43,11 @@ jobs:
         sudo mkdir -p /opt/wine/mono && sudo wget "https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.tar.xz" -P /opt/wine/mono && sudo tar -xf /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz -C /opt/wine/mono && sudo rm /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz
     - name: Set up Monogame shader compiler
       run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
+    - name: Fix MGFXC_WINE_PATH envar
+      uses: myci-actions/export-env-var@1
+      with:
+        name: MGFXC_WINE_PATH
+        value: $HOME/.winemonogame
     - name: Debug
       run: |
         echo $MGFXC_WINE_PATH
