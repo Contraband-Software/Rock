@@ -32,7 +32,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Bootsrap Wine
+    - name: Bootstrap Wine
       run: |
         sudo apt-get install ppa-purge && sudo ppa-purge -y ppa:ubuntu-toolchain-r/test
         sudo dpkg --add-architecture i386
