@@ -58,7 +58,7 @@ jobs:
         dotnet restore --disable-parallel
         dotnet tool restore --disable-parallel
     - name: Build
-      run: dotnet build --disable-parallel -c Release
+      run: dotnet build --disable-parallel
     - name: Package
       run: chmod +x ./BUILD_NUPKG.sh & ./BUILD_NUPKG.sh
     # - name: Test
