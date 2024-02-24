@@ -10,7 +10,7 @@ using GREngine.Core.Physics2D;
 using GREngine.Core.System;
 using SystemTesting;
 
-public class SamTestApp : Game
+public class SystemTestApp : Game
 {
     private GraphicsDeviceManager graphics;
 
@@ -18,7 +18,7 @@ public class SamTestApp : Game
     private readonly PebbleRenderer re;
     private readonly SceneManager sceneManager;
 
-    public SamTestApp()
+    public SystemTestApp()
     {
         graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
