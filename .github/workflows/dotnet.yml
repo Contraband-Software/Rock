@@ -43,10 +43,10 @@ jobs:
       run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
     - name: Restore dependencies
       run: |
-        dotnet restore
-        dotnet tool restore
+        dotnet restore --disable-parallel
+        dotnet tool restore --disable-parallel
     - name: Build
-      run: dotnet build
+      run: dotnet build --disable-parallel
     - name: Package
       run: chmod +x ./BUILD_NUPKG.sh & ./BUILD_NUPKG.sh
     # - name: Test
