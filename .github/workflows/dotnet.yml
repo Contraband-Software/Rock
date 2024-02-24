@@ -15,19 +15,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: sudo apt-get install ppa-purge && sudo ppa-purge -y ppa:ubuntu-toolchain-r/test
-    # Install Wine
-    - run: sudo dpkg --add-architecture i386
-    - run: sudo mkdir -pm755 /etc/apt/keyrings && sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-    - run: sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-    - run: sudo apt-get update
-    - run: sudo apt install --install-recommends winehq-stable
-    # Install mono
-    - run: sudo mkdir -p /opt/wine/mono && sudo wget "https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.tar.xz" -P /opt/wine/mono && sudo tar -xf /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz -C /opt/wine/mono && sudo rm /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz
+    - name: Install fonts
+      run: |
+        echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections 
+        sudo apt-get install -y ttf-mscorefonts-installer
+    - name: Bootsrap Wine
+      run: |
+        sudo apt-get install ppa-purge && sudo ppa-purge -y ppa:ubuntu-toolchain-r/test
+        sudo dpkg --add-architecture i386
+        sudo mkdir -pm755 /etc/apt/keyrings && sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+        sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+        sudo apt-get update
+        sudo apt install --install-recommends winehq-stable
+        sudo mkdir -p /opt/wine/mono && sudo wget "https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.tar.xz" -P /opt/wine/mono && sudo tar -xf /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz -C /opt/wine/mono && sudo rm /opt/wine/mono/wine-mono-8.0.0-x86.tar.xz
     - name: Set up Monogame shader compiler
       run: wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/master/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash
-    - name: Install fonts
-      run: echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && sudo apt-get install -y ttf-mscorefonts-installer
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
