@@ -1,5 +1,5 @@
 #### using **GREngine**;
-# ----> GREEN ROCK ENGINE - Active Development
+# GREEN ROCK ENGINE - Active Development
 
 Contraband Software's very own custom game engine, built on top of the reliable MonoGame framework. Simple and ready for game jams!
 
