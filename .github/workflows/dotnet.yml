@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Install fonts
-      run: echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && apt-get install -y ttf-mscorefonts-installer
+      run: echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && sudo apt-get install -y ttf-mscorefonts-installer
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
