@@ -58,9 +58,19 @@ jobs:
         dotnet restore --disable-parallel
         dotnet tool restore --disable-parallel
     - name: Build
-      run: dotnet build --disable-parallel
+      run: dotnet build --disable-parallel -c Release
     - name: Package
       run: chmod +x ./BUILD_NUPKG.sh & ./BUILD_NUPKG.sh
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal
+    - name: Output package artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Nuget Package Build
+        path: ./Build/*.nupkg
+    - name: Output demo artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Demo Game Build
+        path: ./GameDemo1/bin/Release/net6.0
 
