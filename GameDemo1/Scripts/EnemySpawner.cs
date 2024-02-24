@@ -75,7 +75,7 @@ public class EnemySpawner : Behaviour
         sceneManager.AddNode(this.Node, enemyNode);
         sceneManager.AddBehaviour(enemyNode, e);
 
-        Sprite enemyrender = new AnimatedSprite(0, new Vector2(0.25f), Game.Content.Load<Texture2D>("Graphics/EnemyDIffuseSS"), null, null, 3, 0, true, true);
+        Sprite enemyrender = new AnimatedSprite(0, new Vector2(0.25f), Game.Content.Load<Texture2D>("Graphics/EnemyDiffuseSS"), null, null, 3, 0, true, true);
         sceneManager.AddBehaviour(enemyNode, enemyrender);
 
         Light enemyLight = new Light(new Vector3(500000, 150000, 150000), false, (float)rand.NextDouble() * 4, 0.87f);

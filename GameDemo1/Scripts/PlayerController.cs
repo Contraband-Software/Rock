@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using GameDemo1.Scenes;
 using System.Threading;
+using Microsoft.Xna.Framework.Graphics;
 
 [GRETagWith("Player")]
 public class Player : Node {}
@@ -161,8 +162,8 @@ public class PlayerController : Behaviour
         ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
 
-        
-        
+
+
 
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>

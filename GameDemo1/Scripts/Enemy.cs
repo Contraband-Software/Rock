@@ -32,12 +32,6 @@ public class Enemy : Behaviour
     private bool ping = false;
     #endregion
 
-    float curremtCock = 0;
-    public void Cockback(float cockPower)
-    {
-        curremtCock = cockPower;
-    }
-
     public Enemy(EnemySpawner spawner)
     {
         this.spawner = spawner;
