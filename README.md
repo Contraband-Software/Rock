@@ -10,7 +10,7 @@ Contraband Software's very own custom game engine, built on top of the reliable 
 This is a .NET Core 6.0 MonoGame Game Library, so you will need both of those things installed. Also Git.
 
  - [.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) Make sure to install the SDK, which also contains the runtime.
- - [MonoGame / XNA](https://monogame.net/articles/getting_started/index.html)
+ - [MonoGame / XNA](https://monogame.net/articles/getting_started/index.html), with full shader compiler setup if you're on Linux or MacOS
 
 ## Usage
 
