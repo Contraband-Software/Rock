@@ -1,7 +1,39 @@
+License TLDR if you  want to make a cool project or something,
+
+We have licensed this project under LGPL, here are the broad 
+strokes:
+
+
+ - You may freely: use, distribute, alter, and incorporate this 
+   ibrary into commercial works, provided the following terms are 
+   followed:
+
+ - You must distribute a copy of this project's `LICENSE` text along 
+   with any work that uses this library at all. You dont need to
+   include the TDLR.
+
+ - If you make any modifications to this library's code, you will need 
+   to distribute those changes under LGPL. Easiest way to do this to
+   this is to just contribute to this repository with your changes.
+   Your own codebase need not be governed by this license.
+
+ - You cannot statically link this library with non-LGPL (or LGPL
+   compatible) code.
+   ( .NET Core dynamically links libraries by default anyway. )
+
+
+
+* This is not a legal substitute for the full license terms.  *
+* The full license can be found below                         *
+
+-----------------------------------------------------------------------
+
+
+
 Green Rock Engine,
 Copyright (c) Contraband Software 2024
 
-License:
+Licensed granted for free use is governed by the terms below:
 
                 GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
