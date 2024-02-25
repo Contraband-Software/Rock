@@ -28,7 +28,11 @@ To get started immediately, create your game project in a sister folder to the r
  - `dotnet add package software.contraband.GREngine -s "../GreenRockEngine/Build/"`
  - Start game dev!
 
-Documentation is TBA, currently `GameDemo1` gives a good demonstration of how to build a game with this library.
+## Documentation
+
+Currently a working progress: the [Scripting API Reference](https://contraband-software.github.io/Rock/)
+
+`./GameDemo1` gives a good demonstration of how to build a game with this library. It makes use a large use of shaders, they can be learnt about in Monogame's Custom Effects documentation. The engine also provides a number of preset attributes to all effects, which can be read about in the GREngine.Core.PebbleRenderer package.
 
  - It is important to note that this demo project depends on the `D3 Digitalism` and `Arial` fonts being present on your system.
 
