@@ -249,9 +249,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     {
         UIShapes.Enqueue(drawable);
     }
-    public void setCameraPosition(Vector2 cameraPostion)
+    public void setCameraPosition(Vector2 cameraPosition)
     {
-        this.cameraPosition = cameraPostion;
+        this.cameraPosition = cameraPosition;
     }
 
     public void lookAt(Vector2 position)
@@ -474,7 +474,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 spriteBatch.End();
             }
         }
-        Game.GraphicsDevice.SetRenderTarget(null);// is this neccasary?
+        Game.GraphicsDevice.SetRenderTarget(null);// is this necessary?
     }
 
     private void renderToTarget(RenderTarget2D target, Matrix viewProjection,Color clearColor, int shaderIndex)
@@ -555,7 +555,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 spriteBatch.End();
             }
         }
-        Game.GraphicsDevice.SetRenderTarget(null);// is this neccasary?
+        Game.GraphicsDevice.SetRenderTarget(null);// is this necessary?
     }
 
     private void renderDebugShapes(RenderTarget2D target, Matrix viewProjection)
