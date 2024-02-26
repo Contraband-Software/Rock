@@ -116,7 +116,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private Dictionary<Light,Tuple<RenderTarget2D,RenderTarget2D>> lights;
 
     private Material[] materials;
-    private int materialCount = 1; //the default matarial/shaders
+    private int materialCount = 1; //the default material/shaders
 
 
     private SpriteBatch spriteBatch;
@@ -201,7 +201,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         graphics.ApplyChanges();//?
     }
 
-    public override void Initialize() //overide?
+    public override void Initialize() //override?
     {
         samplerState = SamplerState.PointClamp;
 
@@ -386,7 +386,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
         foreach (KeyValuePair<Light,Tuple<RenderTarget2D, RenderTarget2D>> light in lights)
         {
-            //the aproach I have in mind might be too cpu/ draw call intesive, so I will try raymarching first, but maybe come back to the 1d occlusion map approach with some optimisation later.
+            //the approach I have in mind might be too cpu/ draw call intensive, so I will try raymarching first, but maybe come back to the 1d occlusion map approach with some optimisation later.
             spriteBatch.Begin(effect: pointLightShader.shader, blendState: BlendState.Additive);
             pointLightShader.shader.Parameters["shadowMapSampler"]?.SetValue(light.Value.Item2);
             pointLightShader.shader.Parameters["lightColor"]?.SetValue(light.Key.color * MathF.Sqrt(scaleFactor) * scaleFactor);//this is slightly wrong, figure out later

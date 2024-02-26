@@ -11,8 +11,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace GREngine.Core.PebbleRenderer;
 
 
-public class BlurPostProcess : PostProcess // A very fast blur effect that leverages fixed function gpu texture sampling to blur with a large kernel efficeintly
-                                                // input gets downsampled to size/2^passes and upsampled again. 
+public class BlurPostProcess : PostProcess // A very fast blur effect that leverages fixed function gpu texture sampling to blur with a large kernel efficiently
+                                                // input gets downsampled to size/2^passes and upsampled again.
 {
     RenderTarget2D[] BlurTargets;
     int nearestPOTx;

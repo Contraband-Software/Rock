@@ -333,8 +333,8 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     public Raycast2DResult Raycast2D(PointF origin, Vector2 direction, float distance, List<string> layers)
     {
         //initialise list of all first intersection points
-        // have parellel list of what colliders they correspond to
-        // and another parellel list of the corresponding normal
+        // have parallel list of what colliders they correspond to
+        // and another parallel list of the corresponding normal
         List<PointF> intersectionPoints = new List<PointF>();
         List<Collider> hitColliders = new List<Collider>();
         List<Vector2> normals = new List<Vector2>();

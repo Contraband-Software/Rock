@@ -14,9 +14,9 @@ namespace GREngine.Core.PebbleRenderer;
 public class Light : Behaviour
 {
     private Vector2 position;
-    public Vector2 offset; 
+    public Vector2 offset;
     public Vector3 color;
-    private Vector3 coneEdges;// t1 & t2 are the angles of the egdes of the light cone
+    private Vector3 coneEdges;// t1 & t2 are the angles of the edges of the light cone
     private float rotation = 0;
     public bool isShadowCasting;
 

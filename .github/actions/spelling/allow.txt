@@ -27,6 +27,7 @@ zxy
 xyy
 yzz
 zyy
+coord
 
 emoji
 emojis

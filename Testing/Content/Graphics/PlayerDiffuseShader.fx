@@ -35,7 +35,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float rotationSpeed = 1;
 
     float2 uv = input.TextureCoordinates;
-	float4 sample =  tex2D(SpriteTextureSampler,uv) * input.Color; //remember input.col\ifadsjiogr
+	float4 sample =  tex2D(SpriteTextureSampler,uv) * input.Color; //remember input.col
 
     float alpha = sample.a;
 

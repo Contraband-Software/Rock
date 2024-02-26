@@ -96,7 +96,7 @@ public class PolygonCollider : Collider
 
     /// <summary>
     /// First checks if AABBs are overlapping before proceeding
-    /// Then will do some shit idk and resolve the collision
+    /// Then will do some stuff idk and resolve the collision
     /// </summary>
     /// <param name="other"></param>
     public override void SolveCollision(PolygonCollider other, Vector2 velocity)
