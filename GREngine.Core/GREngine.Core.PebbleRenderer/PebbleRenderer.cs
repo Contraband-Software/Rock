@@ -81,10 +81,10 @@ public struct UIDrawable
     public float scale;
     public string text;
     public SpriteFont font;
-    
+
 
     public UIDrawable(Vector2 position, float scale, Color color,SpriteFont font, String message)
-    { 
+    {
         this.position = position;
         this.color = color;
         this.scale = scale;
@@ -247,7 +247,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void DrawUI(UIDrawable drawable)
     {
-        UIShapes.Enqueue(drawable); 
+        UIShapes.Enqueue(drawable);
     }
     public void setCameraPosition(Vector2 cameraPostion)
     {
@@ -502,7 +502,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
                 foreach (Sprite sprite in lmsTensor[i, j])
                 {
-                    if (shaderIndex == 0 || sprite.isLit)//optimisation, unlit sprites dont need to draw to normal or roughness buffers
+                    if (shaderIndex == 0 || sprite.isLit) // optimization, unlit sprites dont need to draw to normal or roughness buffers
                     {
                         sprite.draw(spriteBatch, shaderIndex);
                     }
@@ -510,7 +510,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 spriteBatch.End();
             }
         }
-        Game.GraphicsDevice.SetRenderTarget(null);// is this neccasary?
+        Game.GraphicsDevice.SetRenderTarget(null);// is this necessary?
     }
 
     private void RenderNoise()
@@ -591,7 +591,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         {
             UIDrawable drawable = UIShapes.Dequeue();
             spriteBatch.DrawString(drawable.font,drawable.text,drawable.position,drawable.color, 0, Vector2.Zero,drawable.scale,SpriteEffects.None,0);
-            
+
         }
         spriteBatch.End();
     }

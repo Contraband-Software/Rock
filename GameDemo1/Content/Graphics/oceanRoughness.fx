@@ -52,10 +52,10 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float scaledTime = time * 0.01;
     float scale = 5;
     float waveSpeed = 250;
-    
+
     float2 ligtmapUV = float2(input.Position.x / width, input.Position.y / height);
     float3 lightColor = tex2D(lightMap, ligtmapUV).rgb + ambientColor * 8; //baked in ambient todo make it a parameter
-	
+
     float2 uv = input.TextureCoordinates * scale;
 
     float hlUVNoise = tex2D(noiseMap, uv * scale / 8).r;
@@ -63,18 +63,18 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 
     float4 noiseSample = tex2D(noiseMap, uv);
 
-    
-    
+
+
     float waveRippleMask = sin(uv.y * scale * 4 + scaledTime * waveSpeed) + tex2D(noiseMap, uv * scale * float2(0.02, 0.02) + scaledTime).r;
     float ripple = tex2D(noiseMap, uv * scale * float2(0.12, 0.02) + scaledTime).r * waveRippleMask;
-    
+
     float waveNoise = min(gnoise((uv + float2(0, scaledTime)) * float2(10, 100) + ripple + hlUVNoise) + 0.2, 1);
     float foam = step(0.8, waveNoise + waveRippleMask * 0.12);
 
-    
-    float3 waveRoughnes = min(float3(1 - min(foam, 1), 1 - min(foam, 1), 1 - min(foam, 1)) +0.6, float3(1, 1, 1));
-    
-    return float4(waveRoughnes, sample.a); //a is alpha right?
+
+    float3 waveRoughness = min(float3(1 - min(foam, 1), 1 - min(foam, 1), 1 - min(foam, 1)) +0.6, float3(1, 1, 1));
+
+    return float4(waveRoughness, sample.a); //a is alpha right?
     //return float4(hlUVNoise, hlUVNoise, hlUVNoise, 1);
 
 }
