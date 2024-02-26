@@ -6,3 +6,6 @@ ignore$
 ^LICENSE\.txt$
 ^t/with-dictionaries/
 ^\.github/
+^\.git/
+^\.idea/
+^Testing/
