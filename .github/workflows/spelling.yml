@@ -109,14 +109,14 @@ jobs:
           cspell:software-terms/dict/softwareTerms.txt
           cspell:filetypes/filetypes.txt
           cspell:csharp/csharp.txt
-          cspell:companies/dict/companies.txt
+          #cspell:companies/dict/companies.txt
           cspell:dotnet/dict/dotnet.txt
-          cspell:bash/dict/bash-words.txt
-          cspell:gaming-terms/dict/gaming-terms.txt
-          cspell:shell/dict/shell-all-words.txt
-          cspell:html/dict/html.txt
-          cspell:css/dict/css.txt
-          cspell:fullstack/dict/fullstack.txt
+          #cspell:bash/dict/bash-words.txt
+          #          cspell:gaming-terms/dict/gaming-terms.txt
+          #cspell:shell/dict/shell-all-words.txt
+          #cspell:html/dict/html.txt
+          #cspell:css/dict/css.txt
+          #cspell:fullstack/dict/fullstack.txt
   comment-push:
     name: Report (Push)
     # If your workflow isn't running on push, you can remove this job
