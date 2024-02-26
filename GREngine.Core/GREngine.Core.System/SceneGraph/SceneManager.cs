@@ -19,7 +19,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     private Scene? nextScene;
 
     private readonly RootNode rootNode = new();
-    private readonly RootNode persistantNode = new();
+    private readonly RootNode persistentNode = new();
 
     private SortedSet<Behaviour> activeBehaviours = new SortedSet<Behaviour>();
     private HashSet<Behaviour> initializationSet = new HashSet<Behaviour>();
@@ -158,7 +158,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     public void AddNodeAtPersistent(Node node)
     {
-        AddNode(this.persistantNode, node);
+        AddNode(this.persistentNode, node);
     }
 
     public void AddNodeAtRoot(Node node)
@@ -240,7 +240,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     public RootNode GetPersistentNode()
     {
-        return this.persistantNode;
+        return this.persistentNode;
     }
 
     /// <summary>
@@ -498,7 +498,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         string rootName = "<SceneController>";
         PrintLn(rootName.PadLeft(POSITION_PADDING + rootName.Length + "    ".Length));
         this.PrintChildren(this.rootNode, 0);
-        this.PrintChildren(this.persistantNode, 0);
+        this.PrintChildren(this.persistentNode, 0);
     }
 
     private void PrintChildren(Node node, int depth)

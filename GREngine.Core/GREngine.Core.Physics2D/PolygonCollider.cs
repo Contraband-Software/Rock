@@ -96,7 +96,7 @@ public class PolygonCollider : Collider
 
     /// <summary>
     /// First checks if AABBs are overlapping before proceeding
-    /// Then will do some stuff idk and resolve the collision
+    /// Then will do some stuff and resolve the collision
     /// </summary>
     /// <param name="other"></param>
     public override void SolveCollision(PolygonCollider other, Vector2 velocity)
@@ -129,11 +129,11 @@ public class PolygonCollider : Collider
         List<PointF> otherVertices = other.translateVertices(other.rotateVertices(other.vertices));
 
         Vector2 position = GetGlobalColliderPosition();
-        Vector2 otherPostion = other.GetGlobalColliderPosition();
+        Vector2 otherPosition = other.GetGlobalColliderPosition();
         bool velocityTowardsCollision = false;
-        float distToOtherObj = new Vector2(otherPostion.X - position.X, otherPostion.Y - position.Y).Length();
+        float distToOtherObj = new Vector2(otherPosition.X - position.X, otherPosition.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
-        float distAfterMove = new Vector2(otherPostion.X - posAfterMove.X, otherPostion.Y - posAfterMove.Y).Length();
+        float distAfterMove = new Vector2(otherPosition.X - posAfterMove.X, otherPosition.Y - posAfterMove.Y).Length();
         if (distAfterMove < distToOtherObj)
         {
             velocityTowardsCollision = true;
@@ -185,7 +185,7 @@ public class PolygonCollider : Collider
                 {
                     continue;
                 }
-                //otherwise, find vector from vertice to intersection point
+                //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
                 if (!velocityTowardsCollision) { collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y); }
@@ -240,7 +240,7 @@ public class PolygonCollider : Collider
                     continue;
                 }
 
-                //otherwise, find vector from vertice to intersection point
+                //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
                 if (!velocityTowardsCollision) { collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y); }
@@ -297,35 +297,35 @@ public class PolygonCollider : Collider
         //get all of our collider vertices that are inside the colliding circle
         List<PointF> vertices = translateVertices(rotateVertices(this.vertices));
         List<PointF> vertsInCircle = new List<PointF>();
-        foreach (PointF vertice in vertices)
+        foreach (PointF vertex in vertices)
         {
-            if (other.PointInsideCollider(vertice)) { vertsInCircle.Add(vertice); }
+            if (other.PointInsideCollider(vertex)) { vertsInCircle.Add(vertex); }
         }
 
-        //for each vertice that IS inside the circle, we make a line along the motion vector
+        //for each vertex that IS inside the circle, we make a line along the motion vector
         //check where that line intersect the circle
         //take the intersection point thats in the AABB overlap region
-        //collision vector is then the vertice to the intersection point
+        //collision vector is then the vertex to the intersection point
         Vector2 directionVector = reverseVector;
         if (!velocityTowardsCollision) { directionVector = forwardVector; }
 
         PointF circCenter = new PointF(otherPosition.X, otherPosition.Y);
         float circRadius = other.GetRadius();
-        foreach (PointF vertice in vertsInCircle)
+        foreach (PointF vertex in vertsInCircle)
         {
-            PointF p1 = new PointF(vertice.X + directionVector.X, vertice.Y + directionVector.Y);
-            PointF p2 = new PointF(vertice.X + (directionVector.X*-1), vertice.Y + (directionVector.Y*-1));
+            PointF p1 = new PointF(vertex.X + directionVector.X, vertex.Y + directionVector.Y);
+            PointF p2 = new PointF(vertex.X + (directionVector.X *-1), vertex.Y + (directionVector.Y *-1));
             List<PointF> intersections = collisionSystem.LineIntersectsCircle(p1, p2, circCenter, circRadius);
             if (collisionSystem.PointIsInAABB(intersections[0], overlapRegion))
             {
-                Vector2 collisionVector = new Vector2(vertice.X - intersections[0].X, vertice.Y - intersections[0].Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[0].X - vertice.X, intersections[0].Y - vertice.Y); }
+                Vector2 collisionVector = new Vector2(vertex.X                                   - intersections[0].X, vertex.Y - intersections[0].Y);
+                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y); }
                 collisionVectors.Add(collisionVector);
             }
             else
             {
-                Vector2 collisionVector = new Vector2(vertice.X - intersections[1].X, vertice.Y - intersections[1].Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[1].X - vertice.X, intersections[1].Y - vertice.Y); }
+                Vector2 collisionVector = new Vector2(vertex.X                                    - intersections[1].X, vertex.Y - intersections[1].Y);
+                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y); }
                 collisionVectors.Add(collisionVector);
             }
         }

@@ -86,7 +86,6 @@ public class Enemy : Behaviour
 
         Random rand = new Random();
 
-        //if (curremtCock <= 0)
         this.Velocity *= 0.7f;
 
         if (this.Node.GetLocalPosition2D().Length() > this.spawner.Radius)
