@@ -38,7 +38,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     Vector2 gravity = new Vector2(0, 1000f);
 
     int subSteps = 1;
-    public CollisionSystem(Game game) : base(game){}
+    public CollisionSystem(Game game) : base(game) { }
 
     public override void Update(GameTime gameTime)
     {
@@ -82,14 +82,14 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             List<Collider> aabbOverlapObjects = new List<Collider>();
             foreach (Collider obj2 in verletObjects)
             {
-                if(!obj1.GetAllowedCollisionLayers().Contains(obj2.GetLayer())) { continue; }
+                if (!obj1.GetAllowedCollisionLayers().Contains(obj2.GetLayer())) { continue; }
 
                 obj2.CalculateAABB();
                 if (obj1 == obj2)
                 {
                     continue;
                 }
-                if(AABBOverlap(obj1.GetAABB(), obj2.GetAABB()))
+                if (AABBOverlap(obj1.GetAABB(), obj2.GetAABB()))
                 {
                     aabbOverlapObjects.Add(obj2);
                 }
@@ -300,14 +300,14 @@ public class CollisionSystem : GameComponent, ICollisionSystem
     {
         verletObjects.Add(obj);
     }
-    public void RemoveCollisionObject(Collider obj) { verletObjects.Remove(obj);}
+    public void RemoveCollisionObject(Collider obj) { verletObjects.Remove(obj); }
     public HashSet<Collider> GetColliderObjects() { return verletObjects; }
 
     public bool PointIsCollidingWithLayer(PointF point, string layer)
     {
-        foreach(Collider obj in verletObjects)
+        foreach (Collider obj in verletObjects)
         {
-            if(obj.GetLayer() == layer)
+            if (obj.GetLayer() == layer)
             {
                 if (obj.PointInsideCollider(point))
                 { return true; }
@@ -351,11 +351,11 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         Line rayAsLine = new Line(origin, endPoint);
 
         //collect colliders within AABB overlap region of ray, and of allowed layer
-        foreach(Collider collider in verletObjects)
+        foreach (Collider collider in verletObjects)
         {
             collider.CalculateAABB();
-            if (!layers.Contains(collider.GetLayer())){ continue; }
-            if(!AABBOverlap(rayAABB, collider.GetAABB())) { continue; }
+            if (!layers.Contains(collider.GetLayer())) { continue; }
+            if (!AABBOverlap(rayAABB, collider.GetAABB())) { continue; }
 
             //RAYCASTS CANT BE FIRED FROM WITHIN A COLLIDER
             if (collider.PointInsideCollider(origin))
@@ -369,7 +369,7 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         }
 
         //for all polygon colliders, find all points of intersection (if any), and store the closest one
-        foreach(Collider obj in possibleColliders.OfType<PolygonCollider>())
+        foreach (Collider obj in possibleColliders.OfType<PolygonCollider>())
         {
             PolygonCollider polyCol = (PolygonCollider)obj;
             List<PointF> vertices = polyCol.GetVertices();
@@ -407,13 +407,13 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             }
 
             //add the closest found intersection point to intersection points
-            if(foundIntersectionPoints.Count == 0)
+            if (foundIntersectionPoints.Count == 0)
             {
                 continue;
             }
             int closestPointIndex = 0;
             float closestPointDistance = float.PositiveInfinity;
-            for(int i = 0; i < foundIntersectionPoints.Count; i++)
+            for (int i = 0; i < foundIntersectionPoints.Count; i++)
             {
                 PointF p1 = origin;
                 PointF p2 = foundIntersectionPoints[i];
@@ -438,18 +438,18 @@ public class CollisionSystem : GameComponent, ICollisionSystem
             float radius = circCol.GetRadius();
             Vector2 circPos = circCol.GetGlobalColliderPosition();
             PointF centre = new PointF(circPos.X, circPos.Y);
-            if(!LineCanIntersectCircle(origin, endPoint, centre, radius)){ continue; }
+            if (!LineCanIntersectCircle(origin, endPoint, centre, radius)) { continue; }
 
             //get the two intersection points
             List<PointF> intersections = LineIntersectsCircle(origin, endPoint, centre, radius);
             float distToP1 = new Vector2(intersections[0].X - origin.X, intersections[0].Y - origin.Y).Length();
             float distToP2 = new Vector2(intersections[1].X - origin.X, intersections[1].Y - origin.Y).Length();
 
-            if(distToP1 < distToP2)
+            if (distToP1 < distToP2)
             {
                 intersectionPoints.Add(intersections[0]);
                 Vector2 normal = new Vector2(intersections[0].X - centre.X, intersections[0].Y - centre.Y);
-                if(normal != Vector2.Zero) { normal.Normalize(); }
+                if (normal != Vector2.Zero) { normal.Normalize(); }
                 normals.Add(normal);
             }
             else
@@ -487,6 +487,6 @@ public class CollisionSystem : GameComponent, ICollisionSystem
         return new Raycast2DResult(
             hitColliders[closestPointIndex2],
             intersectionPoints[closestPointIndex2],
-            normals[closestPointIndex2] );
+            normals[closestPointIndex2]);
     }
 }

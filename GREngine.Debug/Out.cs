@@ -7,10 +7,10 @@ public static class Out
 {
     public static void PrintLn(string text)
     {
-        #if LINUX
+#if LINUX
         Console.Out.WriteLine(text);
-        #else
+#else
         Debug.WriteLine(text);
-        #endif
+#endif
     }
 }

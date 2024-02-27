@@ -69,7 +69,7 @@ public class CircleCollider : Collider
 
             Vector2 n = collisionAxis;
             float delta = minDist - dist;
-            if(dist != 0)
+            if (dist != 0)
             {
                 n = collisionAxis / dist;
             }

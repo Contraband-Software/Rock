@@ -68,7 +68,7 @@ public class GraphicsTesting : Game
 
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/tonemapping")));
         re.addPostProcess(new BloomPostProcess(this, Content.Load<Effect>("Graphics/isolate"), 1920, 1080, 32, 0.9f));
- 
+
         re.addPostProcess(new DitherPostProcess(this, Content.Load<Effect>("Graphics/dither"), Content.Load<Texture2D>("Graphics/bayer")));
         //re.addPostProcess(new BlurPostProcess(this, 1920, 1080, 3, 0.9f));
         //re.addPostProcess(new PostProcess(this, Content.Load<Effect>("Graphics/crtPostProcess")));

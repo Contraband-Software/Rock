@@ -54,7 +54,7 @@ public class Enemy : Behaviour
         this.collider.SetStatic(true);
         this.collider.SetTrigger(true);
         this.collider.SetLayer(GameScene.enemyCollisionLayer);
-        this.collider.SetAllowedCollisionLayers(new List<string>(){GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer, GameScene.playerCollisionLayer});
+        this.collider.SetAllowedCollisionLayers(new List<string>() { GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer, GameScene.playerCollisionLayer });
 
         this.collider.OnTriggerEnter += with =>
         {

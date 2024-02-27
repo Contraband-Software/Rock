@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 public class DeathSceneController : Behaviour
 {
 
-    public DeathSceneController() 
+    public DeathSceneController()
     {
 
     }

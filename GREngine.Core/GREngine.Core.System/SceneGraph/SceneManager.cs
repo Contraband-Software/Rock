@@ -53,14 +53,14 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
             this.TransitionScene();
         }
 
-        if(this.activeScene != null)
+        if (this.activeScene != null)
         {
             // update currently enabled behaviours
 
             // sort initialization queue if non-empty
-                // iterate the initialization queue, running initialize on each behaviour, running awake
-                // take behaviours that are enabled, drop the rest
-                // merge initialization queue and activeBehaviours list
+            // iterate the initialization queue, running initialize on each behaviour, running awake
+            // take behaviours that are enabled, drop the rest
+            // merge initialization queue and activeBehaviours list
 
             if (this.initializationSet.Count != 0)
             {
@@ -130,12 +130,12 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     public Node? FindNodeWithTag(string tag)
     {
-        #if DEBUG
+#if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
         {
             throw new ArgumentOutOfRangeException(tag, "Tag does not exist");
         }
-        #endif
+#endif
 
         if (this.nodeTagIndex[tag].Count == 0)
         {
@@ -146,12 +146,12 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     public HashSet<Node> FindNodesWithTag(string tag)
     {
-        #if DEBUG
+#if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
         {
             throw new ArgumentOutOfRangeException("Tag does not exist: " + tag);
         }
-        #endif
+#endif
 
         return nodeTagIndex[tag];
     }
@@ -173,13 +173,13 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     /// <param name="parent"></param>
     public void AddNode(Node parent, Node node)
     {
-            // add node to parent's child list
-            // set node parent to parent
+        // add node to parent's child list
+        // set node parent to parent
 
-            // get TagList from object, add values to tagindex
-            // find attribute node tags, add values to tagindex, and add values to object TagList
+        // get TagList from object, add values to tagindex
+        // find attribute node tags, add values to tagindex, and add values to object TagList
 
-            // add node's components to initialization queue, adding the Node parent ref
+        // add node's components to initialization queue, adding the Node parent ref
 
         // repeat this process for child nodes
 
@@ -379,12 +379,12 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     private void RemoveTagIndex(string tag, Node node)
     {
-        #if DEBUG
+#if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
         {
             throw new InvalidOperationException("Trying to update indexes for non-existent tags");
         }
-        #endif
+#endif
 
         this.nodeTagIndex[tag].Remove(node);
     }
@@ -410,7 +410,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     {
         Scene nextScene = this.GetSceneByName(next);
 
-        if(this.activeScene != nextScene)
+        if (this.activeScene != nextScene)
         {
             this.nextScene = nextScene;
         }
@@ -436,7 +436,7 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
 
     private void TransitionScene()
     {
-        if(this.activeScene != null)
+        if (this.activeScene != null)
         {
             // this.UnloadChildren(this.rootGameObject);
             // // this should unload all the monogame assets from the previous scene

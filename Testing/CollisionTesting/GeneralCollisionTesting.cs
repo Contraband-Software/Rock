@@ -36,13 +36,13 @@ public class GeneralCollisionTesting : Scene
         };
 
         //Collider object 1
-/*        GenericNode node1 = new GenericNode();
+        /*        GenericNode node1 = new GenericNode();
 
-        node1.SetLocalPosition(new Vector2(100f, 100f));
-        sceneManager.AddNodeAtRoot(node1);
+                node1.SetLocalPosition(new Vector2(100f, 100f));
+                sceneManager.AddNodeAtRoot(node1);
 
-        PolygonCollider col1 = new PolygonCollider(squarePointFList, true);
-        sceneManager.AddBehaviour(node1, col1);*/
+                PolygonCollider col1 = new PolygonCollider(squarePointFList, true);
+                sceneManager.AddBehaviour(node1, col1);*/
 
         //Circle collider 1
         GenericNode node2 = new GenericNode();
@@ -58,7 +58,7 @@ public class GeneralCollisionTesting : Scene
         CircleCollider circ2 = new CircleCollider(30f);
         sceneManager.AddBehaviour(node3, circ2);
 
-        circ2.SetAllowedCollisionLayers(new List<string> { "default"});
+        circ2.SetAllowedCollisionLayers(new List<string> { "default" });
 
         List<string> rayLayers = new List<string> {
             "default"

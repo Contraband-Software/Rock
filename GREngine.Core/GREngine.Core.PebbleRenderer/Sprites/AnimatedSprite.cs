@@ -25,7 +25,7 @@ public class AnimatedSprite : Sprite
     private int index = 0;
 
     private int ssCellRes;
-    public AnimatedSprite(Vector2 offset, float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) : base(rotation,scale,diffuse,normal,roughness,layer,material,isShadowCaster,isLit)
+    public AnimatedSprite(Vector2 offset, float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) : base(rotation, scale, diffuse, normal, roughness, layer, material, isShadowCaster, isLit)
     {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
@@ -98,7 +98,7 @@ public class AnimatedSprite : Sprite
         this.frameCount++;
         if (textureIndex == 4)
         {
-            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index%ssSize)*ssCellRes, (index / ssSize) * ssCellRes,ssCellRes,ssCellRes), Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
+            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes), Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
             return;
         }
         if (textures[textureIndex] != null)
@@ -110,11 +110,12 @@ public class AnimatedSprite : Sprite
             spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes), Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//use diffuse as mask when no normal/diffuse texture provided
         }
 
-        if(frameCount > updateThreshhold)
+        if (frameCount > updateThreshhold)
         {
             frameCount = 0;
             index++;
-            if(index >= ssSize*ssSize) { //?
+            if (index >= ssSize * ssSize)
+            { //?
                 index = 0;
             }
         }
@@ -122,7 +123,7 @@ public class AnimatedSprite : Sprite
 
     internal override void calculateOffset()
     {
-        offsetToCenter = new Vector2((textures[0].Width/ssSize) / 2, (textures[0].Height / ssSize) / 2);
+        offsetToCenter = new Vector2((textures[0].Width / ssSize) / 2, (textures[0].Height / ssSize) / 2);
     }
 
     protected override void OnDestroy()

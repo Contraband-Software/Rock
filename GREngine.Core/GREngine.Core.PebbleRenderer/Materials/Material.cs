@@ -8,8 +8,9 @@ namespace GREngine.Core.PebbleRenderer;
 
 public class Material
 {
-    public Shader[] shaders; 
-    public Material(Shader diffuse, Shader normal, Shader roughness) {
+    public Shader[] shaders;
+    public Material(Shader diffuse, Shader normal, Shader roughness)
+    {
         this.shaders = new Shader[] { diffuse, normal, roughness };
     }
 }

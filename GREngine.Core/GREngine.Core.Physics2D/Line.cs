@@ -64,14 +64,14 @@ public struct Line
     public Line GetNormal()
     {
         //normal to vertical line
-        if(this.a == 0)
+        if (this.a == 0)
         {
             float m = 0f;
             float c = 1;
             return new Line(c, m);
         }
         //normal to horizontal line
-        else if(this.m == 0)
+        else if (this.m == 0)
         {
             float a = 0f;
             float c = -1;
@@ -101,7 +101,7 @@ public struct Line
         //standard line
         else
         {
-            return ((this.a * point.Y) - (this.m * point.X) - c == 0); 
+            return ((this.a * point.Y) - (this.m * point.X) - c == 0);
         }
     }
 
@@ -127,7 +127,7 @@ public struct Line
         {
             //use Y point
             Vector2 direction = new Vector2(0f, towardsPoint.Y - fromPoint.Y);
-            if(direction != Vector2.Zero) { direction.Normalize(); }
+            if (direction != Vector2.Zero) { direction.Normalize(); }
             return direction;
         }
         //line is horizontal
@@ -144,7 +144,7 @@ public struct Line
             Vector2 incoming = new Vector2(fromPoint.X - towardsPoint.X, fromPoint.Y - towardsPoint.Y);
             Vector2 normal = Vector2.Zero;
             //incoming ray is vertical, use towardPos.Y position as reference
-            if(fromPoint.X == towardsPoint.X)
+            if (fromPoint.X == towardsPoint.X)
             {
                 float endX = (towardsPoint.Y - line.c) / line.m;
                 normal = new Vector2(endX - fromPoint.X, towardsPoint.Y - fromPoint.Y);

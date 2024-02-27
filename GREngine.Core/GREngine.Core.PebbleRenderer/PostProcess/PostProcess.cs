@@ -28,7 +28,7 @@ public class PostProcess
     {
         game.GraphicsDevice.SetRenderTarget(bufferOut);
 
-        if(this.shader == null)
+        if (this.shader == null)
         {
             spriteBatch.Begin();
         }
@@ -37,7 +37,7 @@ public class PostProcess
             spriteBatch.Begin(effect: shader);
             SetAllParams();
         }
- 
+
         spriteBatch.Draw(bufferIn, new Vector2(0f), Color.White);
         spriteBatch.End();
         game.GraphicsDevice.SetRenderTarget(null);//?
@@ -50,7 +50,7 @@ public class PostProcess
             shader.Parameters[atribute.Key]?.SetValue(atribute.Value);
         }
     }
-        
+
 
 
 }

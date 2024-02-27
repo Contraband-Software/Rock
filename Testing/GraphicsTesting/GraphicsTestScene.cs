@@ -26,7 +26,7 @@ public class GraphicsTestScene : Scene
         laser.SetLocalPosition(200, 200);
         player.SetLocalPosition(new Vector2(200));
         GenericNode enemy = new GenericNode();
-        enemy.SetLocalPosition(new Vector2(700,500));
+        enemy.SetLocalPosition(new Vector2(700, 500));
         testObject.SetLocalPosition(new Vector2(1700, 1000));
         GenericNode testObject2 = new GenericNode();
         testObject2.SetLocalPosition(new Vector2(512, 512));
@@ -37,7 +37,7 @@ public class GraphicsTestScene : Scene
         //Out.PrintLn("hellow world");
 
 
-        Sprite platformRenderer1 = new Sprite(new Vector2(0),0f, new Vector2(1f),
+        Sprite platformRenderer1 = new Sprite(new Vector2(0), 0f, new Vector2(1f),
             Game.Content.Load<Texture2D>("Graphics/Platform1Diffuse"),
             Game.Content.Load<Texture2D>("Graphics/Platform1Normal"),
             Game.Content.Load<Texture2D>("Graphics/Platform1Roughness"), 2, 2, false);
@@ -56,13 +56,13 @@ public class GraphicsTestScene : Scene
         Sprite playerRenderer = new Sprite(0f, new Vector2(0.25f),
            Game.Content.Load<Texture2D>("Graphics/PlayerDiffuse"),
          null,
-           null,7, 3, false);
+           null, 7, 3, false);
 
         Texture2D allWhite = new Texture2D(Game.GraphicsDevice, 1, 1);
         allWhite.SetData(new Color[] { Color.White });
 
 
-        Sprite laserRenderer = new Sprite(0f, new Vector2(4000,50),
+        Sprite laserRenderer = new Sprite(0f, new Vector2(4000, 50),
           allWhite,
         null,
           null, 7, 4, false);
@@ -74,7 +74,7 @@ public class GraphicsTestScene : Scene
 
 
         Light lightRenderer = new Light(new Vector2(0), new Vector3(300000, 300000, 260000), true);
-        Light lightRenderer2 = new Light(new Vector2(0), new Vector3(400000, 200000, 200000), true,0,1);
+        Light lightRenderer2 = new Light(new Vector2(0), new Vector3(400000, 200000, 200000), true, 0, 1);
 
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(ocean, oceanRenderer);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(testObject, platformRenderer1);

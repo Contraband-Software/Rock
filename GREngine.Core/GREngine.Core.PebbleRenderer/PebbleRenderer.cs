@@ -56,11 +56,11 @@ public struct DebugDrawable
 
     public Vector2 position2;
 
-    public DebugDrawable(Vector2 position, float radius,Color color)
+    public DebugDrawable(Vector2 position, float radius, Color color)
     { //circle
         this.position = position;
         this.color = color;
-        this.position2 = new Vector2(radius,0);
+        this.position2 = new Vector2(radius, 0);
         this.shape = DebugShape.CIRCLE;
     }
 
@@ -83,7 +83,7 @@ public struct UIDrawable
     public SpriteFont font;
 
 
-    public UIDrawable(Vector2 position, float scale, Color color,SpriteFont font, String message)
+    public UIDrawable(Vector2 position, float scale, Color color, SpriteFont font, String message)
     {
         this.position = position;
         this.color = color;
@@ -113,7 +113,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     private List<Sprite>[,] lmsTensor;
 
-    private Dictionary<Light,Tuple<RenderTarget2D,RenderTarget2D>> lights;
+    private Dictionary<Light, Tuple<RenderTarget2D, RenderTarget2D>> lights;
 
     private Material[] materials;
     private int materialCount = 1; //the default material/shaders
@@ -165,12 +165,12 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     private Queue<DebugDrawable> debugShapes;
     private Queue<UIDrawable> UIShapes;
 
-    public PebbleRenderer(Game game, GraphicsDeviceManager graphics, int outputWidth, int outputHeight,float renderScale = 1,float shadowRenderScale = 0.2f) : base(game)
+    public PebbleRenderer(Game game, GraphicsDeviceManager graphics, int outputWidth, int outputHeight, float renderScale = 1, float shadowRenderScale = 0.2f) : base(game)
     {
         this.graphics = graphics;
         this.outputWidth = outputWidth;
         this.outputHeight = outputHeight;
-        this.renderWidth = (int)MathF.Floor(outputWidth*renderScale);
+        this.renderWidth = (int)MathF.Floor(outputWidth * renderScale);
         this.renderHeight = (int)MathF.Floor(outputHeight * renderScale);
         this.renderScale = renderScale;
         this.shadowRenderScale = shadowRenderScale;
@@ -183,12 +183,12 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
 
 
-        lmsTensor = new List<Sprite>[MAX_lAYERS,MAX_MATERIALS]; //2d array of sprite lists, one list for each material-layer combination.
+        lmsTensor = new List<Sprite>[MAX_lAYERS, MAX_MATERIALS]; //2d array of sprite lists, one list for each material-layer combination.
         for (int i = 0; i < MAX_lAYERS; i++)
         {
             for (int j = 0; j < MAX_MATERIALS; j++)
             {
-                lmsTensor[i,j] = new List<Sprite>();
+                lmsTensor[i, j] = new List<Sprite>();
             }
         }
         materials = new Material[MAX_MATERIALS];
@@ -209,10 +209,10 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         normalTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight);
         roughnessTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight);
 
-        shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth*2, renderHeight*2,false,SurfaceFormat.Alpha8,DepthFormat.None); //*2?
+        shadowCasterTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth * 2, renderHeight * 2, false, SurfaceFormat.Alpha8, DepthFormat.None); //*2?
         shadowUpscaleTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
-        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false,SurfaceFormat.HdrBlendable,DepthFormat.None);
+        litTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.HdrBlendable, DepthFormat.None);
 
         noiseTarget = new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None);
 
@@ -256,7 +256,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void lookAt(Vector2 position)
     {
-        this.cameraPosition = position - new Vector2(REFERENCE_WIDTH/2,REFERENCE_HEIGHT/2);
+        this.cameraPosition = position - new Vector2(REFERENCE_WIDTH / 2, REFERENCE_HEIGHT / 2);
     }
     public Vector2 getCameraPosition()
     {
@@ -267,7 +267,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     {
         if (sprite.material >= materialCount)
         {
-            throw new ArgumentException("shader uses material Index: " + sprite.material+" but this shader is not registered.");
+            throw new ArgumentException("shader uses material Index: " + sprite.material + " but this shader is not registered.");
         }
         lmsTensor[sprite.layer, sprite.material].Add(sprite);
 
@@ -280,9 +280,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
     public void addLight(Light light)
     {
-        if(light.isShadowCasting)
+        if (light.isShadowCasting)
         {
-            lights.Add(light, new Tuple<RenderTarget2D,RenderTarget2D>(
+            lights.Add(light, new Tuple<RenderTarget2D, RenderTarget2D>(
                 new RenderTarget2D(Game.GraphicsDevice, (int)MathF.Floor(renderWidth * shadowRenderScale), (int)MathF.Floor(renderHeight * shadowRenderScale), false, SurfaceFormat.Alpha8, DepthFormat.None),
                 new RenderTarget2D(Game.GraphicsDevice, renderWidth, renderHeight, false, SurfaceFormat.Alpha8, DepthFormat.None)));
         }
@@ -292,7 +292,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
             Game.GraphicsDevice.SetRenderTarget(whiteTarget);
             Game.GraphicsDevice.Clear(Color.White);
             Game.GraphicsDevice.SetRenderTarget(null);
-            lights.Add(light, new Tuple<RenderTarget2D,RenderTarget2D>(whiteTarget, whiteTarget));
+            lights.Add(light, new Tuple<RenderTarget2D, RenderTarget2D>(whiteTarget, whiteTarget));
         }
     }
 
@@ -330,7 +330,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     }
 
 
-    public void Draw(GameTime time) {
+    public void Draw(GameTime time)
+    {
         this.time = time.TotalGameTime.TotalSeconds;
         this.random = randomGen.NextDouble();
         RenderNoise();
@@ -344,7 +345,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
 
         //maybe make drawing occlusion map conditional on having shadow casting lights?
-        renderShadowCasters(shadowCasterTarget, view * Matrix.CreateScale(shadowRenderScale) * Matrix.CreateTranslation(new Vector3(renderWidth / 2, renderHeight / 2,0)));
+        renderShadowCasters(shadowCasterTarget, view * Matrix.CreateScale(shadowRenderScale) * Matrix.CreateTranslation(new Vector3(renderWidth / 2, renderHeight / 2, 0)));
 
 
 
@@ -384,7 +385,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         setEngineShaderParams(pointLightShader.shader);
         Game.GraphicsDevice.SetRenderTarget(litTarget);
 
-        foreach (KeyValuePair<Light,Tuple<RenderTarget2D, RenderTarget2D>> light in lights)
+        foreach (KeyValuePair<Light, Tuple<RenderTarget2D, RenderTarget2D>> light in lights)
         {
             //the approach I have in mind might be too cpu/ draw call intensive, so I will try raymarching first, but maybe come back to the 1d occlusion map approach with some optimization later.
             spriteBatch.Begin(effect: pointLightShader.shader, blendState: BlendState.Additive);
@@ -402,7 +403,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
 
         //HERE
         Game.GraphicsDevice.SetRenderTarget(postProcessTarget1); //I can maybe optimise this to overwrite diffuse buffer or lighting buffers, depends if I still want them
-        spriteBatch.Begin(transformMatrix: Matrix.CreateScale(1 / renderScale),samplerState: samplerState); // maybe dont create the matrix every frame
+        spriteBatch.Begin(transformMatrix: Matrix.CreateScale(1 / renderScale), samplerState: samplerState); // maybe dont create the matrix every frame
         spriteBatch.Draw(diffuseTarget, new Vector2(0f), Color.White);
         spriteBatch.End();
 
@@ -411,8 +412,9 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         Game.GraphicsDevice.SetRenderTarget(null);
         postProcessPingPong = true;
 
-        foreach (PostProcess postProcess in postProcesses){
-            if(postProcess.shader != null)
+        foreach (PostProcess postProcess in postProcesses)
+        {
+            if (postProcess.shader != null)
             {
                 setEngineShaderParams(postProcess.shader);
             }
@@ -449,7 +451,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         effect.Parameters["noiseMap"]?.SetValue(noiseTarget);
     }
 
-    private void renderOutput(RenderTarget2D target, Matrix viewProjection){ //refactor this maybe, having a function for rendering to target isnt as nice as I hoped.
+    private void renderOutput(RenderTarget2D target, Matrix viewProjection)
+    { //refactor this maybe, having a function for rendering to target isnt as nice as I hoped.
         Game.GraphicsDevice.SetRenderTarget(target);
         Game.GraphicsDevice.Clear(Color.Black);
 
@@ -461,7 +464,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 materials[j].shaders[0].shader.Parameters["ambientColor"]?.SetValue(ambientLightColor.ToVector3());
                 setEngineShaderParams(materials[j].shaders[0].shader);
 
-                if(lmsTensor[i, j].Count == 0)
+                if (lmsTensor[i, j].Count == 0)
                 {
                     continue;
                 }
@@ -477,7 +480,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         Game.GraphicsDevice.SetRenderTarget(null);// is this necessary?
     }
 
-    private void renderToTarget(RenderTarget2D target, Matrix viewProjection,Color clearColor, int shaderIndex)
+    private void renderToTarget(RenderTarget2D target, Matrix viewProjection, Color clearColor, int shaderIndex)
     {
         Game.GraphicsDevice.SetRenderTarget(target);
         Game.GraphicsDevice.Clear(clearColor);
@@ -518,12 +521,13 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         Game.GraphicsDevice.SetRenderTarget(noiseTarget);
         setEngineShaderParams(gradientNoiseShader.shader);
         spriteBatch.Begin(effect: gradientNoiseShader.shader);
-        spriteBatch.Draw(nullTexture, new Vector2(0),null, Color.White,0,Vector2.Zero,new Vector2(renderWidth,renderHeight),SpriteEffects.None,0);
+        spriteBatch.Draw(nullTexture, new Vector2(0), null, Color.White, 0, Vector2.Zero, new Vector2(renderWidth, renderHeight), SpriteEffects.None, 0);
         spriteBatch.End();
         Game.GraphicsDevice.SetRenderTarget(null);//? needed?
     }
 
-    private void renderShadowCasters(RenderTarget2D target, Matrix viewProjection) {
+    private void renderShadowCasters(RenderTarget2D target, Matrix viewProjection)
+    {
         Game.GraphicsDevice.SetRenderTarget(target);
         Game.GraphicsDevice.Clear(Color.White);
 
@@ -562,21 +566,21 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
     {
         Game.GraphicsDevice.SetRenderTarget(target);
         spriteBatch.Begin(transformMatrix: viewProjection);
-        while(debugShapes.Count > 0)
+        while (debugShapes.Count > 0)
         {
             DebugDrawable drawable = debugShapes.Dequeue();
 
             switch (drawable.shape)
             {
                 case DebugShape.LINE:
-                    spriteBatch.DrawLine(drawable.position,drawable.position2, drawable.color,4);
+                    spriteBatch.DrawLine(drawable.position, drawable.position2, drawable.color, 4);
                     break;
 
                 case DebugShape.RECTANGLE:
-                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)),drawable.color,4 );
+                    spriteBatch.DrawRectangle(new Rectangle((int)drawable.position.X, (int)drawable.position.Y, (int)(drawable.position2.X - drawable.position.X), (int)(drawable.position2.Y - drawable.position.Y)), drawable.color, 4);
                     break;
                 case DebugShape.CIRCLE:
-                    spriteBatch.DrawCircle(drawable.position,drawable.position2.X,32,drawable.color,4);
+                    spriteBatch.DrawCircle(drawable.position, drawable.position2.X, 32, drawable.color, 4);
                     break;
             }
         }
@@ -590,7 +594,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         while (UIShapes.Count > 0)
         {
             UIDrawable drawable = UIShapes.Dequeue();
-            spriteBatch.DrawString(drawable.font,drawable.text,drawable.position,drawable.color, 0, Vector2.Zero,drawable.scale,SpriteEffects.None,0);
+            spriteBatch.DrawString(drawable.font, drawable.text, drawable.position, drawable.color, 0, Vector2.Zero, drawable.scale, SpriteEffects.None, 0);
 
         }
         spriteBatch.End();

@@ -201,7 +201,7 @@ public abstract class Collider : Behaviour
     public void SetStatic(bool b) { isStatic = b; }
     public bool IsStatic() { return isStatic; }
     public void SetTrigger(bool b) { isTrigger = b; }
-    public bool IsTrigger() { return isTrigger;}
+    public bool IsTrigger() { return isTrigger; }
     public void SetLayer(string layer) { collisionLayer = layer; }
     public string GetLayer() { return collisionLayer; }
     public bool IsAABBOverlapping() { return aabbOverlapping; }
@@ -256,7 +256,7 @@ public abstract class Collider : Behaviour
 
     protected void FireCorrectEvent(Vector2 collisionVector, Collider other)
     {
-        if(collisionVector == Vector2.Zero)
+        if (collisionVector == Vector2.Zero)
         {
             return;
         }
@@ -279,7 +279,7 @@ public abstract class Collider : Behaviour
 
     protected void FireTriggerEnter(Vector2 collisionVector, Collider other)
     {
-        if(collisionVector != Vector2.Zero)
+        if (collisionVector != Vector2.Zero)
         {
             this.OnTriggerEnter?.Invoke(other);
         }

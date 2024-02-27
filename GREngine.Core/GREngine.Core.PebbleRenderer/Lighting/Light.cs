@@ -20,7 +20,8 @@ public class Light : Behaviour
     private float rotation = 0;
     public bool isShadowCasting;
 
-    public Light(Vector2 offset, Vector3 color,bool isShadowCasting = false ,float rotation = 0,float arc = 1) { //anything else?
+    public Light(Vector2 offset, Vector3 color, bool isShadowCasting = false, float rotation = 0, float arc = 1)
+    { //anything else?
         this.position = new Vector2(0);
         this.offset = offset;
         this.color = color;

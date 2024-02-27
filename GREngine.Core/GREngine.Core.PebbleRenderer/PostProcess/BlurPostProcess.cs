@@ -12,7 +12,7 @@ namespace GREngine.Core.PebbleRenderer;
 
 
 public class BlurPostProcess : PostProcess // A very fast blur effect that leverages fixed function gpu texture sampling to blur with a large kernel efficiently
-                                                // input gets downsampled to size/2^passes and upsampled again.
+                                           // input gets downsampled to size/2^passes and upsampled again.
 {
     RenderTarget2D[] BlurTargets;
     int nearestPOTx;
@@ -23,7 +23,7 @@ public class BlurPostProcess : PostProcess // A very fast blur effect that lever
     float finalScaleX;
     float finalScaleY;
     float scale;
-    public BlurPostProcess(Game game,int width,int height, int passes, float scale) : base(game, null)
+    public BlurPostProcess(Game game, int width, int height, int passes, float scale) : base(game, null)
     {
         this.width = width;
         this.height = height;
@@ -37,7 +37,7 @@ public class BlurPostProcess : PostProcess // A very fast blur effect that lever
 
         for (int i = 0; i < passes; i++)
         {
-            BlurTargets[i] = new RenderTarget2D(game.GraphicsDevice, nearestPOTx / (int)Math.Pow(1/scale,i), nearestPOTy / (int)Math.Pow(1 / scale, i));
+            BlurTargets[i] = new RenderTarget2D(game.GraphicsDevice, nearestPOTx / (int)Math.Pow(1 / scale, i), nearestPOTy / (int)Math.Pow(1 / scale, i));
         }
 
     }
@@ -48,22 +48,22 @@ public class BlurPostProcess : PostProcess // A very fast blur effect that lever
 
         game.GraphicsDevice.SetRenderTarget(BlurTargets[0]);
         spriteBatch.Begin();
-        spriteBatch.Draw(bufferIn, new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(1/finalScaleX, 1/finalScaleY), SpriteEffects.None, 0);
+        spriteBatch.Draw(bufferIn, new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(1 / finalScaleX, 1 / finalScaleY), SpriteEffects.None, 0);
         spriteBatch.End();
 
-        for (int i = 0; i < passes-1 ; i++)
+        for (int i = 0; i < passes - 1; i++)
         {
-            game.GraphicsDevice.SetRenderTarget(BlurTargets[i+1]);
+            game.GraphicsDevice.SetRenderTarget(BlurTargets[i + 1]);
             spriteBatch.Begin();
             spriteBatch.Draw(BlurTargets[i], new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(scale, scale), SpriteEffects.None, 0);
             spriteBatch.End();
 
         }
-        for (int i = passes - 1; i >0; i--)
+        for (int i = passes - 1; i > 0; i--)
         {
-            game.GraphicsDevice.SetRenderTarget(BlurTargets[i-1]);
+            game.GraphicsDevice.SetRenderTarget(BlurTargets[i - 1]);
             spriteBatch.Begin();
-            spriteBatch.Draw(BlurTargets[i], new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(1/scale, 1/ scale), SpriteEffects.None, 0);
+            spriteBatch.Draw(BlurTargets[i], new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(1 / scale, 1 / scale), SpriteEffects.None, 0);
             spriteBatch.End();
 
         }
@@ -71,7 +71,7 @@ public class BlurPostProcess : PostProcess // A very fast blur effect that lever
 
         game.GraphicsDevice.SetRenderTarget(bufferOut);
         spriteBatch.Begin();
-        spriteBatch.Draw(BlurTargets[0], new Vector2(0f),null, Color.White,0,new Vector2(0),new Vector2(finalScaleX,finalScaleY),SpriteEffects.None,0);
+        spriteBatch.Draw(BlurTargets[0], new Vector2(0f), null, Color.White, 0, new Vector2(0), new Vector2(finalScaleX, finalScaleY), SpriteEffects.None, 0);
         spriteBatch.End();
 
 

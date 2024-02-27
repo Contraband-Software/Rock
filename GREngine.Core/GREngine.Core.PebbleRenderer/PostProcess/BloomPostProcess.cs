@@ -12,7 +12,7 @@ namespace GREngine.Core.PebbleRenderer;
 
 
 public class BloomPostProcess : PostProcess // A very fast blur effect that leverages fixed function gpu texture sampling to blur with a large kernel efficiently
-                                                // input gets downsampled to size/2^passes and upsampled again.
+                                            // input gets downsampled to size/2^passes and upsampled again.
 {
     RenderTarget2D[] BlurTargets;
     int nearestPOTx;
@@ -25,7 +25,7 @@ public class BloomPostProcess : PostProcess // A very fast blur effect that leve
     float scale;
 
     Effect isolate;
-    public BloomPostProcess(Game game,Effect isolate, int width, int height, int passes, float scale) : base(game, null)
+    public BloomPostProcess(Game game, Effect isolate, int width, int height, int passes, float scale) : base(game, null)
     {
         this.width = width;
         this.height = height;

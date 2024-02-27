@@ -10,7 +10,7 @@ namespace GREngine.Core.PebbleRenderer;
 
 public class Shader
 {
-    public Dictionary<string,float> attributes;
+    public Dictionary<string, float> attributes;
     public Effect shader;
 
     public Shader(Effect shader)

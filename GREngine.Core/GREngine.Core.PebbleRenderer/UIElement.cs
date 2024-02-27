@@ -24,14 +24,14 @@ public class UIElement : Behaviour
     private float scale;
     private SpriteFont font;
     private UIDrawable drawable;
-    public UIElement(string text,SpriteFont font, Color color, float scale)
+    public UIElement(string text, SpriteFont font, Color color, float scale)
     {
         this.text = text;
         this.color = color;
         this.scale = scale;
         this.font = font;
 
-        drawable = new UIDrawable(Vector2.Zero, scale,color, font, text);
+        drawable = new UIDrawable(Vector2.Zero, scale, color, font, text);
     }
 
 

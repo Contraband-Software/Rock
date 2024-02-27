@@ -18,7 +18,7 @@ using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
 
 [GRETagWith("Player")]
-public class Player : Node {}
+public class Player : Node { }
 
 [GRExecutionOrder(10)]
 public class PlayerController : Behaviour
@@ -186,11 +186,11 @@ public class PlayerController : Behaviour
         Raycast2DResult ray3 = collisionSystem.Raycast2D(origin3, direction, 100000f, layers);
 
         Collider hitCollider = null;
-        if(ray.colliderHit != null) { hitCollider = ray.colliderHit; }
-        else if(ray2.colliderHit != null) { hitCollider = ray2.colliderHit; }
-        else if(ray3.colliderHit != null) { hitCollider = ray3.colliderHit; }
+        if (ray.colliderHit != null) { hitCollider = ray.colliderHit; }
+        else if (ray2.colliderHit != null) { hitCollider = ray2.colliderHit; }
+        else if (ray3.colliderHit != null) { hitCollider = ray3.colliderHit; }
 
-        if(hitCollider != null)
+        if (hitCollider != null)
         {
             float distanceToHitCollider = new Vector2(
                 hitCollider.GetGlobalColliderPosition().X - origin.X,
@@ -212,7 +212,7 @@ public class PlayerController : Behaviour
 
         //Sprite laser = new Sprite(MathF.Sin(direction.X), new Vector2(4000, currentGunPower * 2), allWhite, null, null,6,4);
         //this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
-        laser.rotation = MathF.Atan2(direction.Y,direction.X);
+        laser.rotation = MathF.Atan2(direction.Y, direction.X);
         laser.setScale(new Vector2(3000, currentGunPower * 2));
         animcounter = 60;
     }
@@ -272,7 +272,7 @@ public class PlayerController : Behaviour
 
         // Aim direction
         Vector2 relativeTo = new Vector2(
-            this.Game.GraphicsDevice.Viewport.Width  / 2,
+            this.Game.GraphicsDevice.Viewport.Width / 2,
             this.Game.GraphicsDevice.Viewport.Height / 2);
         MouseState mouseState = Mouse.GetState();
         Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);

@@ -34,11 +34,11 @@ public class PolygonCollider : Collider
         this.vertices = vertices;
     }
 
-    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged=false) : base(layer: collisionLayer, debug: debugged)
+    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged)
     {
         this.vertices = vertices;
     }
-    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset:offset)
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset: offset)
     {
         this.vertices = vertices;
     }
@@ -115,7 +115,7 @@ public class PolygonCollider : Collider
 
         //get motion and reverse motion vectors
         Vector2 velocityVector = velocity;
-        if(velocityVector != Vector2.Zero)
+        if (velocityVector != Vector2.Zero)
         {
             velocityVector.Normalize();
         }
@@ -314,17 +314,17 @@ public class PolygonCollider : Collider
         foreach (PointF vertex in vertsInCircle)
         {
             PointF p1 = new PointF(vertex.X + directionVector.X, vertex.Y + directionVector.Y);
-            PointF p2 = new PointF(vertex.X + (directionVector.X *-1), vertex.Y + (directionVector.Y *-1));
+            PointF p2 = new PointF(vertex.X + (directionVector.X * -1), vertex.Y + (directionVector.Y * -1));
             List<PointF> intersections = collisionSystem.LineIntersectsCircle(p1, p2, circCenter, circRadius);
             if (collisionSystem.PointIsInAABB(intersections[0], overlapRegion))
             {
-                Vector2 collisionVector = new Vector2(vertex.X                                   - intersections[0].X, vertex.Y - intersections[0].Y);
+                Vector2 collisionVector = new Vector2(vertex.X - intersections[0].X, vertex.Y - intersections[0].Y);
                 if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y); }
                 collisionVectors.Add(collisionVector);
             }
             else
             {
-                Vector2 collisionVector = new Vector2(vertex.X                                    - intersections[1].X, vertex.Y - intersections[1].Y);
+                Vector2 collisionVector = new Vector2(vertex.X - intersections[1].X, vertex.Y - intersections[1].Y);
                 if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y); }
                 collisionVectors.Add(collisionVector);
             }
@@ -371,20 +371,23 @@ public class PolygonCollider : Collider
             }
             //if it can intersect, find where
             PointF intersectionPoint = collisionSystem.LineIntersectionPoint(l1, l2);
-            if(!collisionSystem.PointIsInAABB(intersectionPoint, overlapRegion))
+            if (!collisionSystem.PointIsInAABB(intersectionPoint, overlapRegion))
             {
                 continue;
             }
 
             Vector2 centreToIntersection = new Vector2(intersectionPoint.X - circCenter.X, intersectionPoint.Y - circCenter.Y);
-            if (!velocityTowardsCollision) { centreToIntersection = new Vector2(
+            if (!velocityTowardsCollision)
+            {
+                centreToIntersection = new Vector2(
                 circCenter.X - intersectionPoint.X,
-                circCenter.Y - intersectionPoint.Y); }
-            if(centreToIntersection == Vector2.Zero) { continue; }
+                circCenter.Y - intersectionPoint.Y);
+            }
+            if (centreToIntersection == Vector2.Zero) { continue; }
             Vector2 centreToIntersectionDir = centreToIntersection;
             if (centreToIntersectionDir.Length() == 0) centreToIntersectionDir.Normalize();
             Vector2 centreToRadiusEdge = centreToIntersectionDir * circRadius;
-            if(centreToIntersection.Length() < centreToRadiusEdge.Length())
+            if (centreToIntersection.Length() < centreToRadiusEdge.Length())
             {
                 Vector2 collisionVector = centreToIntersection - centreToRadiusEdge;
                 collisionVectors.Add(collisionVector);

@@ -53,17 +53,17 @@ public class PathfindingSearchNetwork : Behaviour
         this.height = height;
 
         this.nodeNetwork = new Node[
-            width  / ((int)MathF.Ceiling(width  / resolution)),
+            width / ((int)MathF.Ceiling(width / resolution)),
             height / ((int)MathF.Ceiling(height / resolution))];
 
         int vy = 0;
-        for (int y = 0;; y += (int)(height / resolution))
+        for (int y = 0; ; y += (int)(height / resolution))
         {
             if (vy == this.nodeNetwork.GetLength(0))
                 break;
 
             int vx = 0;
-            for (int x = 0;; x += (int)(width / resolution))
+            for (int x = 0; ; x += (int)(width / resolution))
             {
                 if (vx == this.nodeNetwork.GetLength(1))
                     break;
@@ -130,12 +130,12 @@ public class PathfindingSearchNetwork : Behaviour
             node.InitCosts(start, end);
         }
 
-        #if DEBUG
+#if DEBUG
         if (this.nodeNetwork == null)
         {
             throw new InvalidOperationException("Pathfinding error: trying to navigate when network has not been built!");
         }
-        #endif
+#endif
 
         List<Point> path = this.FindPath();
         if (path.Count == 0)
@@ -274,7 +274,7 @@ public class PathfindingSearchNetwork : Behaviour
                     }
 
                     if (x - 1 >= 0) adj.Add(this.nodeNetwork[y, x - 1].Location);
-                    if (x + 1 < l) adj.Add(this.nodeNetwork[y, x  + 1].Location);
+                    if (x + 1 < l) adj.Add(this.nodeNetwork[y, x + 1].Location);
 
                     return adj;
                 }

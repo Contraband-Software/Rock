@@ -18,7 +18,7 @@ public class DitherPostProcess : PostProcess
         this.game = game;
         attributes = new Dictionary<string, float>();
         this.shader = shader;
-        this.ditherPattern = ditherPattern; 
+        this.ditherPattern = ditherPattern;
     }
 
     public override void applyPostProcess(RenderTarget2D bufferIn, RenderTarget2D bufferOut, SpriteBatch spriteBatch)

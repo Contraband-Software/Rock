@@ -15,10 +15,10 @@ public static class Sort
     /// <returns>A sorted list with all elements combined</returns>
     public static IList<T> MergeSortedLists<T>(IList<T> a, IList<T> b) where T : IComparable<T>
     {
-        if(a.Count >b.Count)
-            return MergeSortedLists_Large_Small<T>(a,b);
+        if (a.Count > b.Count)
+            return MergeSortedLists_Large_Small<T>(a, b);
         else
-            return MergeSortedLists_Large_Small<T>(b,a);
+            return MergeSortedLists_Large_Small<T>(b, a);
     }
     private static IList<T> MergeSortedLists_Large_Small<T>(IList<T> a, IList<T> b) where T : IComparable<T>
     {

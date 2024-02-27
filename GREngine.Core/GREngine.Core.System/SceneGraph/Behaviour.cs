@@ -56,7 +56,7 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
         // If other is not a valid object reference, this instance is greater.
         if (other == null) return 1;
 
-        float thisHash = float.Parse(this.loadOrder.ToString()   + '.' + this.InstanceID);
+        float thisHash = float.Parse(this.loadOrder.ToString() + '.' + this.InstanceID);
         float otherHash = float.Parse(other.loadOrder.ToString() + '.' + other.InstanceID);
 
         return thisHash.CompareTo(otherHash);
