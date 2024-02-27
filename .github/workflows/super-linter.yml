@@ -32,7 +32,7 @@ jobs:
         env:
           IGNORE_GITIGNORED_FILES: true
           IGNORE_GENERATED_FILES: true
-          VALIDATE_EDITORCONFIG: true
+#          VALIDATE_EDITORCONFIG: true
           VALIDATE_GITHUB_ACTIONS: false
 #          VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
