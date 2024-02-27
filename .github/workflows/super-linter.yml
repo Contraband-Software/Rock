@@ -20,6 +20,10 @@ jobs:
       statuses: write
 
     steps:
+      - uses: myci-actions/export-env-var@1
+        with:
+          name: DOTNET_CLI_TELEMETRY_OPTOUT
+          value: 1
       - name: Checkout code
         uses: actions/checkout@v4
         with:
