@@ -1,3 +1,10 @@
+root = true
+
+[/.github/**]
+indent_size = 2
+tab_width = 2
+
+
 [*]
 charset = utf-8
 end_of_line = lf
