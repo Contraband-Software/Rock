@@ -6,7 +6,9 @@ on:  # yamllint disable-line rule:truthy
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 permissions: read-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
