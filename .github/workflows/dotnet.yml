@@ -18,7 +18,7 @@ jobs:
     # MGFXC_WINE_PATH
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: myci-actions/export-env-var@1
       with:
         name: DOTNET_CLI_TELEMETRY_OPTOUT
@@ -29,7 +29,7 @@ jobs:
         sudo apt-get install -y ttf-mscorefonts-installer
         sudo cp ./GameDemo1/Content/D3Digitalism.ttf /usr/local/share/fonts && sudo fc-cache -f -v
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
     - name: Bootstrap Wine

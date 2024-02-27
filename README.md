@@ -3,6 +3,8 @@
 
 Contraband Software's very own custom game engine, built on top of the reliable MonoGame framework. Simple and ready for game jams!
 
+From [Contraband Software](https://contraband.software).
+
 ![Green glowing rock outline over black background](./Documentation/Images/rockIcon.png) 
 
 ## Prerequisites
