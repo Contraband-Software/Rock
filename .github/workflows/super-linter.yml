@@ -28,6 +28,9 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@v6.2.0  # x-release-please-version
         env:
+          IGNORE_GITIGNORED_FILES: true
+          IGNORE_GENERATED_FILES: true
+          VALIDATE_EDITORCONFIG: false
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           # To report GitHub Actions status checks
