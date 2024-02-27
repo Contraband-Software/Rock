@@ -1,0 +1,14 @@
+{
+  "filters": {
+    "comments": true,
+    "allowlist": {
+    "allow": [
+        "repo",
+        "MacOS"
+      ]
+    }
+  },
+  "rules": {
+    "terminology": true
+  }
+}
