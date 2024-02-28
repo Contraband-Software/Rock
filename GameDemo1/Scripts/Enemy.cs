@@ -50,11 +50,18 @@ public class Enemy : Behaviour
 
         // PrintLn(Node.GetLocalPosition2D().ToString());
 
-        collider = this.Game.Services.GetService<ISceneControllerService>().InitBehaviour(this.Node, new CircleCollider(50, true)) as CircleCollider;
+        collider = this.Game.Services.GetService<ISceneControllerService>().InitBehaviour(
+            this.Node, new CircleCollider(50, true)) as CircleCollider;
         this.collider.SetStatic(true);
         this.collider.SetTrigger(true);
         this.collider.SetLayer(GameScene.enemyCollisionLayer);
-        this.collider.SetAllowedCollisionLayers(new List<string>() { GameScene.mapFloorCollisionLayer, GameScene.enemyCollisionLayer, GameScene.mapWallCollisionLayer, GameScene.playerCollisionLayer });
+        this.collider.SetAllowedCollisionLayers(
+            new List<string>() {
+                GameScene.mapFloorCollisionLayer,
+                GameScene.enemyCollisionLayer,
+                GameScene.mapWallCollisionLayer,
+                GameScene.playerCollisionLayer
+            });
 
         this.collider.OnTriggerEnter += with =>
         {
@@ -66,7 +73,8 @@ public class Enemy : Behaviour
             {
                 Node playerNode = this.player.Node;
                 if (playerNode != null)
-                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(Vector.SafeNormalize(this.GetPlayerDirection()) * this.hitStrength);
+                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(
+                        Vector.SafeNormalize(this.GetPlayerDirection()) * this.hitStrength);
             }
         };
     }
@@ -98,7 +106,8 @@ public class Enemy : Behaviour
             {
                 if (this.spawner.PlayerTouchingFrame != lastValue)
                 {
-                    this.Velocity += new Vector2(rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * 10;
+                    this.Velocity += new Vector2(
+                        rand.NextSingle() - 0.5f, rand.NextSingle() - 0.5f) * this.walkSpeed * 10;
                 }
                 if (this.GetPlayerDirection().Length() < this.diveDistance)
                 {
@@ -134,7 +143,8 @@ public class Enemy : Behaviour
 
         this.Node.SetLocalPosition(this.Node.GetLocalPosition2D() + this.Velocity);
         // PrintLn((this.Node.GetLocalPosition2D() + this.velocity).ToString());
-        //this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
+        //this.Game.Services.GetService<IPebbleRendererService>().drawDebug(
+        //new DebugDrawable(this.Node.GetGlobalPosition2D(), 30, this.isGrounded > 3 ? Color.Orange : Color.Aqua));
 
         lastValue = this.spawner.PlayerTouchingFrame;
     }

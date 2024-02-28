@@ -575,7 +575,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         setEngineShaderParams(gradientNoiseShader.shader);
         spriteBatch.Begin(effect: gradientNoiseShader.shader);
         spriteBatch.Draw(nullTexture, new Vector2(0), null, Color.White, 0, Vector2.Zero,
-                         new Vector2(renderWidth, renderHeight), SpriteEffects.None, 0);
+                        new Vector2(renderWidth, renderHeight), SpriteEffects.None, 0);
         spriteBatch.End();
         Game.GraphicsDevice.SetRenderTarget(null);//? needed?
     }
@@ -634,8 +634,8 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
                 case DebugShape.RECTANGLE:
                     spriteBatch.DrawRectangle(
                         new Rectangle((int)drawable.position.X, (int)drawable.position.Y,
-                                      (int)(drawable.position2.X - drawable.position.X),
-                                      (int)(drawable.position2.Y - drawable.position.Y)), drawable.color, 4);
+                                    (int)(drawable.position2.X - drawable.position.X),
+                                    (int)(drawable.position2.Y - drawable.position.Y)), drawable.color, 4);
                     break;
                 case DebugShape.CIRCLE:
                     spriteBatch.DrawCircle(drawable.position, drawable.position2.X, 32, drawable.color, 4);
@@ -653,7 +653,7 @@ public class PebbleRenderer : GameComponent, IPebbleRendererService
         {
             UIDrawable drawable = UIShapes.Dequeue();
             spriteBatch.DrawString(drawable.font, drawable.text, drawable.position, drawable.color, 0,
-                                   Vector2.Zero, drawable.scale, SpriteEffects.None, 0);
+                                Vector2.Zero, drawable.scale, SpriteEffects.None, 0);
 
         }
         spriteBatch.End();

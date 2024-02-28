@@ -58,8 +58,10 @@ public class App : Game
             new Shader(Content.Load<Effect>("Graphics/puddleNormalMapped")),
             new Shader(Content.Load<Effect>("Graphics/puddleRoughness")));
         renderManager.addMaterial(puddleMat);
-        Material playerMat = new Material(new Shader(Content.Load<Effect>("Graphics/PlayerDiffuseShader")), null, null);
-        Material laserMat = new Material(new Shader(Content.Load<Effect>("Graphics/LaserShader")), null, null);
+        Material playerMat = new Material(
+            new Shader(Content.Load<Effect>("Graphics/PlayerDiffuseShader")), null, null);
+        Material laserMat = new Material(
+            new Shader(Content.Load<Effect>("Graphics/LaserShader")), null, null);
         renderManager.addMaterial(playerMat);
         renderManager.addMaterial(laserMat);
         renderManager.addPostProcess(
@@ -85,7 +87,8 @@ public class App : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         base.Update(gameTime);

@@ -3,7 +3,7 @@ root = true
 [{**/Doxyfile,**/LICENSE,**/*.md,**/*.sln}]
 generated_code = true
 ij_formatter_enabled = false
-insert_final_newline = false
+insert_final_newline = unset
 
 [*]
 charset = utf-8
@@ -225,11 +225,15 @@ indent_size = 2
 tab_width = 2
 
 [*.{json,csproj,nuspec,Config}]
-insert_final_newline = false
+insert_final_newline = unset
+
+[.nuspec]
+max_line_length = unset
 
 [*.sln]
 max_line_length = 400
 indent_style = tab
+insert_final_newline = unset
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cppm,cs,cshtml,cu,cuh,cxx,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,shader,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style = space

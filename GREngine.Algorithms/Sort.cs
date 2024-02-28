@@ -22,7 +22,8 @@ public static class Sort
     }
     private static IList<T> MergeSortedLists_Large_Small<T>(IList<T> a, IList<T> b) where T : IComparable<T>
     {
-        // Algorithm from: Sujith Karivelil's answer on https://stackoverflow.com/questions/37780578/merging-two-lists-which-are-already-sorted-in-c-sharp
+        // Algorithm from: Sujith Karivelil's answer on
+        // https://stackoverflow.com/questions/37780578/merging-two-lists-which-are-already-sorted-in-c-sharp
         int largeArrayCount = a.Count;
         int currentBIndex = 0;
         List<T> finalResult = new List<T>();
