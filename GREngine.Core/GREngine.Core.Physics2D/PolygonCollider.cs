@@ -34,15 +34,18 @@ public class PolygonCollider : Collider
         this.vertices = vertices;
     }
 
-    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged)
+    public PolygonCollider(List<PointF> vertices, string collisionLayer, bool debugged = false) :
+        base(layer: collisionLayer, debug: debugged)
     {
         this.vertices = vertices;
     }
-    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) : base(layer: collisionLayer, debug: debugged, offset: offset)
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, string collisionLayer, bool debugged = false) :
+        base(layer: collisionLayer, debug: debugged, offset: offset)
     {
         this.vertices = vertices;
     }
-    public PolygonCollider(List<PointF> vertices, Vector2 offset, bool debugged = false) : base(debug: debugged, offset: offset)
+    public PolygonCollider(List<PointF> vertices, Vector2 offset, bool debugged = false) :
+        base(debug: debugged, offset: offset)
     {
         this.vertices = vertices;
     }
@@ -54,14 +57,17 @@ public class PolygonCollider : Collider
         foreach (PointF relativePoint in vertices)
         {
             // Rotate the relative point clockwise
-            float rotatedX = (relativePoint.X * MathF.Cos(rotationAngle)) - (relativePoint.Y * MathF.Sin(rotationAngle));
-            float rotatedY = (relativePoint.X * MathF.Sin(rotationAngle)) + (relativePoint.Y * MathF.Cos(rotationAngle));
+            float rotatedX =
+                (relativePoint.X * MathF.Cos(rotationAngle)) - (relativePoint.Y * MathF.Sin(rotationAngle));
+            float rotatedY =
+                (relativePoint.X * MathF.Sin(rotationAngle)) + (relativePoint.Y * MathF.Cos(rotationAngle));
 
             result.Add(new PointF(rotatedX, rotatedY));
         }
 
         return result;
     }
+
     private List<PointF> translateVertices(List<PointF> vertices)
     {
         List<PointF> result = new List<PointF>();
@@ -120,7 +126,8 @@ public class PolygonCollider : Collider
             velocityVector.Normalize();
         }
         AABB combinedAABB = collisionSystem.GetCombinedAABBRegion(GetAABB(), other.GetAABB());
-        float vectorScale = new Vector2(combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
+        float vectorScale = new Vector2(
+            combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
         Vector2 forwardVector = velocityVector * vectorScale;
         Vector2 reverseVector = new Vector2(forwardVector.X * -1, forwardVector.Y * -1);
 
@@ -133,7 +140,8 @@ public class PolygonCollider : Collider
         bool velocityTowardsCollision = false;
         float distToOtherObj = new Vector2(otherPosition.X - position.X, otherPosition.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
-        float distAfterMove = new Vector2(otherPosition.X - posAfterMove.X, otherPosition.Y - posAfterMove.Y).Length();
+        float distAfterMove = new Vector2(
+            otherPosition.X - posAfterMove.X, otherPosition.Y - posAfterMove.Y).Length();
         if (distAfterMove < distToOtherObj)
         {
             velocityTowardsCollision = true;
@@ -188,7 +196,9 @@ public class PolygonCollider : Collider
                 //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y); }
+                if (!velocityTowardsCollision) {
+                    collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
+                }
                 collisionVectors.Add(collisionVector);
             }
         }
@@ -243,7 +253,9 @@ public class PolygonCollider : Collider
                 //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y); }
+                if (!velocityTowardsCollision) {
+                    collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
+                }
                 collisionVectors.Add(collisionVector);
 
             }
@@ -279,7 +291,8 @@ public class PolygonCollider : Collider
             velocityVector.Normalize();
         }
         AABB combinedAABB = collisionSystem.GetCombinedAABBRegion(GetAABB(), other.GetAABB());
-        float vectorScale = new Vector2(combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
+        float vectorScale = new Vector2(
+            combinedAABB.max.X - combinedAABB.min.X, combinedAABB.max.Y - combinedAABB.min.Y).Length();
         Vector2 forwardVector = velocityVector * vectorScale;
         Vector2 reverseVector = new Vector2(forwardVector.X * -1, forwardVector.Y * -1);
 
@@ -288,7 +301,8 @@ public class PolygonCollider : Collider
         bool velocityTowardsCollision = false;
         float distToOtherObj = new Vector2(otherPosition.X - position.X, otherPosition.Y - position.Y).Length();
         Vector2 posAfterMove = position + velocityVector;
-        float distAfterMove = new Vector2(otherPosition.X - posAfterMove.X, otherPosition.Y - posAfterMove.Y).Length();
+        float distAfterMove = new Vector2(
+            otherPosition.X - posAfterMove.X, otherPosition.Y - posAfterMove.Y).Length();
         if (distAfterMove < distToOtherObj)
         {
             velocityTowardsCollision = true;
@@ -319,13 +333,18 @@ public class PolygonCollider : Collider
             if (collisionSystem.PointIsInAABB(intersections[0], overlapRegion))
             {
                 Vector2 collisionVector = new Vector2(vertex.X - intersections[0].X, vertex.Y - intersections[0].Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y); }
+                if (!velocityTowardsCollision) {
+                    collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y);
+                }
                 collisionVectors.Add(collisionVector);
             }
             else
             {
-                Vector2 collisionVector = new Vector2(vertex.X - intersections[1].X, vertex.Y - intersections[1].Y);
-                if (!velocityTowardsCollision) { collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y); }
+                Vector2 collisionVector = new Vector2(
+                    vertex.X - intersections[1].X, vertex.Y - intersections[1].Y);
+                if (!velocityTowardsCollision) {
+                    collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y);
+                }
                 collisionVectors.Add(collisionVector);
             }
         }
@@ -376,7 +395,8 @@ public class PolygonCollider : Collider
                 continue;
             }
 
-            Vector2 centreToIntersection = new Vector2(intersectionPoint.X - circCenter.X, intersectionPoint.Y - circCenter.Y);
+            Vector2 centreToIntersection = new Vector2(
+                intersectionPoint.X - circCenter.X, intersectionPoint.Y - circCenter.Y);
             if (!velocityTowardsCollision)
             {
                 centreToIntersection = new Vector2(
@@ -433,7 +453,8 @@ public class PolygonCollider : Collider
         //normal to static, resolve only normal
         else if (other.IsStatic())
         {
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             SetNodePosition(resolvedPosition);
         }
         //Normal to normal, resolve both
@@ -455,7 +476,8 @@ public class PolygonCollider : Collider
                 otherColliderResolution *= otherColliderResolutionScale;
             }
 
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             Vector2 otherColliderResolvedPosition = new Vector2(
                 otherCurrentPos.X + otherColliderResolution.X,
                 otherCurrentPos.Y + otherColliderResolution.Y);
@@ -479,7 +501,8 @@ public class PolygonCollider : Collider
         //normal to static, resolve only normal
         else if (circCollider.IsStatic())
         {
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             SetNodePosition(resolvedPosition);
         }
         //Normal to normal, resolve both
@@ -501,7 +524,8 @@ public class PolygonCollider : Collider
                 otherColliderResolution *= otherColliderResolutionScale;
             }
 
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             Vector2 otherColliderResolvedPosition = new Vector2(
                 otherCurrentPos.X + otherColliderResolution.X,
                 otherCurrentPos.Y + otherColliderResolution.Y);
@@ -636,7 +660,9 @@ public class PolygonCollider : Collider
         //float angle = (float)Math.Atan2(edge.Y, edge.X);
 
         //// Draw a 1-pixel wide rectangle for the line
-        //spriteBatch.Draw(pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(edge.Length(), lineThickness), SpriteEffects.None, 0);
-        Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(start, end, color, DebugShape.LINE));
+        //spriteBatch.Draw(pixelTexture, start, null, color,
+        //          angle, Vector2.Zero, new Vector2(edge.Length(), lineThickness), SpriteEffects.None, 0);
+        Game.Services.GetService<IPebbleRendererService>().drawDebug(
+            new DebugDrawable(start, end, color, DebugShape.LINE));
     }
 }

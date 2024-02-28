@@ -85,7 +85,9 @@ public class Light : Behaviour
         return coneEdges;
     }
 
-    private void calculateThetas()// do I want to handle spotlights and pointlights as the same thing or create separate lighting shaders for each as a slight optimization?
+    // do I want to handle spotlights and pointlights as the same thing or
+    // create separate lighting shaders for each as a slight optimization?
+    private void calculateThetas()
     {
         coneEdges.X = (float)Math.Sin(rotation);
         coneEdges.Y = (float)Math.Cos(rotation);

@@ -25,7 +25,12 @@ public class AnimatedSprite : Sprite
     private int index = 0;
 
     private int ssCellRes;
-    public AnimatedSprite(Vector2 offset, float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) : base(rotation, scale, diffuse, normal, roughness, layer, material, isShadowCaster, isLit)
+    public AnimatedSprite(
+        Vector2 offset, float rotation, Vector2 scale,
+        Texture2D diffuse, Texture2D? normal, Texture2D? roughness,
+        int layer = 0, int material = 0,
+        bool isShadowCaster = true, bool isLit = true) :
+        base(rotation, scale, diffuse, normal, roughness, layer, material, isShadowCaster, isLit)
     {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
@@ -44,7 +49,12 @@ public class AnimatedSprite : Sprite
         ssCellRes = (int)MathF.Floor(textures[0].Width / ssSize);
     }
 
-    public AnimatedSprite(float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true) : base(rotation, scale, diffuse, normal, roughness, layer, material, isShadowCaster, isLit)
+    public AnimatedSprite(
+        float rotation, Vector2 scale,
+        Texture2D diffuse, Texture2D? normal, Texture2D? roughness,
+        int layer = 0, int material = 0,
+        bool isShadowCaster = true, bool isLit = true) :
+        base(rotation, scale, diffuse, normal, roughness, layer, material, isShadowCaster, isLit)
     {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
@@ -96,18 +106,33 @@ public class AnimatedSprite : Sprite
     public override void draw(SpriteBatch spriteBatch, int textureIndex)
     {
         this.frameCount++;
+
         if (textureIndex == 4)
         {
-            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes), Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
+            spriteBatch.Draw(
+                textures[0],
+                new Rectangle((position + offset).ToPoint(), size),
+                new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes),
+                Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
             return;
         }
+
         if (textures[textureIndex] != null)
         {
-            spriteBatch.Draw(textures[textureIndex], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes), Color.White, rotation, offsetToCenter, SpriteEffects.None, 0);
+            spriteBatch.Draw(
+                textures[textureIndex],
+                new Rectangle((position + offset).ToPoint(), size),
+                new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes),
+                Color.White, rotation, offsetToCenter, SpriteEffects.None, 0);
         }
         else
         {
-            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes), Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//use diffuse as mask when no normal/diffuse texture provided
+            //use diffuse as mask when no normal/diffuse texture provided
+            spriteBatch.Draw(
+                textures[0],
+                new Rectangle((position + offset).ToPoint(), size),
+                new Rectangle((index % ssSize) * ssCellRes, (index / ssSize) * ssCellRes, ssCellRes, ssCellRes),
+                Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);
         }
 
         if (frameCount > updateThreshhold)
@@ -130,8 +155,4 @@ public class AnimatedSprite : Sprite
     {
         Game.Services.GetService<IPebbleRendererService>().removeSprite(this);
     }
-
-
-
 }
-

@@ -403,7 +403,8 @@ public class CollisionSystem : GameComponent, ICollisionSystem
                 }
                 //otherwise, add it to our found intersection points
                 foundIntersectionPoints.Add(intersectionPoint);
-                foundIntersectionPointNormals.Add(colliderLine.GetNormal().GetNormalAsDirection(intersectionPoint, origin));
+                foundIntersectionPointNormals.Add(
+                    colliderLine.GetNormal().GetNormalAsDirection(intersectionPoint, origin));
             }
 
             //add the closest found intersection point to intersection points

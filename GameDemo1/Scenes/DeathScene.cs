@@ -26,8 +26,10 @@ public class DeathScene : Scene
         gameOver.SetLocalPosition(550, 300);
         restart.SetLocalPosition(550, 400);
 
-        UIElement gameOverUI = new UIElement("Game Over!", Game.Content.Load<SpriteFont>("Graphics/CRTFont"), Color.Red, 2);
-        UIElement restartUI = new UIElement("Press R \n to restart.", Game.Content.Load<SpriteFont>("Graphics/CRTFont"), Color.Red, 2);
+        UIElement gameOverUI = new UIElement(
+            "Game Over!", Game.Content.Load<SpriteFont>("Graphics/CRTFont"), Color.Red, 2);
+        UIElement restartUI = new UIElement(
+            "Press R \n to restart.", Game.Content.Load<SpriteFont>("Graphics/CRTFont"), Color.Red, 2);
         DeathSceneController controller = new DeathSceneController();
 
         Game.Services.GetService<ISceneControllerService>().AddBehaviour(gameOver, gameOverUI);

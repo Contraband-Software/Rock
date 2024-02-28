@@ -3,6 +3,7 @@ root = true
 [{**/Doxyfile,**/LICENSE,**/*.md,**/*.sln}]
 generated_code = true
 ij_formatter_enabled = false
+insert_final_newline = false
 
 [*]
 charset = utf-8
@@ -222,6 +223,9 @@ ij_yaml_spaces_within_brackets = true
 [*.{yaml,yml,json,manifest,csproj,nuspec,sln}]
 indent_size = 2
 tab_width = 2
+
+[*.{json,csproj,nuspec,Config}]
+insert_final_newline = false
 
 [*.sln]
 max_line_length = 400

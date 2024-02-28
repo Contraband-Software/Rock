@@ -29,11 +29,15 @@ public class CircleCollider : Collider
         this.radius = radius;
     }
 
-    public CircleCollider(float radius, string collisionLayer, bool debugged = false) : base(collisionLayer, debugged)
+    public CircleCollider(
+        float radius, string collisionLayer, bool debugged = false) :
+        base(collisionLayer, debugged)
     {
         this.radius = radius;
     }
-    public CircleCollider(float radius, Vector2 offset, string collisionLayer, bool debugged = false) : base(offset, collisionLayer, debugged)
+    public CircleCollider(
+        float radius, Vector2 offset, string collisionLayer, bool debugged = false) :
+        base(offset, collisionLayer, debugged)
     {
         this.radius = radius;
     }
@@ -45,7 +49,8 @@ public class CircleCollider : Collider
     public override void DrawDebug()
     {
         Vector2 pos = GetGlobalColliderPosition();
-        Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(pos, this.GetRadius(), Color.Lime));
+        Game.Services.GetService<IPebbleRendererService>().drawDebug(
+            new DebugDrawable(pos, this.GetRadius(), Color.Lime));
     }
 
     /// <summary>
@@ -107,7 +112,8 @@ public class CircleCollider : Collider
         //normal to static, resolve only normal
         else if (other.IsStatic())
         {
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             SetNodePosition(resolvedPosition);
         }
         //Normal to normal, resolve both
@@ -129,7 +135,8 @@ public class CircleCollider : Collider
                 otherColliderResolution *= otherColliderResolutionScale;
             }
 
-            Vector2 resolvedPosition = new Vector2(currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
+            Vector2 resolvedPosition = new Vector2(
+                currentPos.X + thisColliderResolution.X, currentPos.Y + thisColliderResolution.Y);
             Vector2 otherColliderResolvedPosition = new Vector2(
                 otherCurrentPos.X + otherColliderResolution.X,
                 otherCurrentPos.Y + otherColliderResolution.Y);

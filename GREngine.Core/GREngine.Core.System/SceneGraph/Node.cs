@@ -36,10 +36,12 @@ public abstract class Node : AbstractGameObject
     }
     public Matrix GetGlobalTransform()
     {
-        //                                         |-  Statement null if there is no parent.
-        //                                         |                       |-  Null-coalescing operator makes these parenthesis
-        //                                         V                       V   evaluate to the identity matrix if the above is null.
+        //         Null-coalescing operator makes these parenthesis  ------|
+        //         evaluate to the identity matrix if the above is null.   V
         return this.transform.matrix * (this.parent?.GetGlobalTransform() ?? Matrix.Identity);
+        //                                         A
+        //                                         |
+        //                                         |-  Statement null if there is no parent.
     }
 
     #region HELPERS

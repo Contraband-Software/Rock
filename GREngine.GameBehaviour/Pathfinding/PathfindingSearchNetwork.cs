@@ -20,7 +20,9 @@ public class PathfindingNetworkNode : Core.System.Node
     {
         Name = "PathFindingNetwork";
 
-        Network = game.Services.GetService<ISceneControllerService>().InitBehaviour(this, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
+        Network =
+        game.Services.GetService<ISceneControllerService>().InitBehaviour(
+            this, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
     }
 }
 
@@ -45,7 +47,8 @@ public class PathfindingSearchNetwork : Behaviour
         // this.Node.GetBehaviour<>()
     }
 
-    public void BuildNetwork(int width, int height, string makePointLayer, string cullPointLayer, float resolution)
+    public void BuildNetwork(
+        int width, int height, string makePointLayer, string cullPointLayer, float resolution)
     {
         ICollisionSystem col = this.Game.Services.GetService<ICollisionSystem>();
 
@@ -69,7 +72,8 @@ public class PathfindingSearchNetwork : Behaviour
                     break;
 
                 Vector2 globalPosition = new Vector2();
-                (Node.GetGlobalPosition() + new Vector3(new PointF(x, y).ToVector2(), 0)).Deconstruct(out globalPosition.X, out globalPosition.Y, out _);
+                (Node.GetGlobalPosition() + new Vector3(new PointF(x, y).ToVector2(), 0)).Deconstruct(
+                    out globalPosition.X, out globalPosition.Y, out _);
 
                 this.nodeNetwork[vy, vx] = new Node(
                     new Point(x, y),
@@ -89,7 +93,8 @@ public class PathfindingSearchNetwork : Behaviour
         {
             foreach (var node in this.nodeNetwork)
             {
-                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(GetGlobalNodePosition(node.Location).ToVector2(), 6,
+                this.Game.Services.GetService<IPebbleRendererService>().drawDebug(
+                    new DebugDrawable(GetGlobalNodePosition(node.Location).ToVector2(), 6,
                     node.IsWalkable ? Color.Aqua : Color.Crimson));
             }
         }
@@ -107,7 +112,8 @@ public class PathfindingSearchNetwork : Behaviour
             foreach (var p in LastPath)
             {
                 this.Game.Services.GetService<IPebbleRendererService>().drawDebug(new DebugDrawable(
-                    GetGlobalNodePosition(lastPoint).ToVector2(), GetGlobalNodePosition(p).ToVector2(), Color.Crimson, DebugShape.LINE));
+                    GetGlobalNodePosition(lastPoint).ToVector2(), GetGlobalNodePosition(p).ToVector2(),
+                    Color.Crimson, DebugShape.LINE));
                 lastPoint = p;
             }
         }
@@ -116,7 +122,8 @@ public class PathfindingSearchNetwork : Behaviour
     private Point GetGlobalNodePosition(Point localPosition)
     {
         Vector2 gPosition = new Vector2();
-        (Node.GetGlobalPosition() + new Vector3(localPosition.X, localPosition.Y, 0)).Deconstruct(out gPosition.X, out gPosition.Y, out _);
+        (Node.GetGlobalPosition() + new Vector3(localPosition.X, localPosition.Y, 0)).Deconstruct(
+            out gPosition.X, out gPosition.Y, out _);
         return new Point((int)gPosition.X, (int)gPosition.Y);
     }
 
@@ -133,7 +140,8 @@ public class PathfindingSearchNetwork : Behaviour
 #if DEBUG
         if (this.nodeNetwork == null)
         {
-            throw new InvalidOperationException("Pathfinding error: trying to navigate when network has not been built!");
+            throw new InvalidOperationException(
+                "Pathfinding error: trying to navigate when network has not been built!");
         }
 #endif
 

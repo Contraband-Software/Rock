@@ -101,7 +101,8 @@ public class PlayerController : Behaviour
         //laser.offset = new Vector2(0, 100);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
 
-        Sprite playerSprite = new Sprite(0, new Vector2(0.2f), Game.Content.Load<Texture2D>("Graphics/PlayerDiffuse"), null, null, 6, 3);
+        Sprite playerSprite = new Sprite(0, new Vector2(0.2f),
+                                         Game.Content.Load<Texture2D>("Graphics/PlayerDiffuse"), null, null, 6, 3);
         this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, playerSprite);
     }
 
@@ -145,7 +146,8 @@ public class PlayerController : Behaviour
         isGrounded = false;
 
         this.Game.Services.GetService<IPebbleRendererService>()
-            .lookAt(this.Node.GetGlobalPosition2D());// - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
+            .lookAt(this.Node.GetGlobalPosition2D());
+        // - new Vector2(this.Game.GraphicsDevice.Viewport.Width / 2, this.Game.GraphicsDevice.Viewport.Height / 2));
 
         // this.Game.Services.GetService<ISceneControllerService>().DebugPrintGraph();
     }
@@ -210,7 +212,8 @@ public class PlayerController : Behaviour
         Texture2D allWhite = new Texture2D(Game.GraphicsDevice, 1, 1);
         allWhite.SetData(new Color[] { Color.White });
 
-        //Sprite laser = new Sprite(MathF.Sin(direction.X), new Vector2(4000, currentGunPower * 2), allWhite, null, null,6,4);
+        //Sprite laser = new Sprite(MathF.Sin(direction.X),
+        //              new Vector2(4000, currentGunPower * 2), allWhite, null, null,6,4);
         //this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
         laser.rotation = MathF.Atan2(direction.Y, direction.X);
         laser.setScale(new Vector2(3000, currentGunPower * 2));

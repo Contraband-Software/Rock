@@ -220,7 +220,8 @@ public abstract class Collider : Behaviour
     public void SolveCollisions(List<Collider> others)
     {
         SetAABBOverlapping(true);
-        Vector2 velocityVector = new Vector2(GetLocalNodePosition().X - GetOldPosition().X, GetLocalNodePosition().Y - GetOldPosition().Y);
+        Vector2 velocityVector = new Vector2(
+            GetLocalNodePosition().X - GetOldPosition().X, GetLocalNodePosition().Y - GetOldPosition().Y);
         foreach (Collider other in others)
         {
             other.SetAABBOverlapping(true);

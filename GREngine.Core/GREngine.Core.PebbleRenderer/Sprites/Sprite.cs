@@ -34,7 +34,11 @@ public class Sprite : Behaviour
 
     public int material = 0;
     public int layer = 0;
-    public Sprite(Vector2 offset, float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true)
+    public Sprite(
+        Vector2 offset, float rotation, Vector2 scale,
+        Texture2D diffuse, Texture2D? normal, Texture2D? roughness,
+        int layer = 0, int material = 0,
+        bool isShadowCaster = true, bool isLit = true)
     {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
@@ -51,7 +55,11 @@ public class Sprite : Behaviour
         calculateSize();
     }
 
-    public Sprite(float rotation, Vector2 scale, Texture2D diffuse, Texture2D? normal, Texture2D? roughness, int layer = 0, int material = 0, bool isShadowCaster = true, bool isLit = true)
+    public Sprite(
+        float rotation, Vector2 scale,
+        Texture2D diffuse, Texture2D? normal, Texture2D? roughness,
+        int layer = 0, int material = 0,
+        bool isShadowCaster = true, bool isLit = true)
     {
 
         this.textures = new Texture2D[3] { diffuse, normal, roughness };
@@ -110,16 +118,25 @@ public class Sprite : Behaviour
     {
         if (textureIndex == 4)
         {
-            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), null, Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
+            spriteBatch.Draw(
+                textures[0],
+                new Rectangle((position + offset).ToPoint(), size),
+                null, Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//draw occluder mask
             return;
         }
         if (textures[textureIndex] != null)
         {
-            spriteBatch.Draw(textures[textureIndex], new Rectangle((position + offset).ToPoint(), size), null, Color.White, rotation, offsetToCenter, SpriteEffects.None, 0);
+            spriteBatch.Draw(
+                textures[textureIndex],
+                new Rectangle((position + offset).ToPoint(), size),
+                null, Color.White, rotation, offsetToCenter, SpriteEffects.None, 0);
         }
         else
         {
-            spriteBatch.Draw(textures[0], new Rectangle((position + offset).ToPoint(), size), null, Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);//use diffuse as mask when no normal/diffuse texture provided
+            //use diffuse as mask when no normal/diffuse texture provided
+            spriteBatch.Draw(
+                textures[0], new Rectangle((position + offset).ToPoint(), size),
+                null, Color.Black, rotation, offsetToCenter, SpriteEffects.None, 0);
         }
     }
 
