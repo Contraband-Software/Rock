@@ -4,7 +4,7 @@
   "IgnoreDefaults": false,
   "SpacesAftertabs": false,
   "NoColor": false,
-  "exclude": ["LICENSE", "Doxyfile", "\\.md$"],
+  "exclude": ["LICENSE", "Doxyfile", "\\.md$", "\\.sln$"],
   "AllowedContentTypes": [],
   "PassedFiles": [],
   "Disable": {

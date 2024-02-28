@@ -7,7 +7,7 @@
     <Company>Contraband Software</Company>
     <!--    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
     <Description>Small scale multiplatform engine used by Contraband Software</Description>
-    
+
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>GREngine</RootNamespace>
   </PropertyGroup>

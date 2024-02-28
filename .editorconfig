@@ -220,19 +220,17 @@ ij_yaml_space_before_colon = false
 ij_yaml_spaces_within_braces = true
 ij_yaml_spaces_within_brackets = true
 
-[*.{yaml,yml,json,manifest,csproj,nuspec,sln}]
+[*.{yaml,yml,json,csproj}]
 indent_size = 2
 tab_width = 2
 
-[*.{json,csproj,nuspec,Config}]
+[*.{manifest,nuspec,sln}]
+indent_size = unset
+tab_width = unset
+max_line_length = unset
 insert_final_newline = unset
 
-[.nuspec]
-max_line_length = unset
-
-[*.sln]
-max_line_length = 400
-indent_style = tab
+[*.{json,csproj,Config}]
 insert_final_newline = unset
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cppm,cs,cshtml,cu,cuh,cxx,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,shader,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
