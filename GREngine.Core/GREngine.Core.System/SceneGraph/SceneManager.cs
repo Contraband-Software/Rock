@@ -70,9 +70,11 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 {
                     IEnumerable<Attribute> attrs = b.GetType().GetTypeInfo().GetCustomAttributes();
 
-                    Attribute? loadOrderAttribute = attrs.ToList().FindLast(a => a.GetType() == typeof(GRExecutionOrderAttribute));
+                    Attribute? loadOrderAttribute = attrs.ToList().FindLast(
+                        a => a.GetType() == typeof(GRExecutionOrderAttribute));
 
-                    int loadOrder = loadOrderAttribute == null ? 0 : ((GRExecutionOrderAttribute)loadOrderAttribute).LoadOrder;
+                    int loadOrder = loadOrderAttribute ==
+                    null ? 0 : ((GRExecutionOrderAttribute)loadOrderAttribute).LoadOrder;
                     b.Initialize(loadOrder, this, this.Game);
                 });
 
@@ -87,8 +89,10 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
                 enabledBehaviours.ForEach(b => b.OnStart());
 
                 // Add initialized and started scripts to regular update loop (in load order)
-                // activeBehaviours = Algorithms.Sort.MergeSortedLists(this.activeBehaviours, enabledBehaviours) as List<Behaviour>
-                //                    ?? throw new InvalidOperationException("Active behaviour sorting resulted in a null list!");
+                // activeBehaviours = Algorithms.Sort.MergeSortedLists(
+                //                      this.activeBehaviours, enabledBehaviours) as List<Behaviour>
+                //                    ?? throw new InvalidOperationException(
+                //                                  "Active behaviour sorting resulted in a null list!");
 
                 enabledBehaviours.ForEach(b => this.activeBehaviours.Add(b));
                 this.initializationSet.RemoveWhere(b => b.Initialized);
@@ -286,7 +290,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
     void ISceneControllerService.BehaviourEnabledChanged(Behaviour behaviour, bool status)
     { // [DONE]
         // add or remove behaviour from active list
-        // if add, check if initialized, if so, add to and resort active list, otherwise add to initialization list instead
+        // if add, check if initialized, if so, add to and
+        // resort active list, otherwise add to initialization list instead
         if (status)
         {
             if (behaviour.Initialized)
@@ -521,7 +526,8 @@ public sealed class SceneManager : GameComponent, ISceneControllerService
         Vector3 position = node.GetLocalPosition();
         string format = "{0,10:####0.000}";
         PrintLn(
-            "[" + String.Format(format, position.X) + ", " + String.Format(format, position.Y) + ", " + String.Format(format, position.Z) + "]" +
+            "[" + String.Format(format, position.X) + ", " +
+            String.Format(format, position.Y) + ", " + String.Format(format, position.Z) + "]" +
             space +
             node.GetType().Name + ": '" + node.Name + "' -> [" + components + "]" + " <" + tags + ">"
         );

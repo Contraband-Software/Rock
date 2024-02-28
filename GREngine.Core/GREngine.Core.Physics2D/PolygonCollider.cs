@@ -196,6 +196,7 @@ public class PolygonCollider : Collider
                 //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
+
                 if (!velocityTowardsCollision) {
                     collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
                 }
@@ -253,6 +254,7 @@ public class PolygonCollider : Collider
                 //otherwise, find vector from vertex to intersection point
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
+
                 if (!velocityTowardsCollision) {
                     collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
                 }
@@ -330,9 +332,11 @@ public class PolygonCollider : Collider
             PointF p1 = new PointF(vertex.X + directionVector.X, vertex.Y + directionVector.Y);
             PointF p2 = new PointF(vertex.X + (directionVector.X * -1), vertex.Y + (directionVector.Y * -1));
             List<PointF> intersections = collisionSystem.LineIntersectsCircle(p1, p2, circCenter, circRadius);
+
             if (collisionSystem.PointIsInAABB(intersections[0], overlapRegion))
             {
                 Vector2 collisionVector = new Vector2(vertex.X - intersections[0].X, vertex.Y - intersections[0].Y);
+
                 if (!velocityTowardsCollision) {
                     collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y);
                 }
@@ -342,6 +346,7 @@ public class PolygonCollider : Collider
             {
                 Vector2 collisionVector = new Vector2(
                     vertex.X - intersections[1].X, vertex.Y - intersections[1].Y);
+
                 if (!velocityTowardsCollision) {
                     collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y);
                 }
