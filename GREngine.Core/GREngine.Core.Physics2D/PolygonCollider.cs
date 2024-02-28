@@ -197,7 +197,8 @@ public class PolygonCollider : Collider
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
 
-                if (!velocityTowardsCollision) {
+                if (!velocityTowardsCollision)
+                {
                     collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
                 }
                 collisionVectors.Add(collisionVector);
@@ -255,7 +256,8 @@ public class PolygonCollider : Collider
                 // and add it to list of possible motion vectors
                 Vector2 collisionVector = new Vector2(intersectionPoint.X - v.X, intersectionPoint.Y - v.Y);
 
-                if (!velocityTowardsCollision) {
+                if (!velocityTowardsCollision)
+                {
                     collisionVector = new Vector2(v.X - intersectionPoint.X, v.Y - intersectionPoint.Y);
                 }
                 collisionVectors.Add(collisionVector);
@@ -337,7 +339,8 @@ public class PolygonCollider : Collider
             {
                 Vector2 collisionVector = new Vector2(vertex.X - intersections[0].X, vertex.Y - intersections[0].Y);
 
-                if (!velocityTowardsCollision) {
+                if (!velocityTowardsCollision)
+                {
                     collisionVector = new Vector2(intersections[0].X - vertex.X, intersections[0].Y - vertex.Y);
                 }
                 collisionVectors.Add(collisionVector);
@@ -347,7 +350,8 @@ public class PolygonCollider : Collider
                 Vector2 collisionVector = new Vector2(
                     vertex.X - intersections[1].X, vertex.Y - intersections[1].Y);
 
-                if (!velocityTowardsCollision) {
+                if (!velocityTowardsCollision)
+                {
                     collisionVector = new Vector2(intersections[1].X - vertex.X, intersections[1].Y - vertex.Y);
                 }
                 collisionVectors.Add(collisionVector);
