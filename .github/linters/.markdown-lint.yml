@@ -19,8 +19,9 @@
 # Rules by id #
 ###############
 MD004: false                  # Unordered list style
-MD007: false
-#  indent: 2                   # Unordered list indentation
+MD007:
+  indent: 2                   # Unordered list indentation
+  start_indented: true
 MD013:
   line_length: 400            # Line length 80 is far too short
 MD026:
