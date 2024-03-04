@@ -4,7 +4,8 @@
     "allowlist": {
     "allow": [
         "repo",
-        "MacOS"
+        "MacOS",
+        "Smartphone"
       ]
     }
   },
