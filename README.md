@@ -8,6 +8,8 @@ From [Contraband Software](https://contraband.software).
 
 ![Green glowing rock outline over black background](./Documentation/Images/rockIcon.png)
 
+[To contribute](./CONTRIBUTING.md)
+
 ## Prerequisites
 
 This is a .NET Core 6.0 MonoGame Game Library, so you will need both of those things installed. Also Git.
