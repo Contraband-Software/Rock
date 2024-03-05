@@ -13,7 +13,9 @@ Fixes # (repo issue number if applicable)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
 
+<!-- markdownlint-disable -->
 # Testing
+<!-- markdownlint-restore -->
 
 **Test/Development Configuration**:
 * OS:
