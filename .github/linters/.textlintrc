@@ -5,7 +5,11 @@
     "allow": [
         "repo",
         "MacOS",
-        "Smartphone"
+        "Smartphone",
+        "end-user",
+        "Bug fix",
+        "e-mail",
+        "website"
       ]
     }
   },
