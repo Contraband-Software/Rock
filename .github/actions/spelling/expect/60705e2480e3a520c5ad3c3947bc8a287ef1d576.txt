@@ -1,0 +1,8 @@
+Avalonia
+avaloniaui
+LGPLv
+linted
+mozilla
+sgttaseff
+socio
+website
