@@ -17,10 +17,8 @@ the broad strokes:
    this is to just contribute to this repository with your changes.
    Your own codebase need not be governed by this license.
 
- - You cannot statically link this library with non-LGPL (or LGPL
-   compatible) code.
+ - You cannot statically link this library with non-LGPL compatible code.
    ( .NET Core dynamically links libraries by default anyway. )
-
 
 
 * This is not a legal substitute for the full license terms.  *
