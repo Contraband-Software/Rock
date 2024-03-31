@@ -52,9 +52,9 @@ All complaints will be reviewed and investigated promptly and fairly.
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.
 
-## Violations
+## Violation Consequences
 
-**Consequence**: A temporary ban from interacting with the repository.
+A temporary ban from interacting with the repository.
 Repeat offenses may lead to a permanent ban.
 
 ## Attribution
