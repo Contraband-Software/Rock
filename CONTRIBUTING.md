@@ -14,6 +14,8 @@ If you open a pull request, please try to be active and reachable by the maintai
 
 - Your code MUST be entirely your own, or governed by a license compatible with `LGPLv3` (which also means you need to accredit the original source and supply their license in a comment).
 
+- Do try to add Doxygen comments where necessary to all code you write.
+
 ## What we are looking for
 
 ### Documentation
