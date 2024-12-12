@@ -32,10 +32,17 @@ jobs:
           fetch-depth: 0
 
       - name: Super-linter
-        uses: super-linter/super-linter@v6.3.0  # x-release-please-version
+        uses: super-linter/super-linter@v7.2.0  # x-release-please-version
         env:
           IGNORE_GITIGNORED_FILES: true
           IGNORE_GENERATED_FILES: true
+          VALIDATE_CSS_PRETTIER: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_JSONC_PRETTIER: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_DOTNET_SLN_FORMAT_STYLE: false
+          FILTER_REGEX_EXCLUDE: (^|/)Content/
 #          VALIDATE_EDITORCONFIG: true
 #          VALIDATE_GITHUB_ACTIONS: false
 #          VALIDATE_ALL_CODEBASE: false

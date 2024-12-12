@@ -1,0 +1,3 @@
+{
+  "ignore": ["**/.config/**", "GameDemo1/**", "Testing/**", "GREngine.Core/GREngine.Core.Physics2D/**", "GREngine.Core/GREngine.Core.PebbleRenderer/**"]
+}
