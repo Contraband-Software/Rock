@@ -91,12 +91,12 @@ public sealed class NodePointer
     // ReSharper disable UnusedMember.Global
     public NodePointer GetParent() => this.Get().Parent!.AsWeakReference();
 
-    public IReadOnlyList<NodePointer> GetChildren()
-        => this.Get().Children.Select(c => c.AsWeakReference()).ToList().AsReadOnly();
+    public ReadOnlySpan<NodePointer> GetChildren()
+        => new(this.Get().Children.Select(c => c.AsWeakReference()).ToArray());
     #endregion
 
     #region BEHAVIOUR_API
-    public IEnumerable<Behaviour> GetAllBehaviours() => this.Get().GetAllBehaviours<Behaviour>();
+    public ReadOnlySpan<Behaviour> GetAllBehaviours() => new(this.Get().Behaviours.ToArray());
 
     /// <summary>
     /// This will return the FIRST component of type T

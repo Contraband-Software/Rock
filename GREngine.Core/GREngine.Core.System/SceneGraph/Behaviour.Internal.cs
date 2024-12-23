@@ -1,6 +1,11 @@
 namespace GREngine.Core.System;
 
+using Debug;
+using global::System;
+using global::System.Buffers.Binary;
 using global::System.Collections.Generic;
+using global::System.Globalization;
+using global::System.Linq;
 using Microsoft.Xna.Framework;
 
 /// <summary>
@@ -13,18 +18,19 @@ public abstract partial class Behaviour
 
     private ISceneManager sceneManager;
 
-    private int loadOrder;
+    internal int LoadOrder { get; set; }
     internal bool Initialized { get; private set; }
 
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly uint InstanceId;
     // ReSharper restore MemberCanBePrivate.Global
 
-    internal void Initialize(int lo, SceneManager sm, Game ga)
+    internal void Initialize(int loadOrder, SceneManager sm, Game gm)
     {
-        this.loadOrder = lo;
+        this.LoadOrder = loadOrder;
+
         this.sceneManager = sm;
-        this.Game = ga;
+        this.Game = gm;
         this.Initialized = true;
     }
 
@@ -42,11 +48,11 @@ public abstract partial class Behaviour
         {
             // If other is not a valid object reference, this instance is greater.
             if (b == null) return 1;
+            if (a == null) return -1;
 
-            float thisHash = float.Parse(a.loadOrder.ToString()  + '.' + a.InstanceId);
-            float otherHash = float.Parse(b.loadOrder.ToString() + '.' + b.InstanceId);
-
-            return thisHash.CompareTo(otherHash);
+            int loadOrderCmp = a.LoadOrder.CompareTo(b.LoadOrder);
+            int instanceOrderCmp = a.InstanceId.CompareTo(b.InstanceId);
+            return loadOrderCmp * (int)initializations + instanceOrderCmp;
         }
     }
 }

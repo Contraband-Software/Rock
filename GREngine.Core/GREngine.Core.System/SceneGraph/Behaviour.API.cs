@@ -1,6 +1,5 @@
 namespace GREngine.Core.System;
 
-using global::System;
 using Microsoft.Xna.Framework;
 
 public abstract partial class Behaviour : AbstractGameObject

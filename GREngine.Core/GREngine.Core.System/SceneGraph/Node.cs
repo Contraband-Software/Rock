@@ -52,11 +52,6 @@ internal sealed class Node : AbstractGameObject
     #endregion
 
     #region BEHAVIOUR_API
-    public IEnumerable<Behaviour> GetAllBehaviours()
-    {
-        return this.Behaviours;
-    }
-
     /// <summary>
     /// This will return the FIRST component of type T
     /// </summary>

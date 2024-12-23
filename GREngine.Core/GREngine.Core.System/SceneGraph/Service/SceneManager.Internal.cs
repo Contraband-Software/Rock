@@ -1,7 +1,6 @@
 namespace GREngine.Core.System;
 
 using global::System;
-using global::System.Collections;
 using global::System.Collections.Generic;
 using global::System.Linq;
 using global::System.Reflection;
@@ -15,8 +14,8 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     private Scene? activeScene;
     private Scene? nextScene;
 
-    private readonly Node rootNode = new();
-    private readonly Node persistentNode = new();
+    private readonly Node rootNode = new("Root");
+    private readonly Node persistentNode = new("Persistent");
 
     private readonly SortedSet<Behaviour> activeBehaviours =
         new(loadOrderComparer);
@@ -53,7 +52,8 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
 
             // ReSharper disable once MergeConditionalExpression
             int loadOrder = loadOrderAttribute ==
-                            null ? 0 : ((GRExecutionOrderAttribute)loadOrderAttribute).LoadOrder;
+                              null ? 0 : ((GRExecutionOrderAttribute)loadOrderAttribute).LoadOrder;
+
             b.Initialize(loadOrder, this, this.Game);
             this.initializationSet.Remove(b);
         });
@@ -308,7 +308,11 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
             space += "   ";
 
         string components = "";
-        node.GetAllBehaviours().ToList().ForEach(c => { components += c.GetType().Name + ":" + c.Name + ", "; });
+        node.GetAllBehaviours().ToArray().ToList().ForEach(c => { components += c.GetType().Name + ":" + c.Name + "{" + c.LoadOrder + "}, "; });
+
+        var x = node.GetAllBehaviours();
+        if (x.Length > 0)
+            x.ToArray().SetValue(null, 0);
 
         string tags = "";
         node.Get().Tags.ToList().ForEach(c => { tags += c + ","; });
@@ -322,7 +326,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
             node.GetType().Name + ": '" + node.Get().Name + "' -> [" + components + "]" + " <" + tags + ">"
         );
 
-        IEnumerable<NodePointer> g = node.GetChildren();
+        IEnumerable<NodePointer> g = node.GetChildren().ToArray();
         foreach (NodePointer child in g.ToList())
             PrintChildren(child, depth);
     }

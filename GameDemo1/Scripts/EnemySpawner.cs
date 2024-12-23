@@ -52,7 +52,7 @@ public class EnemySpawner : Behaviour
 
         Random r = new Random();
 
-        if (this.Node.GetChildren().ToList().Count < maxEnemies)
+        if (this.Node.GetChildren().Length < maxEnemies)
         {
             if (gameTime.TotalGameTime.Milliseconds % 200 == 0)
             {
