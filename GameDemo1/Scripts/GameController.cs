@@ -5,13 +5,13 @@ using GREngine.Core.System;
 [GRExecutionOrder(20)]
 public class GameController : Behaviour
 {
-    private ISceneControllerService sc;
+    private ISceneManager sc;
 
     private PlayerController pc;
 
     protected override void OnStart()
     {
-        sc = this.Game.Services.GetService<ISceneControllerService>();
+        sc = this.Game.Services.GetService<ISceneManager>();
         InitGame();
     }
 

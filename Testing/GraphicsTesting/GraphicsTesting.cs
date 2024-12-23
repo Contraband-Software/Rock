@@ -40,7 +40,7 @@ public class GraphicsTesting : Game
     {
         // TODO: Add your initialization logic here
         this.Components.Add(sceneManager);
-        this.Services.AddService(typeof(ISceneControllerService), sceneManager);
+        this.Services.AddService(typeof(ISceneManager), sceneManager);
 
         this.Components.Add(re);
         this.Services.AddService(typeof(IPebbleRendererService), re);

@@ -15,7 +15,7 @@ using Scripts;
 
 public class GameScene : Scene
 {
-    private ISceneControllerService sceneController;
+    private ISceneManager sceneController;
     private IPebbleRendererService rendererService;
 
     internal const string MAP_FLOOR_COLLISION_LAYER = "mapFloor";

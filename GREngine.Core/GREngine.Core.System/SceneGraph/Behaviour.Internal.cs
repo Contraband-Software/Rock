@@ -11,7 +11,7 @@ public abstract partial class Behaviour : AbstractGameObject, IComparable<Behavi
 {
     private static uint instances;
 
-    private ISceneControllerService sceneManager;
+    private ISceneManager sceneManager;
 
     private int loadOrder;
     internal bool Initialized { get; private set; }

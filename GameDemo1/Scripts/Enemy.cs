@@ -43,14 +43,14 @@ public class Enemy : Behaviour
 
     protected override void OnStart()
     {
-        ISceneControllerService sc = this.Game.Services.GetService<ISceneControllerService>();
+        ISceneManager sc = this.Game.Services.GetService<ISceneManager>();
         this.player = sc
             .FindNodeWithTag("Player")!
             .GetBehaviour<PlayerController>() as PlayerController;
 
         // PrintLn(Node.GetLocalPosition2D().ToString());
 
-        collider = this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(
+        collider = this.Game.Services.GetService<ISceneManager>().AddBehaviour(
             this.Node, new CircleCollider(50, true)) as CircleCollider;
         this.collider.SetStatic(true);
         this.collider.SetTrigger(true);

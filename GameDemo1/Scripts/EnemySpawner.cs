@@ -19,7 +19,7 @@ public class EnemySpawner : Behaviour
 
     #region STATE
     private IPebbleRendererService render;
-    private ISceneControllerService sceneManager;
+    private ISceneManager sceneManager;
 
     public float Radius { get; private set; }
     public bool PlayerTouchingFrame { get; private set; } = false;
@@ -39,7 +39,7 @@ public class EnemySpawner : Behaviour
     protected override void OnStart()
     {
         render = this.Game.Services.GetService<IPebbleRendererService>();
-        sceneManager = this.Game.Services.GetService<ISceneControllerService>();
+        sceneManager = this.Game.Services.GetService<ISceneManager>();
 
 
         this.SpawnRandomEnemy();

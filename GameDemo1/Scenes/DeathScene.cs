@@ -18,7 +18,7 @@ public class DeathScene : Scene
 
     protected override void OnLoad(SceneManager sceneManager)
     {
-        ISceneControllerService s = Game.Services.GetService<ISceneControllerService>();
+        ISceneManager s = Game.Services.GetService<ISceneManager>();
 
         NodePointer root = s.AddNodeAtRoot("DeathSceneContainer");
 

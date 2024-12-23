@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 using static Debug.Out;
 
-public sealed partial class SceneManager(Game game) : GameComponent(game), ISceneControllerService
+public sealed partial class SceneManager(Game game) : GameComponent(game), ISceneManager
 {
     private readonly List<Scene> scenes = [];
     private Scene? activeScene;
@@ -115,7 +115,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         if (!b.Initialized) this.initializationSet.Add(b);
     }
 
-    void ISceneControllerService.BehaviourEnabledChanged(Behaviour behaviour, bool enabled)
+    void ISceneManager.BehaviourEnabledChanged(Behaviour behaviour, bool enabled)
     { // [DONE]
         // add or remove behaviour from active list
         // if add, check if initialized, if so, add to and
@@ -133,11 +133,11 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         }
     }
 
-    void ISceneControllerService.NodeEnabledChanged(ReadOnlySpan<Behaviour> behaviours, bool status)
+    void ISceneManager.NodeEnabledChanged(ReadOnlySpan<Behaviour> behaviours, bool status)
     {
         // BehaviourEnabledChanged but with list
         foreach (Behaviour t in behaviours)
-            ((ISceneControllerService)this).BehaviourEnabledChanged(t, status);
+            ((ISceneManager)this).BehaviourEnabledChanged(t, status);
     }
 
     private static void DeInitBehaviour(Behaviour behaviour)

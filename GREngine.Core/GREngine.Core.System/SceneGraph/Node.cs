@@ -30,7 +30,7 @@ internal sealed class Node : AbstractGameObject
         base.SetEnabled(state);
 
         ReadOnlySpan<Behaviour> readOnlyBehaviours = this.behaviours.ToArray();
-        ((ISceneControllerService)sceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
+        ((ISceneManager)sceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
     }
 
     #region TRANSFORM_API

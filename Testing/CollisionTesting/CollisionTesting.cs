@@ -44,7 +44,7 @@ namespace Testing.CollisionTesting
 
 
             // TODO: Add your initialization logic here
-            Services.AddService(typeof(ISceneControllerService), sceneManager);
+            Services.AddService(typeof(ISceneManager), sceneManager);
             Services.AddService(typeof(ICollisionSystem), collisionSystem);
             Services.AddService(typeof(IPebbleRendererService), pebbleRenderer);
             Components.Add(sceneManager);

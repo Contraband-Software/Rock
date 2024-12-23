@@ -97,11 +97,11 @@ public class PlayerController : Behaviour
 
         laser = new Sprite(0, new Vector2(0, currentGunPower * 2), allWhite, null, null, 6, 4);
         //laser.offset = new Vector2(0, 100);
-        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, laser);
+        this.Game.Services.GetService<ISceneManager>().AddBehaviour(Node, laser);
 
         Sprite playerSprite = new Sprite(0, new Vector2(0.2f),
                                         Game.Content.Load<Texture2D>("Graphics/PlayerDiffuse"), null, null, 6, 3);
-        this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(Node, playerSprite);
+        this.Game.Services.GetService<ISceneManager>().AddBehaviour(Node, playerSprite);
     }
 
     protected override void OnUpdate(GameTime gameTime)
@@ -154,7 +154,7 @@ public class PlayerController : Behaviour
     private void GameOver()
     {
         PlayerDiedEvent?.Invoke();
-        this.Game.Services.GetService<ISceneControllerService>().ChangeScene("DeathScene");
+        this.Game.Services.GetService<ISceneManager>().ChangeScene("DeathScene");
         // PrintLn("Game Over");
     }
 

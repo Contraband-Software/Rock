@@ -4,7 +4,7 @@ using global::System;
 using global::System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-public interface ISceneControllerService
+public interface ISceneManager
 {
     // ReSharper disable UnusedMemberInSuper.Global UnusedMember.Global
     public void DebugPrintGraph();

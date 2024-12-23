@@ -34,7 +34,7 @@ public class App : Game
     protected override void Initialize()
     {
         this.Components.Add(sceneManager);
-        this.Services.AddService(typeof(ISceneControllerService), sceneManager);
+        this.Services.AddService(typeof(ISceneManager), sceneManager);
 
         this.Components.Add(renderManager);
         this.Services.AddService(typeof(IPebbleRendererService), renderManager);

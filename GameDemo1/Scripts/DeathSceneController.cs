@@ -21,7 +21,7 @@ public class DeathSceneController : Behaviour
 
         if (state.IsKeyDown(Keys.R))
         {
-            this.Game.Services.GetService<ISceneControllerService>().ChangeScene("GameScene");
+            this.Game.Services.GetService<ISceneManager>().ChangeScene("GameScene");
         }
 
     }
