@@ -1,5 +1,3 @@
-using NotImplementedException = System.NotImplementedException;
-
 namespace GREngine.Core.System;
 
 using global::System.Collections.Generic;
@@ -13,15 +11,17 @@ public abstract class AbstractGameObject
     public event EnabledChanged? EnabledChangedEvent;
     public bool Enabled { get; private set; } = true;
 
-    public string Name { get; internal protected set; } = "Generic Object";
+    public string Name { get; protected set; } = "Generic Object";
     internal protected readonly HashSet<string> Tags = new();
 
+    // ReSharper disable once MemberCanBeProtected.Global UnusedMemberHierarchy.Global
     public virtual void SetEnabled(bool state)
     {
         Enabled = state;
         this.EnabledChangedEvent?.Invoke(state);
     }
 
+    // ReSharper disable once UnusedMember.Global
     public bool HasTag(string tag)
     {
         return Tags.Contains(tag);

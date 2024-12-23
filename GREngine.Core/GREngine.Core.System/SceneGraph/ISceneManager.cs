@@ -6,23 +6,23 @@ using Microsoft.Xna.Framework;
 
 public interface ISceneControllerService
 {
+    // ReSharper disable UnusedMemberInSuper.Global UnusedMember.Global
     public void DebugPrintGraph();
 
-    public RootNode GetRootNode();
-    public RootNode GetPersistentNode();
+    public NodePointer GetRootNode();
+    public NodePointer GetPersistentNode();
 
     public void QueueSceneAction(Action<GameTime> action);
-    public Behaviour InitBehaviour(Node node, Behaviour behaviour);
-    public void AddBehaviour(Node node, Behaviour behaviour);
+    public Behaviour AddBehaviour(NodePointer node, Behaviour behaviour);
     public void RemoveBehaviour(Behaviour behaviour);
-    public void RemoveBehavioursWithTag(Node node, string tag);
-    public void AddNode(Node parent, Node node);
-    public void DestroyNode(Node node);
+    public void RemoveBehavioursWithTag(NodePointer node, string tag);
+    public NodePointer AddNode(NodePointer parent, string name);
+    public void DestroyNode(NodePointer node);
 
-    public Node? FindNodeWithTag(string tag);
-    public HashSet<Node> FindNodesWithTag(string tag);
-    public void AddNodeAtPersistent(Node node);
-    public void AddNodeAtRoot(Node node);
+    public NodePointer? FindNodeWithTag(string tag);
+    public HashSet<NodePointer> FindNodesWithTag(string tag);
+    public NodePointer AddNodeAtPersistent(string name);
+    public NodePointer AddNodeAtRoot(string name);
 
     public Scene? GetCurrentScene();
     public void AddScene(Scene scene);
@@ -31,4 +31,5 @@ public interface ISceneControllerService
 
     internal void BehaviourEnabledChanged(Behaviour behaviour, bool status);
     internal void NodeEnabledChanged(ReadOnlySpan<Behaviour> behaviours, bool status);
+    // ReSharper restore UnusedMemberInSuper.Global UnusedMember.Global
 }

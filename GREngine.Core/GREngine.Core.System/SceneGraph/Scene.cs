@@ -5,13 +5,13 @@ using Microsoft.Xna.Framework.Content;
 
 public abstract class Scene
 {
-    protected Game Game { get; private set; }
+    protected Game Game { get; private set; } = null!;
 
     public string Name { get; private set; }
 
-    internal protected ContentManager contentManager { get; private set; }
+    internal protected ContentManager ContentManager { get; private set; } = null!;
 
-    public Scene(string name)
+    protected Scene(string name)
     {
         Name = name;
     }
@@ -19,12 +19,14 @@ public abstract class Scene
     internal void Initialize(Game game)
     {
         this.Game = game;
-        this.contentManager = new ContentManager(this.Game.Services);
-        this.contentManager.RootDirectory = this.Game.Content.RootDirectory;
+        this.ContentManager = new ContentManager(this.Game.Services);
+        this.ContentManager.RootDirectory = this.Game.Content.RootDirectory;
     }
 
     #region USER_IMPLEMENTATION_API
+    // ReSharper disable VirtualMemberNeverOverridden.Global
     internal protected virtual void OnLoad(SceneManager sceneManager) { }
     internal protected virtual void OnUnload() { }
+    // ReSharper restore VirtualMemberNeverOverridden.Global
     #endregion
 }

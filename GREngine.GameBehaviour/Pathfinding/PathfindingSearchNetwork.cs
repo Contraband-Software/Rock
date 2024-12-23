@@ -11,20 +11,20 @@ using GREngine.Core.PebbleRenderer;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
 
-[GRETagWith("GREngine.GameBehaviour.Pathfinding.NodeNetwork")]
-public class PathfindingNetworkNode : Core.System.Node
-{
-    public PathfindingSearchNetwork Network { get; private set; }
-
-    public PathfindingNetworkNode(Game game)
-    {
-        Name = "PathFindingNetwork";
-
-        Network =
-        game.Services.GetService<ISceneControllerService>().InitBehaviour(
-            this, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
-    }
-}
+// [GRETagWith("GREngine.GameBehaviour.Pathfinding.NodeNetwork")]
+// public class PathfindingNetworkNode : Core.System.Node
+// {
+//     public PathfindingSearchNetwork Network { get; private set; }
+//
+//     public PathfindingNetworkNode(Game game)
+//     {
+//         Name = "PathFindingNetwork";
+//
+//         Network =
+//         game.Services.GetService<ISceneControllerService>().AddBehaviour(
+//             this, new PathfindingSearchNetwork()) as PathfindingSearchNetwork;
+//     }
+// }
 
 public class PathfindingSearchNetwork : Behaviour
 {

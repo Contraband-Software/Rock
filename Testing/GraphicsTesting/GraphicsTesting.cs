@@ -76,10 +76,10 @@ public class GraphicsTesting : Game
         Font = Content.Load<SpriteFont>("Graphics/DefaultFont");
         //PrintLn(Font.ToString());
 
-        Scene myScene = new GraphicsTestScene();
-        this.sceneManager.AddScene(myScene);
+        // Scene myScene = new GraphicsTestScene();
+        // this.sceneManager.AddScene(myScene);
 
-        this.sceneManager.ChangeScene("GraphicsTestScene");
+        // this.sceneManager.ChangeScene("GraphicsTestScene");
 
         // TODO: use this.Content to load your game content here
     }

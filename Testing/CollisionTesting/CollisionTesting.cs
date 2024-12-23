@@ -57,8 +57,8 @@ namespace Testing.CollisionTesting
         protected override void LoadContent()
         {
             pebbleRenderer.LoadShaders();
-            sceneManager.AddScene(new GeneralCollisionTesting());
-            sceneManager.ChangeScene("GeneralCollisionTesting");
+            // sceneManager.AddScene(new GeneralCollisionTesting());
+            // sceneManager.ChangeScene("GeneralCollisionTesting");
 
         }
         protected override void Update(GameTime gameTime)

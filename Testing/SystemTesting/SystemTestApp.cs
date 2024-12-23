@@ -48,10 +48,10 @@ public class SystemTestApp : Game
     {
         re.LoadShaders();
 
-        Scene myScene = new MyScene();
-        this.sceneManager.AddScene(myScene);
+        // Scene myScene = new MyScene();
+        // this.sceneManager.AddScene(myScene);
 
-        this.sceneManager.ChangeScene("MyScene");
+        // this.sceneManager.ChangeScene("MyScene");
     }
 
     private bool done = false;

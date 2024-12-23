@@ -5,35 +5,35 @@ using global::System.Collections.Generic;
 using global::System.Linq;
 using Microsoft.Xna.Framework;
 
-public abstract class Node : AbstractGameObject
+internal sealed class Node : AbstractGameObject
 {
-    internal Node? parent;
-    private Transform transform;
-    private SceneManager sceneManager;
+    internal SceneManager sceneManager = null!;
 
+    internal NodePointer parent;
+
+    // should be readonly list of nodepointers
     internal readonly List<Node> children = new();
     internal readonly List<Behaviour> behaviours = new();
 
-    protected Node()
+    internal Transform transform;
+
+    public static NodePointer New() => new NodePointer(new Node());
+
+    internal Node(string name = "Node")
     {
         Name = "Node";
         this.transform.matrix = Matrix.Identity;
     }
-    protected Node(string name)
+
+    public override void SetEnabled(bool state)
     {
-        Name = name;
-        this.transform.matrix = Matrix.Identity;
+        base.SetEnabled(state);
+
+        ReadOnlySpan<Behaviour> readOnlyBehaviours = this.behaviours.ToArray();
+        ((ISceneControllerService)sceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
     }
 
     #region TRANSFORM_API
-    public Matrix GetLocalTransform()
-    {
-        return this.transform.matrix;
-    }
-    public void SetLocalTransform(Matrix matrix)
-    {
-        this.transform.matrix = matrix;
-    }
     public Matrix GetGlobalTransform()
     {
         //         Null-coalescing operator makes these parenthesis  ------|
@@ -44,52 +44,23 @@ public abstract class Node : AbstractGameObject
         //                                         |-  Statement null if there is no parent.
     }
 
-    #region HELPERS
-    public Vector2 GetLocalPosition2D()
+    public Matrix GetLocalTransform()
     {
-        Vector2 pos = new Vector2();
-        this.GetLocalPosition().Deconstruct(out pos.X, out pos.Y, out _);
-        return pos;
+        return this.transform.matrix;
     }
-    public void SetLocalPosition(float x, float y)
-    {
-        this.SetLocalPosition(new Vector3(x, y, this.GetLocalPosition().Z));
-    }
-    public void SetLocalPosition(Vector3 localPosition)
-    {
-        Matrix matrix = this.GetLocalTransform();
-        matrix.Translation = localPosition;
-        this.SetLocalTransform(matrix);
-    }
-    public void SetLocalPosition(Vector2 localPosition)
-    {
-        this.SetLocalPosition(new Vector3(localPosition, 1));
-    }
-    public Vector3 GetLocalPosition()
-    {
-        return this.GetLocalTransform().Translation;
-    }
-    public Vector3 GetGlobalPosition()
-    {
-        return this.GetGlobalTransform().Translation;
-    }
-    public Vector2 GetGlobalPosition2D()
-    {
-        Vector2 pos = new Vector2();
-        this.GetGlobalTransform().Translation.Deconstruct(out pos.X, out pos.Y, out _);
-        return pos;
-    }
-    #endregion
+
     #endregion
 
     #region SCENE_API
-    public Node? GetParent()
+    // ReSharper disable UnusedMember.Global
+    internal NodePointer? GetParent()
     {
         return this.parent;
     }
-    public IEnumerable<Node> GetChildren()
+
+    internal IEnumerable<NodePointer> GetChildren()
     {
-        return this.children;
+        return this.children.Select(n => new NodePointer(n));
     }
     #endregion
 
@@ -98,17 +69,18 @@ public abstract class Node : AbstractGameObject
     {
         return this.behaviours;
     }
+
     /// <summary>
     /// This will return the FIRST component of type T
     /// </summary>
     /// <typeparam name="T">A Behaviour</typeparam>
     /// <returns></returns>
     // ReSharper disable once UnusedMember.Global
-    public Behaviour? GetBehaviour<T>() where T : Behaviour
+    internal Behaviour? GetBehaviour<T>() where T : Behaviour
     {
         return this.behaviours.FirstOrDefault(c =>
         {
-            for (var current = c.GetType(); current != null; current = current.BaseType)
+            for (Type? current = c.GetType(); current != null; current = current.BaseType)
             {
                 if (current == typeof(T))
                     return true;
@@ -122,17 +94,10 @@ public abstract class Node : AbstractGameObject
     /// </summary>
     /// <typeparam name="T">A Behaviour</typeparam>
     /// <returns></returns>
-    public IEnumerable<Behaviour> GetAllBehaviours<T>() where T : Behaviour
+    internal IEnumerable<Behaviour> GetAllBehaviours<T>() where T : Behaviour
     {
         return this.behaviours.Where(c => c.GetType() == typeof(T)).ToList();
     }
+    // ReSharper restore UnusedMember.Global
     #endregion
-
-    public override void SetEnabled(bool state)
-    {
-        base.SetEnabled(state);
-
-        ReadOnlySpan<Behaviour> readOnlyBehaviours = this.behaviours.ToArray();
-        ((ISceneControllerService)sceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
-    }
 }

@@ -6,10 +6,18 @@ using Microsoft.Xna.Framework;
 /// <summary>
 /// Represents a unit of logic within the scene graph
 /// </summary>
+// Attributes should be used to add behaviours: typeof(...), alternatively, custom nodes are made by functions, not inheritance
 public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
 {
-    private static uint Instances = 0;
+    // ReSharper disable InconsistentNaming
+
+    private static uint Instances;
+
+    // ReSharper disable MemberCanBePrivate.Global
     protected readonly uint InstanceID;
+    // ReSharper restore MemberCanBePrivate.Global
+
+    // ReSharper restore InconsistentNaming
 
     internal void Initialize(int lo, SceneManager sm, Game ga)
     {
@@ -19,12 +27,13 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
         this.Initialized = true;
     }
 
-    private SceneManager sceneManager;
-    internal int loadOrder = 0;
-    internal bool Initialized { get; private set; } = false;
+    private ISceneControllerService sceneManager;
+    private int loadOrder;
+    internal bool Initialized { get; private set; }
 
     internal protected Game Game { get; internal set; }
-    public Node? Node { get; internal set; }
+
+    public NodePointer? Node { get; internal set; }
 
 #pragma warning disable CS8618
     protected Behaviour()
@@ -35,6 +44,7 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
 #pragma warning restore CS8618
 
     #region USER_IMPLEMENTATION_API
+    // ReSharper disable MemberCanBeProtected.Global UnusedMemberHierarchy.Global UnusedParameter.Global
     internal protected virtual void OnAwake() { Name = "Behaviour"; }
     internal protected virtual void OnStart() { Name = "Behaviour"; }
 
@@ -42,13 +52,13 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
     internal protected virtual void OnFixedUpdate(GameTime gameTime) { }
 
     internal protected virtual void OnDestroy() { }
+    // ReSharper restore MemberCanBeProtected.Global UnusedMemberHierarchy.Global UnusedParameter.Global
     #endregion
 
     public override void SetEnabled(bool state)
     {
         base.SetEnabled(state);
-
-        ((ISceneControllerService)sceneManager).BehaviourEnabledChanged(this, state);
+        this.sceneManager.BehaviourEnabledChanged(this, state);
     }
 
     public int CompareTo(Behaviour? other)
