@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 // Attributes should be used to add behaviours: typeof(...), alternatively, custom nodes are made by functions, not inheritance
 public abstract partial class Behaviour
 {
-    private static uint instances;
+    private static uint initializations;
 
     private ISceneManager sceneManager;
 
@@ -32,7 +32,7 @@ public abstract partial class Behaviour
     protected Behaviour()
     {
         Name = "Behaviour";
-        this.InstanceId = ++instances;
+        this.InstanceId = ++initializations;
     }
 #pragma warning restore CS8618
 

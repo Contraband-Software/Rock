@@ -19,11 +19,13 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     private readonly Node persistentNode = new();
 
     private readonly SortedSet<Behaviour> activeBehaviours =
-        new(new Behaviour.LoadOrderComparer());
+        new(loadOrderComparer);
     private readonly HashSet<Behaviour> initializationSet = [];
     private readonly HashSet<Behaviour> disposeSet = [];
     private readonly HashSet<Action<GameTime>> lateUpdateQueue = [];
     private readonly Dictionary<string, HashSet<Node>> nodeTagIndex = new();
+
+    private readonly static Comparer<Behaviour> loadOrderComparer = new Behaviour.LoadOrderComparer();
 
     #region MAIN
     public override void Update(GameTime gameTime)
@@ -57,7 +59,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         });
 
         // uses CompareTo function of behaviour, which uses load order
-        initializationQueue.Sort(new Behaviour.LoadOrderComparer());
+        initializationQueue.Sort(loadOrderComparer);
 
         // Awake functions
         initializationQueue.ForEach(b => b.OnAwake());
