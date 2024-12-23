@@ -38,6 +38,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     private void InitializeBehaviours()
     {
         List<Behaviour> initializationQueue = this.initializationSet.ToList();
+
         // calculate load order for each behaviour [REFLECTION USED HERE]
         initializationQueue.ForEach(b =>
         {
@@ -50,6 +51,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
             int loadOrder = loadOrderAttribute ==
                             null ? 0 : ((GRExecutionOrderAttribute)loadOrderAttribute).LoadOrder;
             b.Initialize(loadOrder, this, this.Game);
+            this.initializationSet.Remove(b);
         });
 
         // uses CompareTo function of behaviour, which uses load order
@@ -59,17 +61,19 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         initializationQueue.ForEach(b => b.OnAwake());
 
         // run start functions for enabled behaviours (in load order)
-        List<Behaviour> enabledBehaviours = initializationQueue.FindAll(b => b.Enabled);
-        enabledBehaviours.ForEach(b => b.OnStart());
+        initializationQueue.FindAll(b => b.Enabled).ForEach(b =>
+        {
+            b.OnStart();
+
+            // automatically sorted to load order by data type
+            this.activeBehaviours.Add(b);
+        });
 
         // Add initialized and started scripts to regular update loop
         // activeBehaviours = Algorithms.Sort.MergeSortedLists(
         //                      this.activeBehaviours, enabledBehaviours) as List<Behaviour>
         //                    ?? throw new InvalidOperationException(
         //                                  "Active behaviour sorting resulted in a null list!");
-
-        enabledBehaviours.ForEach(b => this.activeBehaviours.Add(b));
-        this.initializationSet.RemoveWhere(b => b.Initialized);
     }
 
     private void UpdateActiveScene(GameTime gameTime)
