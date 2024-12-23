@@ -20,6 +20,7 @@ public sealed class NodePointer
         this.weakReference = new WeakReference<Node?>(gameObject);
     }
 
+    #region MEMORY
     internal Node Get() => this.weakReference.TryGetTarget(out Node? target) ? target :
         throw new InvalidOperationException("Node Pointer has no value!");
 
@@ -34,6 +35,7 @@ public sealed class NodePointer
     }
 
     internal void Dangle() => this.weakReference.SetTarget(null);
+    #endregion
 
     #region HELPERS
     public Vector2 GetLocalPosition2D()

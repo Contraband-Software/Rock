@@ -8,22 +8,20 @@ using Microsoft.Xna.Framework;
 
 using static Debug.Out;
 
-public sealed partial class SceneManager : GameComponent, ISceneControllerService
+public sealed partial class SceneManager(Game game) : GameComponent(game), ISceneControllerService
 {
-    private readonly List<Scene> scenes = new();
+    private readonly List<Scene> scenes = [];
     private Scene? activeScene;
     private Scene? nextScene;
 
     private readonly Node rootNode = new();
     private readonly Node persistentNode = new();
 
-    private readonly SortedSet<Behaviour> activeBehaviours = new();
-    private readonly HashSet<Behaviour> initializationSet = new();
-    private readonly HashSet<Behaviour> disposeSet = new();
-    private readonly HashSet<Action<GameTime>> lateUpdateQueue = new();
+    private readonly SortedSet<Behaviour> activeBehaviours = [];
+    private readonly HashSet<Behaviour> initializationSet = [];
+    private readonly HashSet<Behaviour> disposeSet = [];
+    private readonly HashSet<Action<GameTime>> lateUpdateQueue = [];
     private readonly Dictionary<string, HashSet<Node>> nodeTagIndex = new();
-
-    public SceneManager(Game game) : base(game) { }
 
     #region MAIN
     public override void Update(GameTime gameTime)
@@ -190,7 +188,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         }
         else
         {
-            this.nodeTagIndex.Add(tag, new HashSet<Node> { node });
+            this.nodeTagIndex.Add(tag, [node]);
         }
     }
 

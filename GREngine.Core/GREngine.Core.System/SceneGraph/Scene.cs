@@ -3,18 +3,13 @@ namespace GREngine.Core.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-public abstract class Scene
+public abstract class Scene(string name)
 {
     protected Game Game { get; private set; } = null!;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = name;
 
     internal protected ContentManager ContentManager { get; private set; } = null!;
-
-    protected Scene(string name)
-    {
-        Name = name;
-    }
 
     internal void Initialize(Game game)
     {
@@ -23,7 +18,8 @@ public abstract class Scene
         this.ContentManager.RootDirectory = this.Game.Content.RootDirectory;
     }
 
-    #region USER_IMPLEMENTATION_API
+    // this needs to be serialized (XML maybe, or yaml, or toml)
+    #region PROGRAMMABLE_API
     // ReSharper disable VirtualMemberNeverOverridden.Global
     internal protected virtual void OnLoad(SceneManager sceneManager) { }
     internal protected virtual void OnUnload() { }
