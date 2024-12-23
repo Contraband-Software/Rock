@@ -146,7 +146,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         behaviour.OnDestroy();
         // this.activeBehaviours.Remove(behaviour);
 #pragma warning disable // For a behaviour to be loaded at all, it must be attached to a Node
-        behaviour.Node.Get().behaviours.Remove(behaviour);
+        behaviour.Node.Get().Behaviours.Remove(behaviour);
 #pragma warning restore
         behaviour.Node.Dangle();
     }
@@ -168,11 +168,11 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     {
         while (true)
         {
-            if (node.parent == null)
+            if (node.Parent == null)
             {
                 return node;
             }
-            node = node.parent;
+            node = node.Parent;
         }
     }
 
@@ -250,7 +250,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
 #pragma warning restore
 
         // wipe ephemeral tree
-        this.rootNode.children.Clear();
+        this.rootNode.Children.Clear();
 
         // wipe scene data
         this.activeBehaviours.RemoveWhere(b =>

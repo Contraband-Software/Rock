@@ -29,8 +29,8 @@ public sealed class NodePointer
     /// </summary>
     public void Free()
     {
-        Node? obj = this.Get();
-        obj?.sceneManager.FreeNode(obj);
+        Node obj = this.Get();
+        obj.SceneManager.FreeNode(obj);
         this.weakReference.SetTarget(null);
     }
 
@@ -82,17 +82,17 @@ public sealed class NodePointer
     // ReSharper disable MemberCanBePrivate.Global
     public Matrix GetLocalTransform() => this.Get().GetLocalTransform();
 
-    public void SetLocalTransform(Matrix matrix) => this.Get().transform.matrix = matrix;
+    public void SetLocalTransform(Matrix matrix) => this.Get().Transform.matrix = matrix;
 
     public Matrix GetGlobalTransform() => this.Get().GetGlobalTransform();
     #endregion
 
     #region SCENE_API
     // ReSharper disable UnusedMember.Global
-    public NodePointer GetParent() => this.Get().parent.AsWeakReference();
+    public NodePointer GetParent() => this.Get().Parent!.AsWeakReference();
 
     public IReadOnlyList<NodePointer> GetChildren()
-        => this.Get().children.Select(c => c.AsWeakReference()).ToList().AsReadOnly();
+        => this.Get().Children.Select(c => c.AsWeakReference()).ToList().AsReadOnly();
     #endregion
 
     #region BEHAVIOUR_API

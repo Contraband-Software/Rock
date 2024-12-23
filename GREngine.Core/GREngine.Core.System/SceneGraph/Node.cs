@@ -7,30 +7,30 @@ using Microsoft.Xna.Framework;
 
 internal sealed class Node : AbstractGameObject
 {
-    internal SceneManager sceneManager = null!;
+    internal SceneManager SceneManager = null!;
 
-    internal Node parent;
+    internal Node? Parent;
 
-    // should be readonly list of nodepointers
-    internal readonly List<Node> children = new();
-    internal readonly List<Behaviour> behaviours = new();
+    // should be readonly list of node pointers
+    internal readonly List<Node> Children = [];
+    internal readonly List<Behaviour> Behaviours = [];
 
-    internal Transform transform;
+    internal Transform Transform;
 
     internal NodePointer AsWeakReference() => new(this);
 
     internal Node(string name = "Node")
     {
         Name = name;
-        this.transform.matrix = Matrix.Identity;
+        this.Transform.matrix = Matrix.Identity;
     }
 
     public override void SetEnabled(bool state)
     {
         base.SetEnabled(state);
 
-        ReadOnlySpan<Behaviour> readOnlyBehaviours = this.behaviours.ToArray();
-        ((ISceneManager)sceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
+        ReadOnlySpan<Behaviour> readOnlyBehaviours = this.Behaviours.ToArray();
+        ((ISceneManager)this.SceneManager).NodeEnabledChanged(readOnlyBehaviours, state);
     }
 
     #region TRANSFORM_API
@@ -38,7 +38,7 @@ internal sealed class Node : AbstractGameObject
     {
         //         Null-coalescing operator makes these parenthesis  ------|
         //         evaluate to the identity matrix if the above is null.   V
-        return this.transform.matrix * (this.parent?.GetGlobalTransform() ?? Matrix.Identity);
+        return this.Transform.matrix * (this.Parent?.GetGlobalTransform() ?? Matrix.Identity);
         //                                         A
         //                                         |
         //                                         |-  Statement null if there is no parent.
@@ -46,7 +46,7 @@ internal sealed class Node : AbstractGameObject
 
     public Matrix GetLocalTransform()
     {
-        return this.transform.matrix;
+        return this.Transform.matrix;
     }
 
     #endregion
@@ -54,7 +54,7 @@ internal sealed class Node : AbstractGameObject
     #region BEHAVIOUR_API
     public IEnumerable<Behaviour> GetAllBehaviours()
     {
-        return this.behaviours;
+        return this.Behaviours;
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ internal sealed class Node : AbstractGameObject
     // ReSharper disable once UnusedMember.Global
     internal Behaviour? GetBehaviour<T>() where T : Behaviour
     {
-        return this.behaviours.FirstOrDefault(c =>
+        return this.Behaviours.FirstOrDefault(c =>
         {
             for (Type? current = c.GetType(); current != null; current = current.BaseType)
             {
@@ -83,7 +83,7 @@ internal sealed class Node : AbstractGameObject
     /// <returns></returns>
     internal IEnumerable<Behaviour> GetAllBehaviours<T>() where T : Behaviour
     {
-        return this.behaviours.Where(c => c.GetType() == typeof(T)).ToList();
+        return this.Behaviours.Where(c => c.GetType() == typeof(T)).ToList();
     }
     // ReSharper restore UnusedMember.Global
     #endregion

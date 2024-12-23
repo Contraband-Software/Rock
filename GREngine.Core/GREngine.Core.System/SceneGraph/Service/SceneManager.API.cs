@@ -88,8 +88,6 @@ public sealed partial class SceneManager
     /// <summary>
     /// If any node behaviours are disabled, they are not initialized
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="parent"></param>
     public NodePointer AddNode(NodePointer parentNode, string name)
     {
         // add node to parent's child list
@@ -128,9 +126,9 @@ public sealed partial class SceneManager
     // also nodes should have weak refs to each other
     private NodePointer LoadNode(Node parent, Node node)
     {
-        node.parent = parent;
-        parent.children.Add(node);
-        node.sceneManager = this;
+        node.Parent = parent;
+        parent.Children.Add(node);
+        node.SceneManager = this;
 
         IEnumerable<Attribute> attrs = node.GetType().GetTypeInfo().GetCustomAttributes();
         Attribute? tagsAttribute = attrs.ToList().FindLast(a => a.GetType() == typeof(GRETagWithAttribute));
@@ -139,7 +137,7 @@ public sealed partial class SceneManager
 
         node.Tags.ToList().ForEach(t => AppendTagIndex(t, node));
 
-        node.behaviours.ForEach(b =>
+        node.Behaviours.ForEach(b =>
         {
             BootstrapBehaviour(b, node);
         });
@@ -163,25 +161,25 @@ public sealed partial class SceneManager
         // delete node and sub tree
         // garbage collect
 
-        node.parent.children.Remove(node);
-        node.parent = null!;
+        node.Parent!.Children.Remove(node);
+        node.Parent = null!;
 
         TraverseGraphNodes(node,
             n =>
             {
                 // PrintLn(n.Tags.ToList().Count.ToString());
                 n.Tags.ToList().ForEach(t => RemoveTagIndex(t, node));
-                n.behaviours.FindAll(b => b.Initialized).ForEach(b =>
+                n.Behaviours.FindAll(b => b.Initialized).ForEach(b =>
                 {
                     this.activeBehaviours.Remove(b);
                     this.disposeSet.Add(b);
                 });
-                n.behaviours.ForEach(b => this.initializationSet.Remove(b));
-                return n.children;
+                n.Behaviours.ForEach(b => this.initializationSet.Remove(b));
+                return n.Children;
             });
     }
 
-    public NodePointer? FindNodeWithTag(string tag)
+    public NodePointer FindNodeWithTag(string tag)
     {
 #if DEBUG
         if (!this.nodeTagIndex.ContainsKey(tag))
@@ -192,8 +190,8 @@ public sealed partial class SceneManager
 
         return new NodePointer(
                 (this.nodeTagIndex[tag].Count == 0
-                    ? null : this.nodeTagIndex[tag].First()
-                )!
+                    ? throw new InvalidOperationException("Empty tag list") : this.nodeTagIndex[tag].First()
+                )
             );
     }
 
@@ -228,13 +226,13 @@ public sealed partial class SceneManager
         // add reference to node's behaviour list
         // if enabled, add behaviour to initialization list
 #if DEBUG
-        if (node.Get().behaviours.Contains(behaviour))
+        if (node.Get().Behaviours.Contains(behaviour))
         {
             throw new ArgumentException("This Behaviour has already been added to this Node");
         }
 #endif
 
-        node.Get().behaviours.Add(behaviour);
+        node.Get().Behaviours.Add(behaviour);
         BootstrapBehaviour(behaviour, node.Get());
         return behaviour;
     }
@@ -253,7 +251,7 @@ public sealed partial class SceneManager
     {
         // RemoveBehaviour but with tag
 
-        foreach (Behaviour b in node.Get()!.behaviours.Where(behaviour => behaviour.Tags.Contains(tag)))
+        foreach (Behaviour b in node.Get().Behaviours.Where(behaviour => behaviour.Tags.Contains(tag)))
         {
             RemoveBehaviour(b);
         }

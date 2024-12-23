@@ -1,13 +1,12 @@
 namespace GREngine.Core.System;
 
-using global::System;
 using Microsoft.Xna.Framework;
 
 /// <summary>
 /// Represents a unit of logic within the scene graph
 /// </summary>
 // Attributes should be used to add behaviours: typeof(...), alternatively, custom nodes are made by functions, not inheritance
-public abstract partial class Behaviour : AbstractGameObject, IComparable<Behaviour>
+public abstract partial class Behaviour
 {
     private static uint instances;
 
