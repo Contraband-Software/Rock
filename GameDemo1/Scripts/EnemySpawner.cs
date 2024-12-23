@@ -71,9 +71,8 @@ public class EnemySpawner : Behaviour
         Vector2 position = Vector.AngleToVector(angle) * (this.Radius - 30);
 
         Enemy e = new Enemy(this);
-        GenericNode enemyNode = new GenericNode("EnemyNode");
+        NodePointer enemyNode = sceneManager.AddNode(this.Node!, "EnemyNode");
         enemyNode.SetLocalPosition(position);
-        sceneManager.AddNode(this.Node, enemyNode);
         sceneManager.AddBehaviour(enemyNode, e);
 
         Sprite enemyrender = new AnimatedSprite(0, new Vector2(0.25f),

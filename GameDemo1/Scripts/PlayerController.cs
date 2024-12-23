@@ -16,10 +16,6 @@ using System.Collections.Generic;
 using GameDemo1.Scenes;
 using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
-
-[GRETagWith("Player")]
-public class Player : Node { }
-
 [GRExecutionOrder(10)]
 public class PlayerController : Behaviour
 {
@@ -51,6 +47,8 @@ public class PlayerController : Behaviour
     private float currentGunCooldown = 0;
     private float facingDirection = 0;
     private float maxFallTime = 1;
+
+    private bool dead;
 
     private float Size
     {
@@ -138,9 +136,10 @@ public class PlayerController : Behaviour
         {
             currentFallTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
 
-            if (currentFallTime > this.maxFallTime)
+            if (currentFallTime > this.maxFallTime && !dead)
             {
                 GameOver();
+                dead = true;
             }
         }
         isGrounded = false;
@@ -170,7 +169,7 @@ public class PlayerController : Behaviour
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>
         {
-            GameScene.enemyCollisionLayer
+            GameScene.ENEMY_COLLISION_LAYER
         };
         PointF origin = new PointF(Node.GetGlobalPosition().X, Node.GetGlobalPosition().Y);
 

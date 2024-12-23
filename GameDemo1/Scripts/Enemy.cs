@@ -50,32 +50,29 @@ public class Enemy : Behaviour
 
         // PrintLn(Node.GetLocalPosition2D().ToString());
 
-        collider = this.Game.Services.GetService<ISceneControllerService>().InitBehaviour(
+        collider = this.Game.Services.GetService<ISceneControllerService>().AddBehaviour(
             this.Node, new CircleCollider(50, true)) as CircleCollider;
         this.collider.SetStatic(true);
         this.collider.SetTrigger(true);
-        this.collider.SetLayer(GameScene.enemyCollisionLayer);
+        this.collider.SetLayer(GameScene.ENEMY_COLLISION_LAYER);
         this.collider.SetAllowedCollisionLayers(
             new List<string>() {
-                GameScene.mapFloorCollisionLayer,
-                GameScene.enemyCollisionLayer,
-                GameScene.mapWallCollisionLayer,
-                GameScene.playerCollisionLayer
+                GameScene.MAP_FLOOR_COLLISION_LAYER,
+                GameScene.ENEMY_COLLISION_LAYER,
+                GameScene.MAP_WALL_COLLISION_LAYER,
+                GameScene.PLAYER_COLLISION_LAYER
             });
 
         this.collider.OnTriggerEnter += with =>
         {
-            if (with.GetLayer() == GameScene.mapFloorCollisionLayer)
-            {
+            if (with.GetLayer() == GameScene.MAP_FLOOR_COLLISION_LAYER)
                 this.isGrounded = 0;
-            }
-            if (with.GetLayer() == GameScene.playerCollisionLayer)
-            {
-                Node playerNode = this.player.Node;
-                if (playerNode != null)
-                    ((CircleCollider)playerNode.GetBehaviour<CircleCollider>()).SetVelocity(
-                        Vector.SafeNormalize(this.GetPlayerDirection()) * this.hitStrength);
-            }
+
+            if (with.GetLayer() != GameScene.PLAYER_COLLISION_LAYER) return;
+
+            NodePointer playerNode = this.player.Node;
+            ((CircleCollider)playerNode?.GetBehaviour<CircleCollider>())?.SetVelocity(
+                Vector.SafeNormalize(this.GetPlayerDirection()) * this.hitStrength);
         };
     }
 

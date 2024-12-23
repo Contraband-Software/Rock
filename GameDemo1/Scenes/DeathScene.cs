@@ -18,10 +18,12 @@ public class DeathScene : Scene
 
     protected override void OnLoad(SceneManager sceneManager)
     {
-        GenericNode root = new GenericNode();
-        GenericNode gameOver = new GenericNode("gameOver");
-        GenericNode restart = new GenericNode("restart");
+        ISceneControllerService s = Game.Services.GetService<ISceneControllerService>();
 
+        NodePointer root = s.AddNodeAtRoot("DeathSceneContainer");
+
+        NodePointer gameOver = s.AddNode(root, "gameOver");
+        NodePointer restart = s.AddNode(root, "restart");
 
         gameOver.SetLocalPosition(550, 300);
         restart.SetLocalPosition(550, 400);
@@ -32,14 +34,8 @@ public class DeathScene : Scene
             "Press R \n to restart.", Game.Content.Load<SpriteFont>("Graphics/CRTFont"), Color.Red, 2);
         DeathSceneController controller = new DeathSceneController();
 
-        Game.Services.GetService<ISceneControllerService>().AddBehaviour(gameOver, gameOverUI);
-        Game.Services.GetService<ISceneControllerService>().AddBehaviour(gameOver, controller);
-        Game.Services.GetService<ISceneControllerService>().AddBehaviour(restart, restartUI);
-
-
-        Game.Services.GetService<ISceneControllerService>().AddNodeAtRoot(root);
-        Game.Services.GetService<ISceneControllerService>().AddNode(root, gameOver);
-        Game.Services.GetService<ISceneControllerService>().AddNode(root, restart);
-
+        s.AddBehaviour(gameOver, gameOverUI);
+        s.AddBehaviour(gameOver, controller);
+        s.AddBehaviour(restart, restartUI);
     }
 }
