@@ -3,7 +3,7 @@ namespace GREngine.Core.System;
 using global::System;
 using Microsoft.Xna.Framework;
 
-public abstract partial class Behaviour : AbstractGameObject, IComparable<Behaviour>
+public abstract partial class Behaviour : AbstractGameObject
 {
     #region PROPERTIES
     public NodePointer Node { get; internal set; }

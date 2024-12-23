@@ -1,6 +1,7 @@
 namespace GREngine.Core.System;
 
 using global::System;
+using global::System.Collections;
 using global::System.Collections.Generic;
 using global::System.Linq;
 using global::System.Reflection;
@@ -17,7 +18,8 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     private readonly Node rootNode = new();
     private readonly Node persistentNode = new();
 
-    private readonly SortedSet<Behaviour> activeBehaviours = [];
+    private readonly SortedSet<Behaviour> activeBehaviours =
+        new(new Behaviour.LoadOrderComparer());
     private readonly HashSet<Behaviour> initializationSet = [];
     private readonly HashSet<Behaviour> disposeSet = [];
     private readonly HashSet<Action<GameTime>> lateUpdateQueue = [];
@@ -55,7 +57,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         });
 
         // uses CompareTo function of behaviour, which uses load order
-        initializationQueue.Sort();
+        initializationQueue.Sort(new Behaviour.LoadOrderComparer());
 
         // Awake functions
         initializationQueue.ForEach(b => b.OnAwake());

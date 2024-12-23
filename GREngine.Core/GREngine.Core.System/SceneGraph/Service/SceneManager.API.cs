@@ -198,13 +198,13 @@ public sealed partial class SceneManager
     public HashSet<NodePointer> FindNodesWithTag(string tag)
     {
 #if DEBUG
-        if (!this.nodeTagIndex.ContainsKey(tag))
+        if (!this.nodeTagIndex.TryGetValue(tag, out HashSet<Node>? value))
         {
             throw new ArgumentOutOfRangeException("Tag does not exist: " + tag);
         }
 #endif
 
-        return nodeTagIndex[tag].Select(n => new NodePointer(n)).ToHashSet();
+        return value.Select(n => new NodePointer(n)).ToHashSet();
     }
     #endregion
 

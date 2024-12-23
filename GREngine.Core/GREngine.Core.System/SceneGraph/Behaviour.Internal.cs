@@ -1,5 +1,6 @@
 namespace GREngine.Core.System;
 
+using global::System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 /// <summary>
@@ -35,14 +36,17 @@ public abstract partial class Behaviour
     }
 #pragma warning restore CS8618
 
-    public int CompareTo(Behaviour? other)
+    internal class LoadOrderComparer : Comparer<Behaviour>
     {
-        // If other is not a valid object reference, this instance is greater.
-        if (other == null) return 1;
+        public override int Compare(Behaviour? a, Behaviour? b)
+        {
+            // If other is not a valid object reference, this instance is greater.
+            if (b == null) return 1;
 
-        float thisHash = float.Parse(this.loadOrder.ToString() + '.' + this.InstanceId);
-        float otherHash = float.Parse(other.loadOrder.ToString() + '.' + other.InstanceId);
+            float thisHash = float.Parse(a.loadOrder.ToString()  + '.' + a.InstanceId);
+            float otherHash = float.Parse(b.loadOrder.ToString() + '.' + b.InstanceId);
 
-        return thisHash.CompareTo(otherHash);
+            return thisHash.CompareTo(otherHash);
+        }
     }
 }

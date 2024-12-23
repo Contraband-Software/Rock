@@ -12,7 +12,7 @@ public abstract class AbstractGameObject
     public bool Enabled { get; private set; } = true;
 
     public string Name { get; protected set; } = "Generic Object";
-    internal protected readonly HashSet<string> Tags = new();
+    internal protected readonly HashSet<string> Tags = [];
 
     // ReSharper disable once MemberCanBeProtected.Global UnusedMemberHierarchy.Global
     public virtual void SetEnabled(bool state)
