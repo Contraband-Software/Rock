@@ -33,7 +33,7 @@ public abstract class Behaviour : AbstractGameObject, IComparable<Behaviour>
 
     internal protected Game Game { get; internal set; }
 
-    public NodePointer? Node { get; internal set; }
+    public NodePointer Node { get; internal set; }
 
 #pragma warning disable CS8618
     protected Behaviour()

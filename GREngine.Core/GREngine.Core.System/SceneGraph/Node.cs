@@ -9,7 +9,7 @@ internal sealed class Node : AbstractGameObject
 {
     internal SceneManager sceneManager = null!;
 
-    internal NodePointer parent;
+    internal Node parent;
 
     // should be readonly list of nodepointers
     internal readonly List<Node> children = new();
@@ -17,7 +17,7 @@ internal sealed class Node : AbstractGameObject
 
     internal Transform transform;
 
-    public static NodePointer New() => new NodePointer(new Node());
+    internal NodePointer AsWeakReference() => new(this);
 
     internal Node(string name = "Node")
     {
@@ -49,19 +49,6 @@ internal sealed class Node : AbstractGameObject
         return this.transform.matrix;
     }
 
-    #endregion
-
-    #region SCENE_API
-    // ReSharper disable UnusedMember.Global
-    internal NodePointer? GetParent()
-    {
-        return this.parent;
-    }
-
-    internal IEnumerable<NodePointer> GetChildren()
-    {
-        return this.children.Select(n => new NodePointer(n));
-    }
     #endregion
 
     #region BEHAVIOUR_API

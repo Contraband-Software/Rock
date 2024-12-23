@@ -163,9 +163,6 @@ public class PlayerController : Behaviour
         ICollisionSystem collisionSystem = this.Game.Services.GetService<ICollisionSystem>();
         this.rb.Velocity += (Vector.AngleToVector(-this.facingDirection) * this.currentGunPower * gunKnockback);
 
-
-
-
         Vector2 direction = Vector.AngleToVector(this.facingDirection);
         List<string> layers = new List<string>
         {

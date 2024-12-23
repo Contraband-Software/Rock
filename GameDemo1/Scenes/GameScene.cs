@@ -4,6 +4,7 @@ namespace GameDemo1.Scenes;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using GREngine.Core.PebbleRenderer;
 using GREngine.Core.Physics2D;
 using GREngine.Core.System;
@@ -71,15 +72,14 @@ public class GameScene : Scene
 
         #region MANAGERS
         NodePointer player = sceneManager.AddNodeAtRoot("Player");
-        player.AddTag("Player");
 
         CircleCollider cc = sceneManager.AddBehaviour(player, new CircleCollider(40, true)) as CircleCollider;
+        Debug.Assert(cc != null, nameof(cc) + " != null");
         cc.SetLayer(PLAYER_COLLISION_LAYER);
         cc.SetTrigger(true);
         cc.SetAllowedCollisionLayers(new List<string>() {
             GameScene.MAP_FLOOR_COLLISION_LAYER, GameScene.ENEMY_COLLISION_LAYER, GameScene.MAP_WALL_COLLISION_LAYER });
-        PlayerController pc = new PlayerController(MAP_FLOOR_COLLISION_LAYER);
-        sceneManager.AddBehaviour(player, pc);
+        sceneManager.AddBehaviour(player, new PlayerController(MAP_FLOOR_COLLISION_LAYER));
 
 
         NodePointer gameManager = sceneManager.AddNodeAtRoot("GameManager");

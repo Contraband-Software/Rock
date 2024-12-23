@@ -15,20 +15,16 @@ public sealed class NodePointer
 {
     private readonly WeakReference<Node?> weakReference;
 
-    public void AddTag(string tag) => this.Get().Tags.Add(tag);
-
     internal NodePointer(Node gameObject)
     {
         this.weakReference = new WeakReference<Node?>(gameObject);
     }
 
-    internal Node? Get()
-    {
-        return this.weakReference.TryGetTarget(out Node? target) ? target : null;
-    }
+    internal Node Get() => this.weakReference.TryGetTarget(out Node? target) ? target :
+        throw new InvalidOperationException("Node Pointer has no value!");
 
     /// <summary>
-    /// Frees the subtree as well
+    /// Completely destroys the node, its behaviours, and the subtree as well
     /// </summary>
     public void Free()
     {
@@ -36,6 +32,8 @@ public sealed class NodePointer
         obj?.sceneManager.FreeNode(obj);
         this.weakReference.SetTarget(null);
     }
+
+    internal void Dangle() => this.weakReference.SetTarget(null);
 
     #region HELPERS
     public Vector2 GetLocalPosition2D()
@@ -80,40 +78,23 @@ public sealed class NodePointer
 
     #region TRANSFORM_API
     // ReSharper disable MemberCanBePrivate.Global
-    public Matrix GetLocalTransform()
-    {
-        return this.Get()!.GetLocalTransform();
-    }
+    public Matrix GetLocalTransform() => this.Get().GetLocalTransform();
 
-    public void SetLocalTransform(Matrix matrix)
-    {
-        this.Get()!.transform.matrix = matrix;
-    }
+    public void SetLocalTransform(Matrix matrix) => this.Get().transform.matrix = matrix;
 
-    public Matrix GetGlobalTransform()
-    {
-        return this.Get()!.GetGlobalTransform();
-    }
+    public Matrix GetGlobalTransform() => this.Get().GetGlobalTransform();
     #endregion
 
     #region SCENE_API
     // ReSharper disable UnusedMember.Global
-    public NodePointer? GetParent()
-    {
-        return this.Get()!.GetParent();
-    }
+    public NodePointer GetParent() => this.Get().parent.AsWeakReference();
 
-    public IEnumerable<NodePointer> GetChildren()
-    {
-        return this.Get()!.GetChildren();
-    }
+    public IReadOnlyList<NodePointer> GetChildren()
+        => this.Get().children.Select(c => c.AsWeakReference()).ToList().AsReadOnly();
     #endregion
 
     #region BEHAVIOUR_API
-    public IEnumerable<Behaviour> GetAllBehaviours()
-    {
-        return this.Get()!.GetAllBehaviours<Behaviour>();
-    }
+    public IEnumerable<Behaviour> GetAllBehaviours() => this.Get().GetAllBehaviours<Behaviour>();
 
     /// <summary>
     /// This will return the FIRST component of type T
@@ -121,20 +102,14 @@ public sealed class NodePointer
     /// <typeparam name="T">A Behaviour</typeparam>
     /// <returns></returns>
     // ReSharper disable once UnusedMember.Global
-    public Behaviour? GetBehaviour<T>() where T : Behaviour
-    {
-        return this.Get()!.GetBehaviour<T>();
-    }
+    public Behaviour? GetBehaviour<T>() where T : Behaviour => this.Get().GetBehaviour<T>();
 
     /// <summary>
     /// This will return ALL components of type T
     /// </summary>
     /// <typeparam name="T">A Behaviour</typeparam>
     /// <returns></returns>
-    public IEnumerable<Behaviour> GetAllBehaviours<T>() where T : Behaviour
-    {
-        return this.Get()!.GetAllBehaviours<T>();
-    }
+    public IEnumerable<Behaviour> GetAllBehaviours<T>() where T : Behaviour => this.Get().GetAllBehaviours<T>();
     // ReSharper restore UnusedMember.Global
     #endregion
 }

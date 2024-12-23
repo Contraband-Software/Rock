@@ -2,6 +2,7 @@ namespace GREngine.Core.System;
 
 using global::System;
 using global::System.Collections.Generic;
+using global::System.Diagnostics;
 using global::System.Linq;
 using global::System.Reflection;
 using Microsoft.Xna.Framework;
@@ -102,11 +103,9 @@ public sealed partial class SceneManager
         // repeat this process for child nodes
 
         // sort the initialization queue
-#if DEBUG
-        if (parentNode.Get() == null)
-            throw new ArgumentException("Null parent Node pointer passed into AddNode");
-#endif
-        return LoadNode(parentNode.Get()!, new Node(name));
+        Debug.Assert(parentNode.Get() != null);
+
+        return LoadNode(parentNode.Get(), new Node(name));
     }
 
     public NodePointer AddNode(string name)
@@ -129,7 +128,7 @@ public sealed partial class SceneManager
     // also nodes should have weak refs to each other
     private NodePointer LoadNode(Node parent, Node node)
     {
-        node.parent = new NodePointer(parent);
+        node.parent = parent;
         parent.children.Add(node);
         node.sceneManager = this;
 
@@ -164,7 +163,7 @@ public sealed partial class SceneManager
         // delete node and sub tree
         // garbage collect
 
-        node.parent.Get()!.children.Remove(node);
+        node.parent.children.Remove(node);
         node.parent = null!;
 
         TraverseGraphNodes(node,
@@ -172,7 +171,11 @@ public sealed partial class SceneManager
             {
                 // PrintLn(n.Tags.ToList().Count.ToString());
                 n.Tags.ToList().ForEach(t => RemoveTagIndex(t, node));
-                n.behaviours.FindAll(b => b.Initialized).ForEach(b => this.disposeSet.Add(b));
+                n.behaviours.FindAll(b => b.Initialized).ForEach(b =>
+                {
+                    this.activeBehaviours.Remove(b);
+                    this.disposeSet.Add(b);
+                });
                 n.behaviours.ForEach(b => this.initializationSet.Remove(b));
                 return n.children;
             });
@@ -225,14 +228,14 @@ public sealed partial class SceneManager
         // add reference to node's behaviour list
         // if enabled, add behaviour to initialization list
 #if DEBUG
-        if (node.Get()!.behaviours.Contains(behaviour))
+        if (node.Get().behaviours.Contains(behaviour))
         {
             throw new ArgumentException("This Behaviour has already been added to this Node");
         }
 #endif
 
-        node.Get()!.behaviours.Add(behaviour);
-        BootstrapBehaviour(behaviour, node.Get()!);
+        node.Get().behaviours.Add(behaviour);
+        BootstrapBehaviour(behaviour, node.Get());
         return behaviour;
     }
 

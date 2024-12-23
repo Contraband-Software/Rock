@@ -101,7 +101,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         if (initializedScriptsQueuedForUnloading)
         {
             foreach (Behaviour b in this.disposeSet)
-                this.DeInitBehaviour(b);
+                DeInitBehaviour(b);
 
             this.disposeSet.Clear();
             GC.Collect();
@@ -117,12 +117,12 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         if (!b.Initialized) this.initializationSet.Add(b);
     }
 
-    void ISceneControllerService.BehaviourEnabledChanged(Behaviour behaviour, bool status)
+    void ISceneControllerService.BehaviourEnabledChanged(Behaviour behaviour, bool enabled)
     { // [DONE]
         // add or remove behaviour from active list
         // if add, check if initialized, if so, add to and
         // resort active list, otherwise add to initialization list instead
-        if (status)
+        if (enabled)
         {
             if (behaviour.Initialized)
                 this.activeBehaviours.Add(behaviour);
@@ -142,14 +142,14 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
             ((ISceneControllerService)this).BehaviourEnabledChanged(t, status);
     }
 
-    private void DeInitBehaviour(Behaviour behaviour)
+    private static void DeInitBehaviour(Behaviour behaviour)
     {
         behaviour.OnDestroy();
-        this.activeBehaviours.Remove(behaviour);
+        // this.activeBehaviours.Remove(behaviour);
 #pragma warning disable // For a behaviour to be loaded at all, it must be attached to a Node
-        behaviour.Node.Get()!.behaviours.Remove(behaviour);
+        behaviour.Node.Get().behaviours.Remove(behaviour);
 #pragma warning restore
-        behaviour.Node = null;
+        behaviour.Node.Dangle();
     }
 
     private void DestroyGraphComponents(Node node)
@@ -158,7 +158,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
 
         TraverseGraphNodes(node, n =>
         {
-            n.behaviours.FindAll(b => b.Initialized).ForEach(this.DeInitBehaviour);
+            n.behaviours.FindAll(b => b.Initialized).ForEach(DeInitBehaviour);
             return n.children;
         });
     }
@@ -169,10 +169,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
     {
         while (true)
         {
-            Node? parent = node.parent.Get();
-            if (parent == null)
-                return node;
-
+            Node? parent = node.parent;
             node = parent;
         }
     }
@@ -243,7 +240,7 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         // unload scene content manager
 
         // user defined behaviour de-init
-        DestroyGraphComponents(this.rootNode);
+        // DestroyGraphComponents(this.rootNode);
 
         // user defined unload
 #pragma warning disable
@@ -257,10 +254,10 @@ public sealed partial class SceneManager : GameComponent, ISceneControllerServic
         this.activeBehaviours.RemoveWhere(b =>
         {
 #pragma warning disable
-            if (!IsDescendedFrom(b.Node.Get()!, this.rootNode)) return false;
+            if (!IsDescendedFrom(b.Node.Get(), this.rootNode)) return false;
 #pragma warning restore
 
-            this.DeInitBehaviour(b);
+            DeInitBehaviour(b);
             return true;
         });
 
