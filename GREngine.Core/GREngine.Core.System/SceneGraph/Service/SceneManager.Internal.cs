@@ -78,9 +78,6 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
 
     private void UpdateActiveScene(GameTime gameTime)
     {
-        bool uninitializedScriptsQueuedForLoading = this.initializationSet.Count != 0;
-        bool initializedScriptsQueuedForUnloading = this.disposeSet.Count        != 0;
-
         // update currently enabled behaviours
 
         // sort initialization queue if non-empty
@@ -88,7 +85,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         // take behaviours that are enabled, drop the rest
         // merge initialization queue and activeBehaviours list
 
-        if (uninitializedScriptsQueuedForLoading)
+        if (this.initializationSet.Count != 0)
             this.InitializeBehaviours();
 
         foreach (Behaviour b in this.activeBehaviours)
@@ -100,7 +97,7 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
             this.lateUpdateQueue.Clear();
         }
 
-        if (initializedScriptsQueuedForUnloading)
+        if (this.disposeSet.Count != 0)
         {
             foreach (Behaviour b in this.disposeSet)
                 DeInitBehaviour(b);
@@ -154,16 +151,16 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         behaviour.Node.Dangle();
     }
 
-    private void DestroyGraphComponents(Node node)
-    {
-        // depth first tree traversal
-
-        TraverseGraphNodes(node, n =>
-        {
-            n.behaviours.FindAll(b => b.Initialized).ForEach(DeInitBehaviour);
-            return n.children;
-        });
-    }
+    // private void DestroyGraphComponents(Node node)
+    // {
+    //     // depth first tree traversal
+    //
+    //     TraverseGraphNodes(node, n =>
+    //     {
+    //         n.behaviours.FindAll(b => b.Initialized).ForEach(DeInitBehaviour);
+    //         return n.children;
+    //     });
+    // }
 
     private static bool IsDescendedFrom(Node node, Node parent) => GetFirstAncestor(node) == parent;
 
@@ -171,16 +168,19 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
     {
         while (true)
         {
-            Node? parent = node.parent;
-            node = parent;
+            if (node.parent == null)
+            {
+                return node;
+            }
+            node = node.parent;
         }
     }
 
-    private void TraverseGraphNodes(Node start, Func<Node, IEnumerable<Node>> function)
+    private static void TraverseGraphNodes(Node start, Func<Node, IEnumerable<Node>> function)
     {
         foreach (Node child in function(start))
         {
-            this.TraverseGraphNodes(child, function);
+            TraverseGraphNodes(child, function);
         }
     }
 
@@ -307,15 +307,15 @@ public sealed partial class SceneManager(Game game) : GameComponent(game), IScen
         node.GetAllBehaviours().ToList().ForEach(c => { components += c.GetType().Name + ":" + c.Name + ", "; });
 
         string tags = "";
-        node.Get()!.Tags.ToList().ForEach(c => { tags += c + ","; });
+        node.Get().Tags.ToList().ForEach(c => { tags += c + ","; });
 
         Vector3 position = node.GetLocalPosition();
         const string format = "{0,10:####0.000}";
         PrintLn(
-            "[" + String.Format(format, position.X) + ", " +
-            String.Format(format, position.Y) + ", " + String.Format(format, position.Z) + "]" +
+            "[" + string.Format(format, position.X) + ", " +
+            string.Format(format, position.Y) + ", " + string.Format(format, position.Z) + "]" +
             space +
-            node.GetType().Name + ": '" + node.Get()!.Name + "' -> [" + components + "]" + " <" + tags + ">"
+            node.GetType().Name + ": '" + node.Get().Name + "' -> [" + components + "]" + " <" + tags + ">"
         );
 
         IEnumerable<NodePointer> g = node.GetChildren();

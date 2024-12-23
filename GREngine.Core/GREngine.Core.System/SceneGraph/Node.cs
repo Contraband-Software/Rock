@@ -21,7 +21,7 @@ internal sealed class Node : AbstractGameObject
 
     internal Node(string name = "Node")
     {
-        Name = "Node";
+        Name = name;
         this.transform.matrix = Matrix.Identity;
     }
 
